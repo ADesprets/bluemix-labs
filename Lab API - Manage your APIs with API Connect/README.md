@@ -499,6 +499,15 @@ If all is OK, you should see a list of ***cutomers*** in JSON format with items 
 6. Feel free to play around with the other visualizations by adding them to the Dashboard. You can also save the dashboard by clicking on the Save Dashboard button:
  ![Anaytic screen](./images/analytics-save-dashboard.png)
 
+# Step 10 - Invoke your API from Mobile
+
+In this lab, you will learn how consume the API from a Mobile Application. 
+
+In this case, we will use a very simple sample of a Mobile Hybrid Application with the framework Ionic 1.7.
+
+
+the consumer experience for APIs that have been exposed to your developer organization. Using the developer portal, you will first login in as the admin user to load a Think IBM custom theme. You will then login as a developer to register your application and then subscribe to an API and test that API
+
 
 
 
