@@ -169,7 +169,7 @@ Answer the questions with the following data:
 > **Note**: 
 > <mark>For **Connection String url** paste the previous value you copied about Cloudant credential in Step 1</mark>
 
-Option name         | Rsponse          | 
+Option name         | Values          | 
 --------------------|------------------|
 ? Enter the data-source name :      | **db**         | 
 ? Select the connector for db :     | **IBM Cloudant DB**         | 
