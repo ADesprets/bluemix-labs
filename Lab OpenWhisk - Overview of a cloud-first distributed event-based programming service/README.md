@@ -2,28 +2,21 @@
 
 # OpenWhisk
 
-Microservice architectures have emerged as the preferred way to engineer
-robust, scalable cloud-native solutions. Microservices encapsulate
-application logic in small, loosely coupled, distributed services
-communicating via language-agnostic APIs.
 
-Despite their benefit, microservice-based solutions remain difficult to
-be build using mainstream cloud technologies often asking you to control
-a complex toolchain and a complex build- and operations pipeline.
-Developers spend too much time dealing with infrastructural and
-operational complexities, such as fault-tolerance, load balancing,
-auto-scaling, and logging features.
+###What is Serverless Computing?
 
-Developers would benefit from a better way to quickly build their
-microservice-oriented solutions.
+Serverless computing refers to a model where the existence of servers is simply hidden from developers. I.e. that even though servers still exist developers are relieved from the need to care about their operation. They are relieved from the need to worry about low-level infrastructural and operational details such as scalability, high-availability, infrastructure-security, and so forth. Hence, serverless computing is essentially about reducing maintenance efforts to allow developers to quickly focus on developing value-adding code.
 
-They require...
+Serverless computing encourages and simplifies developing microservice-oriented solutions in order to decompose complex applications into small and independent modules that can be easily exchanged.
 
--   ... a rich set of building blocks that they can easily glue stitch together
+Serverless computing does not refer to a specific technology; instead if refers to the concepts underlying the model described prior. Nevertheless some promising solutions have recently emerged easing development approaches that follow the serverless model – such as OpenWhisk.
 
--   ... the ability to focus more on value-add business logic and less on low-level infrastructural and operational details
+###What is OpenWhisk?
 
--   ... the ability to easily chain together microservices to form workflows via composition
+OpenWhisk is a cloud-first distributed event-based programming service. It represents an event-action platform that allows you to execute code in response to an event.
+
+OpenWhisk provides you with a serverless deployment and operations model hiding infrastructural complexity and allowing you to simply provide the code you want us to execute. It provides you with a fair pricing model at any scale, where we provide you with exactly the resources – not more not less – you need and only charge you for code really running. It offers a flexible programming model. incl. support for languages like NodeJS and Swift and even for the execution of custom logic via docker containers. This allows small agile teams to reuse existing skills and to develop in a fit-for-purpose fashion. It also provides you with tools to chain together the building blocks you have developed. And the best: It is open and can run anywhere to avoid any kind of vendor lock-in.
+
 
 **IBM Bluemix OpenWhisk** introduces a new way to build such solutions in the cloud. It provides a distributed compute service to execute application logic in response to events.
 
