@@ -81,18 +81,28 @@ pre-lab assignment.
 
 3.  Log-in with your account
 
-4.  Navigate to Configure CLI
+4.  Navigate to Download and Configure CLI
 
-5.  Follow step 2 (you do not need to perform step 1 and 3) listed
-    there
+5.  Follow step 2 : 
+Set your OpenWhisk Namespace and Authorization Key.These are your settings. Copy and paste this line into your terminal.
     
-    
+    ```
+    wsk property set --apihost openwhisk.ng.bluemix.net --auth 
+    xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxxx**:**yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+    ```
     >Note: When you perform step 2 you will see a auth key & secret
     looking like this:
     xxxxxxxxxx-xxxxxxxxxx-xxxxxxxxxx**:**yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
     
     The part left of the colon is your auth key.
     The part right of the colon is your auth secret.
+    
+6.  Follow step 3 :   
+    Verify your setup.Here, we perform a blocking (synchronous) invocation of echo, passing it "hello" as an argument.
+    
+    ```
+    wsk action invoke /whisk.system/utils/echo -p message hello --blocking --result
+    ```
     
     **As you will need both later leave the browser open.**
 
