@@ -1,0 +1,689 @@
+
+==================================================================
+
+## Initialize MobileFirst SDK and Manage your application
+
+==================================================================
+
+//Adding support for cordova.
+     ibmApp.run(function($ionicPlatform) {
+           console.log('>> ibmApp.run ...');
+           $ionicPlatform.ready(function() {
+             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+             // for form inputs)
+             console.log('>> ibmApp.ready ...');
+             if (window.cordova && 
+                 window.cordova.plugins && 
+                 window.cordova.plugins.Keyboard) {
+                    cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+             }
+             if(window.StatusBar) {
+               StatusBar.styleDefault();
+             }
+           });
+         });
+		 
+// Add MobileFirst configuration stuff.
+	 var Messages = {
+		   // Add here your messages for the default language.
+		   // Generate a similar file with a language suffix containing the translated messages.
+		   // key1 : message1,
+	};
+
+	var wlInitOptions = {
+		   // Options to initialize with the WL.Client object.
+		   // For initialization options please refer to IBM MobileFirst Platform Foundation Knowledge Center.
+	};
+
+	function wlCommonInit() {
+		   console.log(">> wlCommonInit() ..." );  
+		   var serverUrl = WL.App.getServerUrl(function(success){
+		       console.log(success);
+		   }, function(fail){
+		       console.log(fail);
+		   })
+	}
+		 
+
+==================================================================
+
+## Register and Manage Application
+
+==================================================================
+
+//Calling to the MobileFirst Server    
+WLAuthorizationManager.obtainAccessToken().then(
+        function (accessToken) {
+          console.log(">> Success - Connected to MobileFirst Server");          
+        },
+        function (error) {
+          console.log(">> Failed to connect to MobileFirst Server");          
+        }
+);
+		 
+			 
+
+==================================================================
+
+## MobileFirst Adapter - Server Side
+
+==================================================================
+
+-------------------- SNIPPET: EMPLOYEE METHOD --------------------
+
+    
+    /*
+	 * Path for method:
+	 * "<server address>/mfp/api/adapters/Employee/services/list"
+	 */
+	
+	@ApiOperation(value = "Get employee list", notes = "Return employee list")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "A constant string is returned") })
+	@GET
+	@Path("/list")
+	@Produces(MediaType.TEXT_PLAIN)	
+	public String employees() {
+		System.out.println(">> in employees() ...");
+		logger.info(">> EmployeeAdapterResource: employees");
+		String rsp = null;
+		try {
+			rsp =  getHttp("http://employeenodeapp.mybluemix.net/employees");
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rsp;
+	}
+
+
+
+
+-------------------- SNIPPET: getDetails() METHOD --------------------
+
+
+
+	/*
+	 * Path for method:
+	 * "<server address>/mfp/api/adapters/Employee/services/details/{id}"
+	 */
+
+	@ApiOperation(value = "Employee Details by Id", notes = "Return the employee detials, by Id")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Property value returned."),
+			@ApiResponse(code = 404, message = "Property value not found.") })
+	@GET
+	@Path("/details/{id}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getDetails(
+			@ApiParam(value = "The name of the property to lookup", required = true) @PathParam("id") String id) {
+		// Get the value of the property:
+		System.out.println(">> in getDetails() ...");
+		System.out.println(">> id :[" + id + "]");
+		String rsp = null;
+		try {
+			rsp =  getHttp("http://employeenodeapp.mybluemix.net/details?id=" + id);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rsp;
+
+	}
+
+
+-------------------- SNIPPET: getHttp() METHOD --------------------
+
+    
+    private final String USER_AGENT = "Mozilla/5.0";	
+	public String getHttp(String url) throws ClientProtocolException, IOException{
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet(url);
+		// add request header
+		request.addHeader("User-Agent", USER_AGENT);
+		HttpResponse response = client.execute(request);
+		System.out.println("Response Code : " 
+	                + response.getStatusLine().getStatusCode());
+
+		BufferedReader rd = new BufferedReader(
+			new InputStreamReader(response.getEntity().getContent()));
+		StringBuffer result = new StringBuffer();
+		String line = "";
+		while ((line = rd.readLine()) != null) {
+			result.append(line);
+		}		
+		return result.toString();
+	}
+
+
+
+-------------------- SNIPPET: import statement --------------------
+
+/* Add org.apach.http*/
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+	
+==================================================================
+
+## MobileFirst Adapter - Client Side
+
+==================================================================
+
+------------------- SNIPPET: services.js Replacing the EmployeeService method --------------------
+
+
+/* services.js */
+//application services for employee, employee details, and authetication service.
+ibmApp.factory("EmployeeService", function($http){
+    console.log( ">> in EmployeeService ...");
+    var employees = [];
+    var resourceRequest = new WLResourceRequest(
+        "/adapters/EmployeeAdapter/services/list", WLResourceRequest.GET
+    );
+    return {
+        getEmployeeList: function(){
+            return resourceRequest.send().then(function(response){
+                employees = response.responseJSON;
+                return employees;
+            }, function(response){
+                console.log("error:" + response);
+                return null;
+            });
+        },
+        getEmployee: function(index){
+            return employees[index];
+        },
+        getEmployeeById: function(id){
+            var _emp;
+            angular.forEach(employees, function(emp) {
+                console.log(">> getEmployeeById :" + id + " ==  " + emp._id );
+                if(emp._id == id){ _emp = emp; }
+            });
+            return _emp;
+        }
+    };
+})
+
+
+------------------- SNIPPET: services.js Replacing the EmployeeDetailsService method --------------------
+
+ibmApp.factory("EmployeeDetailsService", function($http){
+    console.log( ">> in EmployeeDetailsService ...");
+    return {
+        getEmployeeDetails: function(empId){
+            //using path param.
+            var resourceRequest = new WLResourceRequest(
+                "/adapters/EmployeeAdapter/services/details/" + empId, WLResourceRequest.GET
+            );
+            return resourceRequest.send().then(function(response){
+                return response.responseJSON;
+            }, function(response){
+                console.log("error:" + response);
+                return null;
+            });
+        }};
+ })
+
+
+------------------- SNIPPET: controller.js employeeDetailCtrl Method --------------------
+
+/* controller.js */
+ibmApp.controller('employeeDetailCtrl', function($scope, EmployeeService,
+                             employeeDetailList , empId ,$ionicHistory) {
+  $scope.employee = {
+        "first_name" : "",
+        "last_name" : "",
+        "_id" : ""
+  }
+  $scope.employeeDetails = {}
+  console.log(">> in - employeeDetailCtrl:" + employeeDetailList);
+  //Employee service cached the list of employee
+  $scope.employee = EmployeeService.getEmployeeById(empId);
+  $scope.employeeDetails = employeeDetailList;
+  $scope.employeeDetails.email =  angular.lowercase($scope.employeeDetails.email);
+
+})
+
+
+==================================================================
+
+## MobileFirst - Secure Your App - Server Side
+
+==================================================================
+
+------------- SNIPPET: UserLoginSecurityCheck.java     --------------------------
+
+/* UserLoginSecurityCheck.java */
+
+/* Basic implementation */        
+	package com.ibm;
+
+	import com.ibm.mfp.server.registration.external.model.AuthenticatedUser;
+	import com.ibm.mfp.security.checks.base.UserAuthenticationSecurityCheck;
+
+	import java.util.HashMap;
+	import java.util.Map;
+	
+	public class UserLoginSecurityCheck extends UserAuthenticationSecurityCheck {
+
+    @Override
+    protected AuthenticatedUser createUser() {
+        return null;
+    }
+
+    @Override
+    protected boolean validateCredentials(Map<String, Object> credentials) {
+        return false;
+    }
+
+    @Override
+    protected Map<String, Object> createChallenge() {
+        return null;
+    }
+	}
+
+------------- SNIPPET: Replace the Challenge method --------------------------
+
+
+/* create the challenge */
+@Override
+protected Map<String, Object> createChallenge() {
+    Map challenge = new HashMap();
+    challenge.put("errorMsg",errorMsg);
+    challenge.put("remainingAttempts",getRemainingAttempts());
+    return challenge;
+}
+ 
+
+
+
+
+
+------------- SNIPPET: Replace the validateCredentials method --------------------------
+
+
+/* Validating the user credentials */ 
+    @Override
+    protected boolean validateCredentials(Map<String, Object> credentials) {
+        if(credentials!=null && credentials.containsKey("username") && credentials.containsKey("password")){
+            String username = credentials.get("username").toString();
+            String password = credentials.get("password").toString();
+            if(username.equals(password)) {
+                userId = username;
+                displayName = username;
+                return true;
+            }
+            else {
+                errorMsg = "Wrong Credentials";
+            }
+        }
+        else{
+            errorMsg = "Credentials not set properly";
+        }
+        return false;
+    }
+
+
+------------- SNIPPET: Replace the createUser method --------------------------
+
+
+/* Creating the AuthenticatedUser object */
+ private String userId, displayName;
+ private String errorMsg;
+
+
+
+/* override the createUser */ 
+@Override
+protected AuthenticatedUser createUser() {
+    return new AuthenticatedUser(userId, displayName, this.getName());
+} 
+
+
+
+------------- SNIPPET: adapter.xml  --------------------------
+
+
+
+/* adapter.xml */
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Licensed Materials - Property of IBM
+	5725-I43 (C) Copyright IBM Corp. 2011, 2013. All Rights Reserved.
+	US Government Users Restricted Rights - Use, duplication or
+	disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<mfp:adapter name="UserLogin"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mfp="http://www.ibm.com/mfp/integration"
+	xmlns:http="http://www.ibm.com/mfp/integration/http">
+
+	<displayName>UserLogin</displayName>
+	<description>UserLogin</description>
+
+	<securityCheckDefinition name="UserLogin" class="com.ibm.UserLoginSecurityCheck">
+		<property name="maxAttempts" defaultValue="3" displayName="How many attempts are allowed"/>
+		<property name="blockedStateExpirationSec" defaultValue="10" displayName="How long before the client can try again (seconds)"/>
+		<property name="successStateExpirationSec" defaultValue="60" displayName="How long is a successful state valid for (seconds)"/>
+	</securityCheckDefinition>
+
+</mfp:adapter>
+
+        
+------------- SNIPPET: This is what the final code looks like --------------------------
+
+/*****  Complete Class ****/
+
+/*
+ * IBM Confidential OCO Source Materials
+ *
+ * 5725-I43 Copyright IBM Corp. 2006, 2015
+ *
+ * The source code for this program is not published or otherwise
+ * divested of its trade secrets, irrespective of what has
+ * been deposited with the U.S. Copyright Office.
+ */
+package com.ibm;
+
+import com.ibm.mfp.server.registration.external.model.AuthenticatedUser;
+import com.ibm.mfp.security.checks.base.UserAuthenticationSecurityCheck;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Sample implementation of username/password security check that succeeds if username and password are identical.
+ */
+public class UserLoginSecurityCheck extends UserAuthenticationSecurityCheck {
+    private String userId, displayName;
+    private String errorMsg;
+
+    @Override
+    protected AuthenticatedUser createUser() {
+        return new AuthenticatedUser(userId, displayName, this.getName());
+    }
+
+    /**
+     * This method is called by the base class UserAuthenticationSecurityCheck when an authorization
+     * request is made that requests authorization for this security check or a scope which contains this security check
+     * @param credentials
+     * @return true if the credentials are valid, false otherwise
+     */
+    @Override
+    protected boolean validateCredentials(Map<String, Object> credentials) {
+        if(credentials!=null && credentials.containsKey("username") && credentials.containsKey("password")){
+            String username = credentials.get("username").toString();
+            String password = credentials.get("password").toString();
+            if(username.equals(password)) {
+                userId = username;
+                displayName = username;
+                return true;
+            }
+            else {
+                errorMsg = "Wrong Credentials";
+            }
+        }
+        else{
+            errorMsg = "Credentials not set properly";
+        }
+        return false;
+    }
+
+    /**
+     *
+     * This method is describes the challenge JSON that gets sent to the client during the authorization process
+     * This is called by the base class UserAuthenticationSecurityCheck when validateCredentials returns false and
+     * the number of remaining attempts is > 0
+     * @return the challenge object
+     */
+    @Override
+    protected Map<String, Object> createChallenge() {
+        Map<String, Object> challenge = new HashMap();
+        challenge.put("errorMsg",errorMsg);
+        challenge.put("remainingAttempts",getRemainingAttempts());
+        return challenge;
+    }
+}
+
+
+
+
+==================================================================
+
+## MobileFirst - Secure Your App - Client Side
+
+==================================================================
+
+
+// Application controllers.
+
+ibmApp.controller('appCtrl', function ($scope) {
+	$scope.logout = function() {
+        console.log(">> in appCtrl - logout");
+        $timeout(function(){        
+                    $scope.user = { username: "", password: ""};
+        }, 200);                
+        WLAuthorizationManager.logout("UserLogin").then(
+            function () {
+                console.log(">> logout onSuccess");
+                $state.transitionTo("splash");  
+            },
+            function (response) {
+                console.log(">> logout onFailure: " + JSON.stringify(response));
+                $state.transitionTo("splash");  
+            });
+        }  
+
+})
+
+ibmApp.controller('mainCtrl', ['$scope', 'employees',  function ($scope, employees) {
+    console.log(">> in mainCtrl ... ");
+    //ionicMaterialInk.displayEffect();    
+    $scope.employees = employees;
+    
+    // mainCtrl event
+    var event = {viewLoad: 'Employee List View'};
+    WL.Analytics.log(event, 'Employee List View - loaded');
+    
+    }])
+
+
+/* controller.js */
+ibmApp.controller('employeeDetailCtrl', function($scope, EmployeeService,
+                             employeeDetailList , empId ,$ionicHistory) {
+  $scope.employee = {
+        "first_name" : "",
+        "last_name" : "",
+        "_id" : ""
+  }
+  $scope.employeeDetails = {}
+  console.log(">> in - employeeDetailCtrl:" + employeeDetailList);
+  //Employee service cached the list of employee
+  $scope.employee = EmployeeService.getEmployeeById(empId);
+  $scope.employeeDetails = employeeDetailList;
+  $scope.employeeDetails.email =  angular.lowercase($scope.employeeDetails.email);
+
+    // employeeDetailCtrl event
+    var event = {viewLoad: 'Details View'};
+    WL.Analytics.log(event, 'Details View - loaded');
+})
+
+
+ibmApp.controller('splashCtrl', ['$scope', '$stateParams', '$timeout', '$state', 'AuthenticateUserService', '$ionicPopup', '$location', function ($scope, $stateParams, $timeout, $state, AuthenticateUserService, $ionicPopup, $location) {
+    console.log(">> splashCtrl - ... ");        
+    $scope.user = {
+            username: "",
+            password: ""
+        }
+    var code = document.getElementsByClassName('code-wrapper');
+    for (var i = 0; i < code.length; i++) {
+        code[i].addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+    }
+    
+    /* $scope.doLogin - updted method  */
+    /* using mfp challenge handler */    
+        $scope.doLogin = function () {
+                console.log(">> loginCtrl - doLogin - $scope.user:" + $scope.user);            
+                if ($scope.isChallenged){
+                    console.log(">> loginCtrl - doLogin -  $scope.isChallenged == true");            
+                    $scope.userLoginChallengeHandler.submitChallengeAnswer({
+                        'username': $scope.user.username, 
+                        'password': $scope.user.password
+                    });
+                } else {
+                    console.log(">> loginCtrl - doLogin -  $scope.isChallenged == false");            
+                    WLAuthorizationManager.login("UserLogin",{
+                        'username':$scope.user.username, 
+                        'password':$scope.user.password
+                    }).then( function () {
+                        console.log(">> WLAuthorizationManager.login - onSuccess");
+                        $state.transitionTo("main");                        
+                    },
+                    function (response) {
+                        console.log(">> WLAuthorizationManager.login - onFailure: " + JSON.stringify(response));
+                        $scope.showLoginError();
+                    });
+                }               
+        }    
+        
+        
+
+        /* register the challengeHandler - updted method  */
+            
+            $scope.isChallenged = false;
+            $scope.securityCheckName = 'UserLogin';    
+            $scope.userLoginChallengeHandler = null;
+            
+            $scope.registerChallengeHandler = function(){
+                console.log(">> in $scope.registerChllangeHandler ... ");
+                //$scope.userLoginChallengeHandler = WL.Client.createWLChallengeHandler($scope.securityCheckName);
+                $scope.userLoginChallengeHandler = WL.Client.createSecurityCheckChallengeHandler($scope.securityCheckName);
+                console.log(">> in UserLoginChallengeHandler - createSecurityCheckChallengeHandler ...");
+                $scope.userLoginChallengeHandler.securityCheckName = $scope.securityCheckName;
+                //$scope.userLoginChallengeHandler.processSuccess = function(challenge) {
+                $scope.userLoginChallengeHandler.handleChallenge = function(challenge) {
+                    console.log(">> in UserLoginChallengeHandler - userLoginChallengeHandler.handleChallenge ...");
+                    //show the login ...
+                    $scope.user = { username: "", password: ""};
+                    $scope.currentPath = $location.path();
+                    console.log(">> $location.path(): " + $location.path());
+                    $state.transitionTo("splash");
+                    $scope.isChallenged = true;
+                    var statusMsg = "Remaining Attempts: " + challenge.remainingAttempts;
+                    if (challenge.errorMsg !== null){
+                        statusMsg = statusMsg + "<br/>" + challenge.errorMsg;
+                        $timeout(function(){
+                            //want to show only when submit user/pass not when token expired ...
+                            if($scope.currentPath == "/"){
+                                $scope.showLoginError(statusMsg);
+                            }
+                         }, 300);
+                    }
+                    console.log(">>> statusMsg : " + statusMsg);
+                };
+
+                $scope.userLoginChallengeHandler.processSuccess = function(data) {                
+                    console.log(">> in UserLoginChallengeHandler - userLoginChallengeHandler.processSuccess ...");        
+                    $scope.isChallenged = false;     
+                    $timeout(function(){        
+                            $scope.user = { username: "", password: ""};
+                    }, 200);                    
+                    $state.transitionTo("main");                
+                };
+                       
+                $scope.userLoginChallengeHandler.handleFailure = function(error) {
+                    console.log(">> in UserLoginChallengeHandler - userLoginChallengeHandler.handleFailure ...");
+                    console.log(">> handleFailure: " + error.failure);
+                    $scope.isChallenged = false;
+                    if (error.failure !== null){
+                        alert(error.failure);
+                    } else {
+                        alert("Failed to login.");
+                    }
+                };
+            }
+
+
+
+
+    
+            /* updted method showLoginError */
+            //show alert login error ... 
+            $scope.showLoginError = function(msg) {
+                if(msg == null || msg == undefined) msg = 'Please check your username and password and try again';
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Login Error!',
+                    template: msg
+                });
+                alertPopup.then(function(res) {
+                    console.log('>> Thank you for trying ...');
+                });
+            };
+
+    
+    $scope.doShowLogin = function(){
+        console.log(">> SplashCtrl - doShowLogin() ... ");   
+        $scope.hideSplashBox();
+    }
+
+    $scope.moveSplashBox = function() {
+        var splashNextBox = document.getElementById('splash-next-box');
+        move(splashNextBox).ease('in-out').y(-415).duration('0.5s').end();
+        //move('.signInMsg').rotate(360).end();
+    };          
+    
+    $scope.hideSplashBox = function() {
+        var splashNextBox = document.getElementById('splash-next-box');        
+        move(splashNextBox).ease('in-out').y(415).duration('0.5s').end(
+            function(){
+                console.log(">>> showLogin ... ");
+                var loginBox = document.getElementById('login-box');
+                move(loginBox).ease('in-out').y(-415).duration('0.5s').end();
+            }
+        );
+        //move(loginBox).ease('in-out').y(-385).duration('0.5s').end
+    };
+    
+    $timeout(function(){        
+        //fix android bug where render splash screen incorrect. 
+        var splashNextBox = document.getElementById('splash-next-box'); 
+        var loginBox = document.getElementById('login-box');
+        splashNextBox.style.display = 'block';
+        loginBox.style.display = 'block'        
+    }, 415);
+        
+    
+    $timeout(function(){        
+        $scope.moveSplashBox();
+        var event = {viewLoad: 'Splash View'};
+        if(WL!=null && WL!=undefined) WL.Analytics.log(event, 'Splash View - loaded');                
+        $scope.registerChallengeHandler();
+    }, 3000); 
+    
+ 
+        
+}])
+
+
+    
+
+    
+    
+
+
+
+			 
