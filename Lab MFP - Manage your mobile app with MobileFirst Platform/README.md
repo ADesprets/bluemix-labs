@@ -56,17 +56,12 @@ git clone https://github.com/eliranbi/IBMEmployeeApp
 
 
 
-
 ### Start by previewing the existing Ionic Employee Directory application.
 
 
 For the username and password use the combination of **demo/demo** to login
 
-<img src=images/Intro-05.1-app-login.png width=220>
-<img src=images/Intro-06-app-splash.png width=220>
-<img src=images/Intro-07-app-list.png.png width=220>
-<img src=images/Intro-08-app-details.png width=220>
-<img src=images/Intro-09-app-slider.png width=220>
+<img src=images/Intro-05.1-app-login.png width=220><img src=images/Intro-06-app-splash.png width=220><img src=images/Intro-07-app-list.png.png width=220><img src=images/Intro-08-app-details.png width=220><img src=images/Intro-09-app-slider.png width=220>
   
 ## MobileFirst Foundation components
 
@@ -130,43 +125,44 @@ If you haven't already done so, run the following commands below to start from a
 
 1.  Enter in the directory **IBMEmployeeApp** directory (Previously created by git clone command):
 
-    ```
-cd IBMEmployeeApp
-```
+ ```
+ cd IBMEmployeeApp
+ ```
 
 1.  In order to start from a known point for the first lab run the following command:
 
-	```
-git checkout -f step-0
-```
+ ```
+ git checkout -f step-0
+ ```
 
-	> **Note:** this checkout will also add the **/snippets** and **/extras** folders for use in the editing steps later on.
+ > **Note:** this checkout will also add the **/snippets** and **/extras** folders for use in the editing steps later on.
 
 1.  Run the application using the Ionic serve command to start the default browser and point to **localhost:8100/\#/**. This will also track and reload any application code changes.
 
-	```
-ionic serve
-```
-	<img src=images/Lab1-00-ionic-serve.png width=480>
+ ```
+ ionic serve
+ ```
+ 
+ <img src=images/Lab1-00-ionic-serve.png width=480>
 	
-	<img src=images/Lab1-01-browser.png width=280>
+ <img src=images/Lab1-01-browser.png width=280>
  
 
 1. Review the project structure on the left side 
-	
-	
-	<img src=images/Lab1-02-app-dir.png width=280> 
+
+ <img src=images/Lab1-02-app-dir.png width=280> 
+ 
   
-	- **package.json** - contains all application dependencies.
-	- **platfroms directory** - contains the added device platforms that have been added to the project (iOS, Android etc).
-	- **plugins directory** - contains the different cordova plugins added to the project.
-	- **resource directory** - contains the application splash screen and the app icon for the different platforms (default to Ionic)
-	- **scss directory** - contains application color theme definitions.
-	- **www directory** - contains application assets such as; css files, images, data files, html files, javascript files etc.
-	- **lib directory** - contains the ionic libs and any additional libs that might add.
-	- **index.html** - the main html file for the application.
-	- **app.js** - the main javascript file for the application.
-	- **controllers.js** - JavaScript file containing the controllers that have been defined for each page (view). See [Angular Controllers](https://docs.angularjs.org/guide/controller) for more information.
+- **package.json** - contains all application dependencies.
+- **platforms directory** - contains the added device platforms that have been added to the project (iOS, Android etc).
+- **plugins directory** - contains the different cordova plugins added to the project.
+- **resource directory** - contains the application splash screen and the app icon for the different platforms (default to Ionic)
+- **scss directory** - contains application color theme definitions.
+- **www directory** - contains application assets such as; css files, images, data files, html files, javascript files etc.
+- **lib directory** - contains the ionic libs and any additional libs that might add.
+- **index.html** - the main html file for the application.
+- **app.js** - the main javascript file for the application.
+- **controllers.js** - JavaScript file containing the controllers that have been defined for each page (view). See [Angular Controllers](https://docs.angularjs.org/guide/controller) for more information.
 	- **services.js** - JavaScript file containing service, or network, calls used by the application. See [Angular Services](https://docs.angularjs.org/guide/services) for more information.
 
 1. New review the index.html file
