@@ -68,9 +68,9 @@ For the username and password use the combination of **demo/demo** to login
 <img src=images/Intro-08-app-details.png width=220>
 <img src=images/Intro-09-app-slider.png width=220>
   
-##MobileFirst Foundation components
+## MobileFirst Foundation components
 
-###MobileFirst Server
+### MobileFirst Server
 
 As part of the Developer Kit, the MobileFirst Server is provided pre-deployed on a WebSphere Liberty profile application server. The server is pre-configured with an “mfp” runtime and uses a filesystem-based Apache Derby database.
 
@@ -86,7 +86,7 @@ In the Developer Kit root directory, the following scripts are available to run 
 
 >**Note** .sh file extensions are for Mac and Linux, and .cmd file extensions are for Windows.
 
-###MobileFirst Operations Console
+### MobileFirst Operations Console
 
 The MobileFirst Operations Console exposes the following functionalities.
 A developer can:
@@ -101,7 +101,7 @@ A developer can:
 - Send Push Notifications to iOS and Android devices
 - Generate DevOps scripts for continuous integration workflows and faster development cycles
 
-###MobileFirst Foundation Command-line Interface
+### MobileFirst Foundation Command-line Interface
 
 You can use the MobileFirst CLI to develop and manage applications, in addition to using the MobileFirst Operations Console. The CLI command are prefixed with mfpdev and support the following types of tasks:
 
@@ -110,13 +110,13 @@ You can use the MobileFirst CLI to develop and manage applications, in addition 
 - Creating, building, and deploying adapters
 - Previewing and updating Cordova apps
 
-###MobileFirst Foundation client SDKs and adapter tooling
+### MobileFirst Foundation client SDKs and adapter tooling
 
 MobileFirst Foundation provides client SDKs for Cordova applications as well as for Native platforms (iOS, Android and Windows 8.1 Universal & Windows 10 UWP). Adapter tooling for adapters and security checks development is available as well.
 
     
 
-#Introduction - Review Ionic Application & Customization
+# Introduction - Review Ionic Application & Customization
 
 
 This short lab introduces the Ionic application artifacts and code. 
@@ -435,7 +435,7 @@ In a few moments, the application will start up in an android emulator window.
 
 The MobileFirst platform provides a web based console to easily view and manage application instances, platforms and versions.  Managing an application requires an application registration. Registering an application will also enable secure connectivity to the MobileFirst server and will enable the use of the adapter framework and analytics capabilities of the MobileFirst PlatForm server.
 
-##Steps
+## Steps
 
 1. Open the **IBMEmployeeApp** project using a preferred IDE. Code snippets are available from the `snippets/snippets.txt` file.
 
@@ -538,7 +538,7 @@ cordova emulate android
 	 
 	
   
-##Summary
+## Summary
 In this lab, you added javascript code to connect to the MobileFirst server when the application start, and used the built-in management features of the platform.
 
 If you were unable to complete this lab, you can catch up by running this command:
@@ -841,14 +841,16 @@ With the MFP adapter in place on the server side, you will now add code to the c
 
 >Note:  For this lab there are snippets files included in the **/snippets** folder of your workspace which can be used to quickly copy/paste the large source code changes in the lab steps below.
 
-##Steps
+## Steps
 
-###1. Modify app.js to invoke the adapter procedure
+### Modify app.js to invoke the adapter procedure
 
 The EmployeeService service in app.js returns the list of employees to the controller.  We will replace the Angular `$http` service logic with MobileFirst WLResourceRequest API.  WLResourceRequest is a REST client api provided in the MobileFirst client SDKs (hybrid and native) that integrates with MobileFirst security and analytics.
 
 1. Open the **services.js** file in **IBMEmployeeApp/www/js**.  
+
 2. Find the **EmployeeService** method.  You will replace the method implementation to use MFP Client API instead of the Angular $http services.
+
 3. Replace the implementation of the **EmployeeAdapter** method with the code, below (*use the corresponding **lab06** snippet file in **/snippets** to copy/paste*):
 
    ``` javascript
@@ -895,7 +897,7 @@ The EmployeeService service in app.js returns the list of employees to the contr
 
 4. **Save** your updates!
 
-### 2. Test the changes
+### Test the changes
 
 1. Return to the command line and ensure you are in the `IBMEmployeeApp` folder 
 
@@ -920,7 +922,7 @@ The EmployeeService service in app.js returns the list of employees to the contr
 
 4. Close the **emulator**
 
-###3. Modify the EmployeeDetailsService service to invoke the adapter procedure
+### Modify the EmployeeDetailsService service to invoke the adapter procedure
 
 EmployeeDetailsService returns details for the specified employee id.  This set of steps will replace the Angular `$http` processing with WLResourceRequest.
 
@@ -959,7 +961,7 @@ EmployeeDetailsService returns details for the specified employee id.  This set 
 3. **Save** your updates!
     
     
-###4. Modify the employeeDetailCtrl controller to match the EmployeDetailsService
+### Modify the employeeDetailCtrl controller to match the EmployeDetailsService
 
 We no longer need the 'for' loop to parse the complete set of detail data, as our adapter provides a single set of employee detail data for the requested employee id.  We can simplify the client controller to take advantage of having moved that "business logic" to the server.  
 
@@ -997,7 +999,7 @@ This is a very simple example of offloading logic to the adapter tier, but you c
     
 2.  **Save** your updates!  
 
-###5. Verify your changes
+### Verify your changes
 
 1. Run the application and view the results
 
@@ -1147,7 +1149,7 @@ The MobileFirst client will automatically forward collected log messages when th
 
 <img src="images/Lab8-wlInit-after.png" width="500"/>
 
-#### Save your changes!  
+### Save your changes!  
 
 In the next lab, we will run the app to generate the data, then use the Analytics console to create a custom chart showing the distribution of views being loaded.
 
@@ -1224,6 +1226,7 @@ Now you have seen how to easily instrument your application with simple logging 
 
 - - -
 # Lab 4 - Secure your application
+
 ## How to secure your application - Server side
 
 The MobileFirst Platform Foundation authentication framework uses the **OAuth 2.0** protocol. The OAuth 2 protocol is based on the acquisition of an access token that encapsulates the granted permissions to the client.
@@ -1248,6 +1251,7 @@ In this labe we going to use a security check asking for a username and password
 
 
 ## Steps:
+
 ### Create new adapter
 
 1. In the console nevigate to **AdapterServices** folder 
@@ -1472,6 +1476,7 @@ We going to implement a challenge handler, The challenge handler will demonstrat
 >Note:  For this lab there are snippets files included in the **/snippets** folder of your workspace which can be used to quickly copy/paste the large source code changes in the lab steps below.
 
 ## Steps:
+
 ### Update the wlClientInit
 
 1. Open the **app.js** file and change the **wlClientInit()** method, remove the snippets file and copy the WLAuthorizationManager.obtainAccessToken() block
