@@ -46,9 +46,6 @@ android update sdk -u -a -t "tools","platform-tools","build-tools-23.0.3","andro
 ```
 
 
-+ (Optional) Install [API Connect Developer Toolkit](https://www.npmjs.com/package/apiconnect)
-
-
 ### Source code for labs
 
 In order to get the latest code for the ionic application, go to Home Directory and run the following git command:
@@ -127,7 +124,7 @@ If you haven't already done so, run the following commands below to start from a
 
 1.  Start a command line terminal (i.e. `cmd` on Windows or `terminal` on OS X and Linux).
 
-1.  Change context to the IBMEmployeeApp directory:
+1.  Enter in the directory **IBMEmployeeApp** directory (Previously created by git clone command):
 
     ```
 cd IBMEmployeeApp
@@ -357,7 +354,6 @@ The Mobile Browser Simulator requires a MobileFirst development server to operat
   
   > **Tip:** Code snippets for this lab are available in the `snippets/snippets.txt` file.
 
-
 1. Add code for MobielFirst PlatForm init. 
 
 Within **`app.js`** scroll to the very bottom of the file and add the following code just after the *"// Add MobileFirst configuration stuff."* comment (locate snippet for copy/paste in the **/snippets** folder):
@@ -390,44 +386,44 @@ Within **`app.js`** scroll to the very bottom of the file and add the following 
 
   <img src="images/Lab3-mfp-code.png" width=600/>
 
-1. **Save** the app.js file 
+**Save** the app.js file 
 
-	### Preview the application
+###Preview the application
 	
 	
-	There are two options available to preview the application :
+There are two options available to preview the application :
 	
-	- Use the **cordova emulate** command 
-	  - The emulate command launches an android virtual device or Xcode iOS simulator 
-	        
-	- Use the **mfpdev app preview** command.  
-	  - The preview command provides options of: 
-	       - Simple browser rendering or 
-	       - Mobile Browser Simulator rendering
-	
-	The **mfpdev app preview** command provides easy preview, testing, and debugging of applications using the embedded browser debugger. The Mobile Browser Simulator feature also supports many Cordova device emulation controls for items such as GPS and accelerometer.  However, this requires that the MobileFirst server is running, make sure you start the MFP server using the ./run.sh command
-	
-	We going to preview the application using the **mfpdev app preview** first.
+- Use the **cordova emulate** command : The emulate command launches an android virtual device or Xcode iOS simulator 
 
+- Use the **mfpdev app preview** command : The preview command provides options of: Simple browser rendering or Mobile Browser Simulator rendering
+	
+The **mfpdev app preview** command provides easy preview, testing, and debugging of applications using the embedded browser debugger. 
+
+The Mobile Browser Simulator feature also supports many Cordova device emulation controls for items such as GPS and accelerometer.  
+
+However, this requires that the MobileFirst server is running, make sure you start the MFP server using the ./run.sh command
+	
+We going to preview the application using the **mfpdev app preview** first.
 
 1. **Run** the application in the browser we can run the application using the *lighting* button within Brackets or use the following command and select the first option **browser: Simple browser rendering** 
 
-	```
+```
 mfpdev app preview
 ```
 
-1. Use the `cordova emulate` command which will allow you to choose between the platform you choose to add: android or iOS.    
+1.	Use the `cordova emulate` command which will allow you to choose between the platform you choose to add: android or iOS.    
 
-        cordova emulate android
+```
+cordova emulate android
+```
 
 If you added more than one device platform to Cordova, then you can select a specific device. Otherwise the default device emuluator should start.
   
+In a few moments, the application will start up in an android emulator window.
 
-8.  In a few moments, the application will start up in an android emulator window.
+<img src="images/Lab3-splash.png" height="450" border="1"/>  <img src="images/Lab3-login.png" height="450" border="1"/>
 
-    <img src="images/Lab3-splash.png" height="450" border="1"/>  <img src="images/Lab3-login.png" height="450" border="1"/>
-
-3. Close the Emulator when finished.
+1.	Close the Emulator when finished
 
 
 ## Register and Manage Application
@@ -1485,7 +1481,7 @@ We going to implement a challenge handler, The challenge handler will demonstrat
 
 	>Note:  We going to obtain a access token when we inside the new implementation of the login method in the next steps.
 
-	### Create new challenge handler
+### Create new challenge handler
 
 2. Open the **controllers.js**  and change the look for the **ibmApp.controller('splashCtrl'...** controller and add the location service $location to the method signature 
 
