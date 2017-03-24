@@ -225,52 +225,53 @@ These are the standard steps required to add plugins to an application. Adding t
 
 2. Use the MobileFirst CLI to preview the application to ensure the plugin was successfully added. 
 
-##Steps
+## Steps
 
 1. Change context into the MobileFirst project.
-
-        cd IBMEmployeeApp        
+ 
+ ```
+    cd IBMEmployeeApp        
+ ```
 
 2. **Add** the Android platform, run the following command 'cordova platform add android'
 
-	```
-	    cordova platform add android
-```
+ ```
+	cordova platform add android
+ ```
 
 3. To add mfp sdk,  **Run** the cordova plugin add cordova-plugin-mfp
 
-	```
-        cordova plugin add cordova-plugin-mfp
- 	```
+ ```
+    cordova plugin add cordova-plugin-mfp
+ ```
 
-	>Note:  To be able to easily debug your application and view your application console log, run the following command to add the cordova console plugin 
-	
+>Note:  To be able to easily debug your application and view your application console log, run the following command to add the cordova console plugin 
 	```
 		cordova plugin add cordova-plugin-console
 	```
 	
 4. To prepare the next Lab, **Start** the MobileFirst server, navigate to your MobileFirst Server installation folder and run the following command
-	> **Note:** When you install MobileFirst Developer Toolkit you are able to have a MobileFirst Server instance localy.
+
+> **Note:** When you install MobileFirst Developer Toolkit you are able to have a MobileFirst Server instance localy.
 	
-	> **Note:** Running the add plugin command above will add all the required MFP plugin files from npm. This requires a network connection. For more information on the MFP Cordova Plugin, visit: [https://www.npmjs.com/package/cordova-plugin-mfp](https://www.npmjs.com/package/cordova-plugin-mfp)
+> **Note:** Running the add plugin command above will add all the required MFP plugin files from npm. This requires a network connection. For more information on the MFP Cordova Plugin, visit: [https://www.npmjs.com/package/cordova-plugin-mfp](https://www.npmjs.com/package/cordova-plugin-mfp)
 
 4. **Start** the local MobileFirst Server, navigate to the mobile first server installation folder and run the following commands:
 
-	- Open a new terminal session
+ - Open a new terminal session
 
+ ```
+ cd $HOME\MobileFirst-8.0.0.0
 
-	```
-	cd $HOME\MobileFirst-8.0.0.0
+ run -bg
 
-	run -bg
-```
-	```
-Running MobileFirst server in the background.
-Starting server mfp.
-Server mfp started.
-	```	
+ ...
+
+ Running MobileFirst server in the background.
+ Starting server mfp.
+ Server mfp started.
+ ```	
 		
- 
 5. Go back in the IBMEmployeeApp directory and **Run** the ` mfpdev app preview ` command
 
 	```
@@ -281,29 +282,27 @@ Server mfp started.
 
 6.  The preview will prompt for using either the simple browser or the mobile browser simulator. Select the simple browser. This will launch the  application using the default browser.
 
-	```
-Verifying server configuration...
-? Select how to preview your app: (Use arrow keys)
-❯ browser: Simple browser rendering 
-  mbs: Mobile Browser Simulator 
-```
+ ```
+ Verifying server configuration...
+ ? Select how to preview your app: (Use arrow keys)
+ ❯ browser: Simple browser rendering 
+   mbs: Mobile Browser Simulator 
+ ```
 
-  <img src="images/Lab2-browser.png" width="250"/>
+ <img src="images/Lab2-browser.png" width="250"/>
 
 > **Tip:** To change the default browser use the `mfpdev config` command.
  
-
-##Summary
+## Summary
 This lab enabled the MobileFirst Platform functionality for an existing Ionic/Cordova application by simply issuing the Cordova plugin add command. 
 
-If you were unable to complete this lab, you can catch up by running this command: ** 
-**You will still need to add the Android platform and the mfp cordova plugin manually since the plugin folder is not committed to the git repo**
+If you were unable to complete this lab, you can catch up by running this command:
 
-```
-git checkout -f step-2
-```
+ ```
+ git checkout -f step-2
+ ```
 
-- - -
+
 ## Initialize MobileFirst SDK and Manage your application 
 
 Previous labs introduced the IBM Employee App and demonstrated how to add device platforms and the MobileFirst 8.0 SDK for Hybrid application. 
@@ -320,17 +319,17 @@ The Mobile Browser Simulator requires a MobileFirst development server to operat
 
 > **Note:**  For this lab there are snippets files included in the **/snippets** folder of your root workspace which can be used to quickly copy/paste the large source code blocks below.
 
-##Steps
+## Steps
 
-1.  Open the **IBMEmployeeApp** project using your editor. 
+1. Open the **IBMEmployeeApp** project using your editor. 
 
-  > **Note:**  You may use any IDE you like to perform the labs.  The examples shown use the Brackets IDE.
+> **Note:**  You may use any IDE you like to perform the labs.  The examples shown use the Brackets IDE.
   
-1. Open the **`app.js`** file in the folder **`IBMEmployeeApp/www/js`** and add the following code immediately after the declaration of ibmApp and just after the **`//Add support for Cordova`** and before the comment **`//application config`**:
+2. Open the **`app.js`** file in the folder **`IBMEmployeeApp/www/js`** and add the following code immediately after the declaration of ibmApp and just after the **`//Add support for Cordova`** and before the comment **`//application config`**:
 
-  <img src="images/Lab3-start-code.png" width=600/>
+<img src="images/Lab3-start-code.png" width=600/>
   
-	```javascript
+```javascript
      //Adding support for cordova.
          ibmApp.run(function($ionicPlatform) {
                console.log('>> ibmApp.run ...');
@@ -348,18 +347,18 @@ The Mobile Browser Simulator requires a MobileFirst development server to operat
                  }
                });
              });
-    ```
- 
-  <img src="images/Lab3-app-run.png" width=600/>
+```
+
+<img src="images/Lab3-app-run.png" width=600/>
   
-  > **Tip:** Code snippets for this lab are available in the `snippets/snippets.txt` file.
+> **Tip:** Code snippets for this lab are available in the `snippets/snippets.txt` file.
 
-1. Add code for MobielFirst PlatForm init. 
+3. Add code for MobielFirst PlatForm init. 
 
-Within **`app.js`** scroll to the very bottom of the file and add the following code just after the *"// Add MobileFirst configuration stuff."* comment (locate snippet for copy/paste in the **/snippets** folder):
+ Within **`app.js`** scroll to the very bottom of the file and add the following code just after the *"// Add MobileFirst configuration stuff."* comment (locate snippet for copy/paste in the **/snippets** folder):
 
 
-   ```javascript
+ ```javascript
    // Add MobileFirst configuration stuff.
 	 var Messages = {
 		   // Add here your messages for the default language.
@@ -380,16 +379,14 @@ Within **`app.js`** scroll to the very bottom of the file and add the following 
 		       console.log(fail);
 		   })
 	}
-	
-   
-   ```
+	   
+ ```
 
-  <img src="images/Lab3-mfp-code.png" width=600/>
+ <img src="images/Lab3-mfp-code.png" width=600/>
 
-**Save** the app.js file 
+ **Save** the app.js file 
 
-###Preview the application
-	
+### Preview the application
 	
 There are two options available to preview the application :
 	
@@ -405,29 +402,27 @@ However, this requires that the MobileFirst server is running, make sure you sta
 	
 We going to preview the application using the **mfpdev app preview** first.
 
-1. **Run** the application in the browser we can run the application using the *lighting* button within Brackets or use the following command and select the first option **browser: Simple browser rendering** 
+4. **Run** the application in the browser we can run the application using the *lighting* button within Brackets or use the following command and select the first option **browser: Simple browser rendering** 
 
-```
-mfpdev app preview
-```
+ ```
+ mfpdev app preview
+ ```
 
-1.	Use the `cordova emulate` command which will allow you to choose between the platform you choose to add: android or iOS.    
+5.	Use the `cordova emulate` command which will allow you to choose between the platform you choose to add: android or iOS.    
 
-```
-cordova emulate android
-```
+ ```
+ cordova emulate android
+ ```
 
-If you added more than one device platform to Cordova, then you can select a specific device. Otherwise the default device emuluator should start.
+ If you added more than one device platform to Cordova, then you can select a specific device. Otherwise the default device emuluator should start.
   
-In a few moments, the application will start up in an android emulator window.
+ In a few moments, the application will start up in an android emulator window.
 
-<img src="images/Lab3-splash.png" height="450" border="1"/>  <img src="images/Lab3-login.png" height="450" border="1"/>
+ <img src="images/Lab3-splash.png" height="450" border="1"/>  <img src="images/Lab3-login.png" height="450" border="1"/>
 
-1.	Close the Emulator when finished
-
+6.	Close the Emulator when finished
 
 ## Register and Manage Application
-
 
 The MobileFirst platform provides a web based console to easily view and manage application instances, platforms and versions.  Managing an application requires an application registration. Registering an application will also enable secure connectivity to the MobileFirst server and will enable the use of the adapter framework and analytics capabilities of the MobileFirst PlatForm server.
 
@@ -435,12 +430,11 @@ The MobileFirst platform provides a web based console to easily view and manage 
 
 1. Open the **IBMEmployeeApp** project using a preferred IDE. Code snippets are available from the `snippets/snippets.txt` file.
 
-1. Open the **`app.js`** file in the folder **`IBMEmployeeApp/www/js`** locate the **wlCommonInit()** function and add the following code immediately after the last line of the code inside
+2. Open the **`app.js`** file in the folder **`IBMEmployeeApp/www/js`** locate the **wlCommonInit()** function and add the following code immediately after the last line of the code inside
 
-	<img src="images/Lab4-wlcommoninit.png" width=500/>
+ <img src="images/Lab4-wlcommoninit.png" width=500/>
 
-
-   ```javascript
+ ```javascript
 	//Calling to the MobileFirst Server    
 	WLAuthorizationManager.obtainAccessToken().then(
 	        function (accessToken) {
@@ -452,38 +446,37 @@ The MobileFirst platform provides a web based console to easily view and manage 
 	);
    ```
   
-  Your code should look like this:
+Your code should look like this:
   
-   <img src="images/Lab4-obtainAccessToken.png" width=500/>
+<img src="images/Lab4-obtainAccessToken.png" width=500/>
     
 >**Note:**  That the **`WLAuthorizationManager.obtainAccessToken()`** method the obtains an access token for the specified resource scope from the MobileFirst authorization server. The **WLAuthorizationManager** class is instantiated as a singleton and can be used anywhere in the application to obtain the client ID and authorization header. It is also called internally to handle MobileFirst OAuth-based security model protocol.
       
 > **Important:**  That **WLAuthorizationManager.obtainAccessToken()** method replaces the deprecated **WL.Client.connect()** method that has been used in earlier version of MFP to establishes a connection to the MobileFirst       
   
-3. Next register the application with the MobileFirst Server, **Run** the following command 
+3. Next register the application with the MobileFirst Server, **Run** the following command :
 
-	```
-mfpdev app register
-cordova prepare
-   ```
+ ```
+ mfpdev app register
 
+ cordova prepare
+ ```
 
-        
-4. The Operations Console is a browser-based interface through which you can manage artifacts deployed to your server.  View the **Operations Console** by running
+4. The Operations Console is a browser-based interface through which you can manage artifacts deployed to your server.  View the **Operations Console** by running :
 
-	```
-mfpdev server console
-   ```
+ ```
+ mfpdev server console
+ ```
 
-	The MobileFirst Operations Console will start in your default browser, you can see the application 'Employee' under the "Application" list on the  dashboard left side.
+The MobileFirst Operations Console will start in your default browser, you can see the application 'Employee' under the "Application" list on the  dashboard left side.
 
-  <img src="images/Lab4-mfp-oc.png" width="650"/>
+<img src="images/Lab4-mfp-oc.png" width="650"/>
 
 5. Use the cordova emulate command to preview the application on the emulator.
 
-	```
-cordova emulate android
-```
+ ```
+ cordova emulate android
+ ```
 
 6. Check the console logs. There is different tools to show logs of emulated or physical device. For this lab, we are going to use Eclipse logcal plugin included in Eclipse.
 
@@ -491,26 +484,24 @@ cordova emulate android
 	
 	![log file](images/Lab4-logs2.png)
 	
-	  Then on the top right corner select the filter **com.ionicframework.** you should be able to see the connection success message
+	Then on the top right corner select the filter **com.ionicframework.** you should be able to see the connection success message
 	
 	![log file](images/Lab4-logs3.png)
 
+  	Notice the application has successfully connected to the MFP server.
   
-	Notice the application has successfully connected to the MFP server.
-  
+7. Close eclipse and go back to the web console, lets take a look at the built-in management capabilities of the platform, you can also enter the following url in your browser  **http://localhost:9080/mfpconsole/index.html#/dashboard**
 
-8. Close eclipse and go back to the web console, lets take a look at the built-in management capabilities of the platform, you can also enter the following url in your browser  **http://localhost:9080/mfpconsole/index.html#/dashboard**
+8. **Press** on the "Employee" application under the "Application" menu on the left side, you will see the Employee Management feature. (Select Android environment)
 
-9. **Press** on the "Employee" application under the "Application" menu on the left side, you will see the Employee Management feature. (Select Android environment)
-
-  ![cli mfp console](images/Lab4-manage.png)
+	![cli mfp console](images/Lab4-manage.png)
   
 
-10. **Select** "Access Disable" option
+9. **Select** "Access Disable" option
 
-11. In the "URL of latest version" input filed simply enter "http://www.cnn.com"
+10. In the "URL of latest version" input filed simply enter "http://www.cnn.com"
 
-12. In the "Default notification message*" enter "Application disabled, please download latest version"
+11. In the "Default notification message*" enter "Application disabled, please download latest version"
 	  
 	![cli mfp console](images/Lab4-access-disable.png)	
 
@@ -518,20 +509,17 @@ cordova emulate android
 
 	![cli mfp console](images/Lab4-access-saved.png)
 
-
-14. **Run** the application again using the cordova emulate command
+14. **Run** the application again using the cordova emulate command :
 	
 	```
-cordova emulate android
-```
+	cordova emulate android
+	```
 
 	**Notice** the "Access disabled" notification when the application starts.
 
-	  <img src="images/Lab4-disabled-msg.png" width=280/>
+	<img src="images/Lab4-disabled-msg.png" width=280/>
 
-15. **Press** the "Upgrade" button, you will see the browser on your phone open the cnn.com website.
-		
-	 
+15. **Press** the "Upgrade" button, you will see the browser on your phone open the cnn.com website. 
 	
   
 ## Summary
@@ -564,71 +552,72 @@ We are provided two REST end points **employees** and **details**.  The **employ
 Using imagination, the **REST Api** could be an REST APi provided by your organization which allow you to access your system of records.  
 The adapter framework allows you to easily adapt to changes in backend data formats or even completely replace with a different data source, without affecting the client app running on (dozens, hundreds, thousands or millions of) mobile devices.   Changes in your back-end can be addressed in the adapter tier without forcing you to rebuild and redistribute the client app.
 
-
 >Note:  For this lab there are snippets files included in the **/snippets** folder of your workspace which can be used to quickly copy/paste the large source code changes in the lab steps below.
 
 >Note:  Please make sure you have **Apache Maven** installed, and you add it to your path, you can confirm by running **mvn -v** in the terminal 
 
-   <img src="images/Lab5-mvn.png" width="600"/>
+<img src="images/Lab5-mvn.png" width="600"/>
 
 
-##Steps
+## Steps
+
 ### Create the adapter
 
 >Note:  In previous versions of MFP, you had to create BackEnd project first, before you could create an adapter, Starting v8.0 you don't need to create a back-end project in order to create an adapter.
 
 1. Create new folder called AdapterServices in parallel to your IBMEmployeeApp folder
 
-        cd ..
-        mkdir AdapterServices
-
+	```
+    cd ..
+    mkdir AdapterServices
+	```
 2. Change context to AdapterServices
+	
+	```
+    cd AdapterServices
+    ``` 
 
-        cd AdapterServices
-        
+2. Create** a Java-based adapter to your project
 
-2. **Create** a Java-based adapter to your project
+	```
+    mfpdev adapter create
+	```
 
-        mfpdev adapter create
-
-   1. When prompted, name your adapter **`EmployeeAdapter`**
+3. When prompted, name your adapter **`EmployeeAdapter`**
    
-   2. For adapter type select : **`Java`**
+4. For adapter type select : **`Java`**
    
-        <img src="images/Lab5-adpt-create.png" width="600"/>
+<img src="images/Lab5-adpt-create.png" width="600"/>
    
    
-   3. For Java package enter : **`com.ibm`** and press **`Enter`**.  You should get the following success message:
+6. For Java package enter : **`com.ibm`** and press **`Enter`**.  You should get the following success message:
            
+7. For group ID enter : **`com.ibm`** and press **`Enter`**.  You should get the following success message:
 
-   4. For group ID enter : **`com.ibm`** and press **`Enter`**.  You should get the following success message:
+<img src="images/Lab5-adpt-success.png" width="600"/>
 
-		<img src="images/Lab5-adpt-success.png" width="600"/>
+8. Looking at your file directory you should see the following structure/files
 
-	3. Looking at your file directory you should see the following structure/files
-
-	   <img src="images/Lab5-adpt-folder.png" width="350"/>
-
+<img src="images/Lab5-adpt-folder.png" width="350"/>
    
 ### Implement the adapter procedures
+
 The Java adapter implements the JAX-RS standard, allowing your adapter to also serve as a REST-ful endpoint.  The procedures in the adapter are linked to HTTP verbs such as GET and POST.  The adapter is created with sample procedures, which you can remove.  In the next several steps, you will add code to implement two new methods:
 
 - **list()**
 - **details()**
-      
-      
+         
 1. Using bracket IDE to update this adapter
 
-```
-Start > All programs > Brackets
-```
+	```
+	Start > All programs > Brackets	
+	```
+	Puis
 
-Puis
-
-```
-File > Open Folder
-C:\Labs\AdapterService\EmployeeAdapter
-```
+	```
+	File > Open Folder
+	Labs\AdapterService\EmployeeAdapter
+ 	```
 
 2. open the **EmployeeAdapterResource.java** file in the **EmployeeAdapter/src/main/java/com/ibm** directory.
 
@@ -649,11 +638,11 @@ C:\Labs\AdapterService\EmployeeAdapter
 5. Add the **employees** method just after the previous add the final curly brace after ``"ConfigurationAPI configApi;"```.  This method implements the REST operation "/list", returning a list of all employees by calling **getHttp()** method with our back-end REST end point, we going to implement the **getHttp()** in the next few steps.
    
    ```java
-/*
+	/*
 	 * Path for method:
 	 * "<server address>/mfp/api/adapters/EmployeeAdapter/services/list"
 	 */
-@ApiOperation(value = "Get employee list", notes = "Return employee list")
+	@ApiOperation(value = "Get employee list", notes = "Return employee list")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "A constant string is returned") })
 	@GET
 	@Path("/list")
@@ -675,12 +664,11 @@ C:\Labs\AdapterService\EmployeeAdapter
 		return rsp;
 	}   
    ```
-   
     
 6. Add the **getDetails** method just after the previous add.  This method implements the REST operation "/details/{id}", returning the details of a given employee by calling into **getHttp()** method with the supplied employee id.
   
    ```java
-/*
+	/*
 	 * Path for method:
 	 * "<server address>/mfp/api/adapters/EmployeeAdapter/services/details/{id}"
 	 */
@@ -711,10 +699,11 @@ C:\Labs\AdapterService\EmployeeAdapter
 
 	}
    ```
+
 6. Add the **getHttp()** method just before the previous adc.  This method implements the REST http calls to our back-end and will be used internally by operation "/details/{id}" and "/list".
   
    ```java
-private final String USER_AGENT = "Mozilla/5.0";	
+	private final String USER_AGENT = "Mozilla/5.0";	
 	public String getHttp(String url) throws ClientProtocolException, IOException{
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpGet request = new HttpGet(url);
@@ -736,7 +725,6 @@ private final String USER_AGENT = "Mozilla/5.0";
 	}	
    ```
 
-
 5. Add the import statement for our backend jar file after the other imports
 
    ```java
@@ -751,7 +739,6 @@ private final String USER_AGENT = "Mozilla/5.0";
 	import java.io.InputStreamReader;
    ```
  
-  
 8. **Save** your changes.
  
   Your adapter code should be like this now:
@@ -762,74 +749,79 @@ private final String USER_AGENT = "Mozilla/5.0";
   
 
 
-  
-  
 ### Test your adapter
+
 The MFP CLI provides the ability to test adapters using command line commands.  This is not only helpful for manually testing your adapters during development, but it can be leveraged by automated test scripts as part of your DevOps process automation strategy.
 
 1. To test your adapter using the MFP CLI, you must first **build** it and then deploy it to the MFP Development server. In the directory of your adapter 
 
-
 	```
-		cd C:\Labs\AdapterService\EmployeeAdapter
+	cd C:\Labs\AdapterService\EmployeeAdapter
 		
-		mfpdev adapter build
-   ```     
+	mfpdev adapter build
+	```     
      <img src="images/Lab5-adpt-build.png" width="600"/>
         
-   ```  
-        mfpdev adapter deploy        
-   ```
+	```  
+     mfpdev adapter deploy        
+	```
    
    <img src="images/Lab5-adpt-deploy.png" width="600"/>
   
-   > **Note:** If you encounter compilation errors, you will need to correct them before moving forward.  You can get compilation error listings by using the -d switch on the push command:
-   ```
-        mfpdev adapter deploy -d
-        ```
-  > Evaluate the results, edit your code and continue to push until your errors have been resolved.
-   
+>**Note:** If you encounter compilation errors, you will need to correct them before moving forward.  You can get compilation error listings by using the -d switch on the push command: **mfpdev adapter deploy -d**
+	
+> Evaluate the results, edit your code and continue to push until your errors have been resolved.
+
+
 2. Once your adapter builds correctly, open the **Operational Console**.  You should see that your EmployeeServices adapter has been deployed
-   ```
-        mfpdev server console 
-   ```
+
+	```
+    mfpdev server console 
+	```
    
-   <img src="images/Lab5-adpt-console.png" width="700"/>
+<img src="images/Lab5-adpt-console.png" width="700"/>
 
 3. Close the **browser**.
+
 4. Test the **list** procedure using the CLI
+   
    ```
-        mfpdev adapter call 
+   mfpdev adapter call 
    ```
-        
+     
    Use your keyboard arrow keys to highlight the adapter **EmployeeAdapter** and then press **Enter**.  Then use your keyboard arrow keys to highlight the endpoint **get:/EmployeeAdapter/services/list** and then press **Enter**.  The adapter response object will be printed in the console:
 
-   <img src="images/Lab5-test-adpt-cmd-2.png" width="600"/>
+<img src="images/Lab5-test-adpt-cmd-2.png" width="600"/>
 
 5. Test the **details** procedure using the CLI
 
-        mfpdev adapter call 
-        
-      Use your keyboard arrow keys to highlight the adapter **EmployeeAdapter** and then press **Enter**.  Then use your keyboard arrow keys to highlight the endpoint **get:/EmployeeAdapter/services/details/{id}** and then press **Enter**.  The adapter response object will be printed in the console:
+	```
+    mfpdev adapter call 
+	```     
+    
+	Use your keyboard arrow keys to highlight the adapter **EmployeeAdapter** and then press **Enter**.  Then use your keyboard arrow keys to highlight the endpoint **get:/EmployeeAdapter/services/details/{id}** and then press **Enter**.  The adapter response object will be printed in the console:
 
-   <img src="images/Lab5-test-adpt-cmd-1.png" width="600"/>
+    <img src="images/Lab5-test-adpt-cmd-1.png" width="600"/>
 
-   When prompted for the path parameters, enter **`/services/details/01800292`**, then press **`Enter`**.  This will retrieve the details record for employee Amy Jones.
+    When prompted for the path parameters, enter **`/services/details/01800292`**, then press **`Enter`**.  This will retrieve the details record for employee Amy Jones.
 
-   The adapter response object will be printed in the console:
-   <img src="images/Lab5-test-adpt-cmd-4.png" width="600"/>
+    The adapter response object will be printed in the console:
+    
+	<img src="images/Lab5-test-adpt-cmd-4.png" width="600"/>
   
 ## Summary
+
 In this step, you added a Java-based MobileFirst adapter to your project.  You then edited the code to implement two procedures that will return a list of employees and employee details via REST interface calls from your mobile client.  You then used the MFP CLI to invoke your adapter procedures manually to confirm they work as expected.
 
 >Note:  You can also test your adapters by using the built-in Swagger interface available through the console.
 
 <img src="images/Lab5-swagger.png" width="600"/>
 
-If you were unable to complete this lab, you can catch up by running this command:
+If you were unable to complete this lab, you can catch up by running this command :
+	```
+	git checkout -f step-5
+   	```  
 
-     git checkout -f step-5
-     
 - - -
 ##  MobileFirst Platform Adapter - Client side
 
@@ -885,11 +877,11 @@ The EmployeeService service in app.js returns the list of employees to the contr
   
   **Screenshot Before:**  
   
-  	<img src="images/Lab6-emp-service-before.png" width="600"/>
+  <img src="images/Lab6-emp-service-before.png" width="600"/>
 
   **Screenshot After:**
-   
-   <img src="images/Lab6-emp-service-after.png" width="600"/>
+
+  <img src="images/Lab6-emp-service-after.png" width="600"/>
 
 4. **Save** your updates!
 
@@ -899,21 +891,16 @@ The EmployeeService service in app.js returns the list of employees to the contr
 
 2. Run the application using
 
-  ```
-   mfpdev app preview
-  ```
+	```
+	mfpdev app preview
 
-
-        cordova prepare 
-        cordova emulate
-
-   > Note that trying to test the adapter on the MBS or on the Browser will not work, you will have to use the cordova emulate. 
-   MBS support will be added at MFP v8.0 GA
+    cordova prepare 
+	cordova emulate
+ 	```
 
 3. You should see that the Employee List is populated from the data provided by the MobileFirst Platform adapter.  But, if you tap on any employee you will see that the details are still the template values, not those provided by the adapter.  You will correct that next.
 
-
-	<img src="images/Lab6-emp-list.png" width="280" border="1px"/> <img src="images/Lab6-emp-details.png" width="280" border="1px"/>
+<img src="images/Lab6-emp-list.png" width="280" border="1px"/> <img src="images/Lab6-emp-details.png" width="280" border="1px"/>
 
 
 4. Close the **emulator**
@@ -921,6 +908,7 @@ The EmployeeService service in app.js returns the list of employees to the contr
 ### Modify the EmployeeDetailsService service to invoke the adapter procedure
 
 EmployeeDetailsService returns details for the specified employee id.  This set of steps will replace the Angular `$http` processing with WLResourceRequest.
+
 
 1. Locate the **EmployeeDetailsServices** method in **IBMEmployeeApp/www/js/services.js**.  You will also replace the current Angluar $http implementation of this service with calls to the MobileFirst Client API.  The service only needs to get the employee details as provided by the adapter.  There is no need to parse and massage the data returned from the server. The filtering (heavy lifting) was done on the adapter side.  When you have hundreds or thousands of employees this is huge time saving which done on the server side.
 
@@ -1004,7 +992,7 @@ This is a very simple example of offloading logic to the adapter tier, but you c
         
 2.  You should now see both the employee list and the employee details are coming from the data supplied by the adapter.
 
-	<img src="images/Lab6-emp-list.png" width="280" border="1px"/> <img src="images/Lab6-emp-details.png" width="280" border="1px"/>
+<img src="images/Lab6-emp-list.png" width="280" border="1px"/> <img src="images/Lab6-emp-details.png" width="280" border="1px"/>
 
 
 ## Summary
@@ -1068,7 +1056,6 @@ As we'll see in the next lab, the platform also provides a client-side api that 
 
 Go ahead and navigate the different tabs and pages to see the range and types of information collected and available for use in managing your applications, servers and environment.
 
-.
 
 - - -
 ## How to capture custom events
@@ -1145,7 +1132,7 @@ The MobileFirst client will automatically forward collected log messages when th
 
 <img src="images/Lab8-wlInit-after.png" width="500"/>
 
-### Save your changes!  
+Save your changes!  
 
 In the next lab, we will run the app to generate the data, then use the Analytics console to create a custom chart showing the distribution of views being loaded.
 
@@ -1325,10 +1312,12 @@ In this labe we going to use a security check asking for a username and password
 		}
 
 ### Validating the user credentials
+
 When the client sends the challenge's answer, the answer is passed to **validateCredentials** as a Map. This method should implement your logic and return true if the credentials are valid.
 
 In this example, credentials are considered "valid" when username and password are the same:
 
+```java
 		@Override
 		protected boolean validateCredentials(Map<String, Object> credentials) {
 		    if(credentials!=null && credentials.containsKey("username") && credentials.containsKey("password")){
@@ -1346,14 +1335,17 @@ In this example, credentials are considered "valid" when username and password a
 		    }
 		    return false;
 		}		
+```
 
 ### Creating the AuthenticatedUser object
+
 The **UserAuthenticationSecurityCheck** stores a representation of the current client (user, device, application) in persistent data, allowing you to retrieve the current user in various parts of your code, such as the challenge handlers or the adapters. Users are represented by an instance of the class AuthenticatedUser. Its constructor receives a id, displayName and securityCheckName.
 
 In this example, we are using the username for both the id and displayName.
 
 1. First, modify the validateCredentials method to save the username:
 
+```java
 		private String userId, displayName;
 		@Override
 		protected boolean validateCredentials(Map<String, Object> credentials) {
@@ -1375,12 +1367,16 @@ In this example, we are using the username for both the id and displayName.
 		return false;
 		}
 
+```
+
 2. Then, override the createUser method to return a new instance of AuthenticatedUser:
 
+```java
 		@Override
 		protected AuthenticatedUser createUser() {
 		    return new AuthenticatedUser(userId, displayName, this.getName());
 		}
+```
 
 You can use **this.getName()** to get the current security check name.
 
@@ -1390,16 +1386,20 @@ You can use **this.getName()** to get the current security check name.
 ### Configuring the SecurityCheck
 
 1. **Open** the **adapter.xml** under **UserLogin/src/main/adapter-resources/adapter.xml** 
+
 2. n the adapter.xml file, find the **<JAXRSApplicationClass>com.ibm.UserLoginApplication</JAXRSApplicationClass>** and delete it from the file
+
 3. In the adapter.xml file, add a <securityCheckDefinition> element:
 
-		<securityCheckDefinition name="UserLogin" class="com.ibm.UserLogin">
-		  <property name="maxAttempts" defaultValue="3" description="How many attempts are allowed"/>
-		  <property name="blockedStateExpirationSec" defaultValue="10" description="How long before the client can try again (seconds)"/>
-		  <property name="successStateExpirationSec" defaultValue="60" description="How long is a successful state valid for (seconds)"/>
-		  <property name="rememberMeDurationSec" defaultValue="120" description="How long is the user remembered when using RememberMe (seconds)"/>
-		</securityCheckDefinition>
+```
+<securityCheckDefinition name="UserLogin" class="com.ibm.UserLogin">
+<property name="maxAttempts" defaultValue="3" description="How many attempts are allowed"/>
+<property name="blockedStateExpirationSec" defaultValue="10" description="How long before the client can try again (seconds)"/>
+<property name="successStateExpirationSec" defaultValue="60" description="How long is a successful state valid for (seconds)"/>
+<property name="rememberMeDurationSec" defaultValue="120" description="How long is the user remembered when using RememberMe (seconds)"/>
+</securityCheckDefinition>
 
+```
  Your **adapter.xml** should look like this:
  
  **Before**
@@ -1416,6 +1416,7 @@ You can use **this.getName()** to get the current security check name.
 	<img src="images/Lab10-complete-code-2.png" width="700"/>
 
 5. **Save** your changes
+
 6. **Deploy** the new adapter to the console.
 	
 		mfpdev adapter deploy
