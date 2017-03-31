@@ -4,44 +4,124 @@
 
 In this lab, you’ll gain a high level understanding of the architecture, features, and development concepts related to the IBM API Connect (APIC) solution. Throughout the lab, you’ll get a chance to use the APIC command line interface for creating LoopBack applications, the intuitive Web-based user interface, and explore the various aspects associated with solution’s configuration of RESTful based services as well as their operation.
 
+>**Note**:
+This lab is based on version 5.0.7 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
+
 
 # Objective
 
 In the following lab, you will learn:
 
-+ How to create a simple LoopBack application
-+ How to create a Representational State Transfer (REST) API definition
-+ How to test an API
-+ How to publish an API to Bluemix
-+ How to sucribe to an API previously published
-+ How to invoke an API from Mobile Application
++ Goals of API Connect, main use cases (Presentation)
++ Basics on the architecture of the API Connect and terminology useful with API Connect (Presentation)
++ Installation (Presentation)
++ How to create and test a REST API definition (Lab)
++ How to publish an API to Bluemix (Lab)
++ How to sucribe to an API previously published and test in the portal (Lab)
++ How to create a simple LoopBack application to implement Microservice architecture (Lab)
++ How to version an API and deploy another version of an API (Lab)
++ How to create and manage a SOAP API (Lab)
++ Basics about the command line apic to script recurring operations (Lab)
++ Transformation JSON to SOAP (Lab)
++ API security (pres)
 
 
 # Pre-Requisites
-
-+ Get a [Bluemix IBM id](https://bluemix.net)
-+ Install Node.js 4.4.x [Node.js](https://nodejs.org/download/release/v4.4.7/)
-+ Install (or Update) API Connect CLI [API Connect Developer Toolkit](https://www.npmjs.com/package/apiconnect)
++ Sign in to [Bluemix](https://bluemix.net) and set up your IBM ID
++ Install IBM Node SDK 6.x [Node.js](https://developer.ibm.com/node/sdk/v6/)
++ Install (or Update) API Connect Toolkit [API Connect Developer Toolkit](https://www.npmjs.com/package/apiconnect) by issuing the following command:
 
    ```
-   npm install apiconnect -g 
+   npm install -g apiconnect --no-optional --ignore-scripts
    ```
-You must have version 5.0.6 or above. check the version with the following command :
+You must have version 5.0.7 or above. check the version with the following command :
 
   ```
    $apic -v
-   API Connect: v5.0.6.0 (apiconnect: v2.5.8) 
+   API Connect: v5.0.7 (apiconnect: v2.5.22)
    ```
-
 
 >**Note**:
 To check all available versions of API Connect: ```npm view apiconnect version```
 To check the local version of API Connect: ```apic -v```
 
+# Goals of API Connect, main use cases
+This chapter does not intend to describe all the possible use cases of API Connect, but instead provide some simple and concrete common usages of API Connect.
 
+1. **Use case 1**: I have existing internal SOAP services and/or REST APIs. I want to expose and increase visibility internaly and externaly. I need to understand how my APIs/Services are used and apply quotas. I need to provide to secure the access.
+<br>Solution: Simple proxyfication, not complex policies, use OOTB portal, manager.
+2. **Use case 2**: All the above + my APIs/services do not have the right granularity or the right format to be used by my Apps.
+<br>Solution: Use map policies to adapt the interfaces, and/or use JSON <-> XML policies.
+3. **Use case 3**: I organise an hackathon or I'm in context of co-creation with extended eco-system and I need to rapidly create APIs from data sources or from models.
+<br>Solution: Create Loopback Applications and expose them as APIs.
+4. **Use case 4**: I need some kind of composition/aggration and expose an API.
+<br>Solution: Create a Loopback Application and add remote hook
 
+# Architecture and terminology
+## API Connect architecture onPremise
+The main components composing API Connect are:
++ The **gateway** (either DataPower, either a NodeJS implementation called micro gateway in this case). The requests from apps are going through the gateway, policies are enforced and analytic are gathered.
++ The **manager**  where the APIs are defined and governed. It also collects the analytics from the gateway. The manager can be used directly or more likely using the toolkit.
++ The **portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developpers), they create Apps and susbscribe to API within the portal. Based on Drupal, it is highly customizable.
++ The **collective member** or micro servics runtime. This is where the loopback applications are running. This component is originaly coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and aslo a good place to perform composition of APIs.
++ Associated to the collective member is the **collective controller** that monitors the collective member and can provide advanced feature such as auto-scaling.
++ The **toolkit**, running on the API developper, it offers the same web experience as the manager to manage APIs. But this is also the only place where you can define Loopback applications. It also contains CLI to operate directly on the manager wether it is an onPremise version or Bluemix version of API Connect.
 
-# Steps
+>Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
+![APIC Achitecture](./images/apic-archi-on-prem.png)
+
+## API Connect architecture in Bluemix
+Well, API Connect in Bluemix, is the same product as onPremise (or almost, notice the NodeJS runtime instead of collective member). This gives us a competitive advantage, because we have no issues at all to move from onPremise to Bluemix and vice-versa.
+
+>Notice the **secure gateway** component that allows to connect simply IBM Bluemix and the company IT.
+![APIC Achitecture in Bluemix](./images/apic-archi-bmx.png)
+
+## Terminology
++ An **API**: Can be SOAP or Representational State Transfer - REST API defined with an Open API definition (Swagger) as a YAML file. One API = one yaml file though WSDLs and Schema are separated in a zip file for a SOAP API.
++ A **plan**: this is where we specify the quotas and if an approval is needed to subscribe to a Product/API.
++ A **product**: this is an aggregation of APIs, and one or many plans associated to those APIs. This is what is published to a catalog.
++ A **catalog**: it's relates to a cluster of gateways and a portal. It sounds like an environment but it also contains a business dimension. For example, good names for a catalog are Sandbox, Dev, Production, CRM (for my CRM APIs exposed to a specific population), etc ...
++ An API Connect **cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and collective runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organisation and needs to separate the infrastructures.
++ **Assembly panel**: this is where we specify the policies to b executed in the gateway for each transactions.
+
+## Concepts map
+![APIC Concepts](./images/apic-ConceptsMap.png)
+
+Below the available policies in API Connect 5.0.6
+
+Category| Name |Description ||Category| Name |Description
+--------|------|------------||--------|------|------------
+Logic|Switch|switch||Transform|Set variable|set
+Logic|Operation Switch| on op||Transform|Validate|JSON schema
+Logic|If|if||Transform|Gateway script|any code
+Logic|Throw|exception handling||Transform|XML to JSON|transform
+Transform|Redac|obfuscate||Transform|JSON to XML|transform
+Transform|Map|mapping||Security|Validate JWT|JSON Web Token
+Transform|XSLT|any code||Security|Validate UNT|UserName Token
+Transform|Invoke|invoke||Security|Generate JWT|JSON Web Token
+Transform|Proxy|proxie||Security|Generate LTPA|LTPA (for WAS)
+Transform|Activity Log|audit||User Defined|Any|any logic coded in DP
+
+# Installation
+This chapter just illustrate one way to install the product in a very simple case. There are many more options to deploy install API Connect including full docker installation. The goal here is just to give a feeling on the installation process.
+* Install the gateway
+<br>Start the OVA in VMWare, install firmware update if needed to DataPower, adjust network settings.
+* Manager
+<br>Start the OVA in VMWare, adjust network settings, configure gateway access and configure portal.
+* Portal
+<br>Start the OVA in VMWare, adjust network settings and exchange keys so manager can interact with portal.
+* Toolkit
+<br>On Windows or Linux, install IBM NodeJS SDK and install api-connect toolkit using npm
+* Collective
+<br>Install controller (WAS liberty) + IHS + member (nodeJS) and configure IHS Plugin
+
+# Steps for the lab
+
+<To be updated from here: stop 31 st March, work in progress>
++ How to create and test a REST API definition (Lab)
++ How to publish an API to Bluemix (Lab)
++ How to sucribe to an API previously published and test in the portal (Lab)
+
 
 1. [Provision API Connect in Bluemix](#step-1---provision-api-connect-in-bluemix)
 2. [Create a Cloudant service](#step-2---create-a-Cloudant-service)
@@ -57,13 +137,13 @@ To check the local version of API Connect: ```apic -v```
 
 # Step 1 - Provision  API Connect in Bluemix
 
-From the Bluemix [Catalog] [bmx_catalog_uk_url], provision an instance of the service **API Connect**.
+From the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision (create) an instance of the service **API Connect**.
 
 # Step 2 - Create a Cloudant service
 
 In order to store our data used by our API, we will need a persistent storage. To do so, we will use a Cloudant NoSQL database, a JSON document oriented store, compatible with CouchDB.
 
-You can use a existing Cloudant service or create an instance of the service Cloudant DB. 
+You can use a existing Cloudant service or create an instance of the service Cloudant DB.
 
 1. Go to the Bluemix Catalog, create an instance of the service Cloudant NoSQL DB.
 
@@ -96,31 +176,34 @@ You can use a existing Cloudant service or create an instance of the service Clo
 
 # Step 3 - Create a LoopBack application
 
-API Connect comes with a developer toolkit. This toolkit provides a offline graphical user interace named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs, and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
+API Connect comes with a developer toolkit. This toolkit provides an offline graphical user interace named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs, and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
 
 1. Get help on the **apic** command set:
   ```
-  apic -h 
+  apic -h
   ```
-  
-
 
 The developer toolkit provides an integrated development environment for developing APIs and applications that use the LoopBack framework.
 
 To create a new LoopBack project, use the command apic loopback; then use the apic edit command to edit the project in the API Designer.
 
-1. Create an API Connect LoopBack application. 
+>**Note**: When working with the toolkit always be careful of where you are located on your file system. The working directory from where the apic command are started will be considered as the root of the loopback projects and products/APIs you are working at some point. Cautious must be taken on how you organise the directories. It also msut take in considerations that at some point you will want to source control some of the generated files (such as the yaml files for example) in a Source Control Management system such as github.
+
+
+1. Create an API Connect LoopBack application.
 
   ```
+  $ mkdir -p <your-favorite-working-dir>/apic/myfirstproject
+  $ cd <your-favorite-working-dir>/apic/myfirstproject
   $ apic loopback
   ```
 
  Next you will be asked to supply the name of the directory where the application will be created. Enter **demo**
-  
+
   ```
   What's the name of your application? demo
   ```
-  
+
 1. LoopBack will default the project directory name to the name of the application.
 
 1. Press the ***Enter*** or ***Return*** key to accept the default value of inventory.
@@ -148,7 +231,7 @@ To create a new LoopBack project, use the command apic loopback; then use the ap
 
 The datasource is what allows the API to communicate with the backend data repository. In this case we will be using Cloudant to store the data item information.
 
-There are two parts to this. First is the definition of how to connect to the backend system. The second is downloading the actual loopback connector for Cloudant. 
+There are two parts to this. First is the definition of how to connect to the backend system. The second is downloading the actual loopback connector for Cloudant.
 
 In your terminal ensure that you are in the **demo** directory.
 
@@ -161,24 +244,24 @@ In your terminal, type:
  ```
  apic create --type datasource
  ```
- 
+
  The terminal will bring up the configuration wizard for our new datasource for the item database. The configuration wizard will prompt you with a series of questions. Some questions require text input, others offer a selectable menu of pre-defined choices.
 
 Answer the questions with the following data:
 
-> **Note**: 
+> **Note**:
 > <mark>For **Connection String url** paste the previous value you copied about Cloudant credential in Step 1</mark>
 
-Option name         | Values          | 
---------------------|------------------|
-? Enter the data-source name :      | **db**         | 
-? Select the connector for db :     | **IBM Cloudant DB**         | 
-? Connection String url to override other settings       | **YOUR Connection URL https://username:password@host**         | 
-? database :      | **test** | 
-? username :      |          | 
-? password :      |          | 
-? modelIndex :    |          | 
-? Install loopback-connector-cloudant@^1.0.4 |  **Y**      | 
+Option name         | Values
+--------------------|------------------
+? Enter the data-source name :      | **db**
+? Select the connector for db :     | **IBM Cloudant DB**
+? Connection String url to override other settings       | **YOUR Connection URL https://username:password@host**
+? database :      | **test**
+? username :      |          
+? password :      |
+? modelIndex :    |
+? Install loopback-connector-cloudant@^1.0.4 |  **Y**
 
 Example :
 
@@ -205,7 +288,7 @@ By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloud
 
 >For more information on the LoopBack Connector for Cloudant, see: https://www.npmjs.com/package/loopback-connector-cloudant
 
- 
+
 >Note : You can create an api directly from a existing web service from the wsdl. Create a SOAP API definition from a WSDL definition file, or a .zip file that contains the WSDL definition files for a service with the following command: ```apic create --type api --wsdl filename```
 
 >Note: You can create an API or Product from an OpenAPI (Swagger 2.0) template file by using the '--template template-name' option.
@@ -216,11 +299,11 @@ By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloud
 1. Launch API Connect Designer
 
   ```apic edit```
-  
+
   If the designer started correctly, a webpage will automatically opens and the terminal will show a message similar to this one:
-  
+
   ```Express server listening on http://127.0.0.1:9000```
-  
+
 1. Click **Sign in with Bluemix**. If you're already sign in with Bluemix, you'll be automatically signed into the designer.
 
 1. The designer opens into the APIs section showing the API definition we created from the command line.
@@ -250,7 +333,7 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 | Required |  Property Name  | Is Array | Type  | ID | Index |Description |
 |:---------|:---------------:| --------:|------:|---:|------:|-----------:|
 | yes      | name            | no       | String| no |   no  | Name       |
-| yes      | age             | no       | number| no |   no  | age        |
+| yes      | age             | no       | number| no |   no  | Age        |
 
 
 1. Scroll to the top of the page and click the **Save button** to save the data model.
@@ -291,7 +374,7 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 1. Open the url below in a new tab of your browser:
 
   https://localhost:4002/api/Customers
-  
+
 1. Click on Advanced. Accept the exception.
 
 1. Go back to the Explore view in API Designer and click **Call operation** again. You should get a successful response code 200 OK.
@@ -352,7 +435,7 @@ At this time, your API is not avaible for consumer. First you need initialize th
 
   A pop up screen will let you know that the process to create your portal has started.
   ```Creating the developer portal for catalog 'Sandbox' may take a few minutes. You will receive an email when the portal is available.```
-  
+
 It might take some time for your developer portal to get created, but usually the process is pretty quick. Once the portal is done creating, you will receive an email.
 
 So now we are going to publish our API
@@ -361,7 +444,7 @@ So now we are going to publish our API
 
 ![APIC Publish](./images/apic-publish.gif)
 
-2. Your demo API is now visible in Developer Portal 
+2. Your demo API is now visible in Developer Portal
 
 
 
@@ -383,7 +466,7 @@ So now we are going to publish our API
 
 ## Register an Application as a developer
 
-Let's now subscribe to the API. You will log into the portal as a user in the application developer role, then register an application that will be used to consume APIs. 
+Let's now subscribe to the API. You will log into the portal as a user in the application developer role, then register an application that will be used to consume APIs.
 
 If you have not created a developer account, you will need to use the **Create an account** link to do so now.
 
@@ -396,16 +479,16 @@ If you have not created a developer account, you will need to use the **Create a
  1. Login into the developer portal as an application developer using your developer credentials.
 
  2. Click the Apps link, then click on the **Create new App** link.
- 
+
  3. Enter a title and description for the application and click the Submit button.
 
  >Title: Mobile App Consumer
- 
+
  >Description: Test Application for demo APIs
- 
+
  >OAuth Redirect URI: < leave blank >
 
-We need to capture the Client Secret and Client ID in a text editor for later use by our test application. 
+We need to capture the Client Secret and Client ID in a text editor for later use by our test application.
 
   1. Select the Show Client Secret checkbox next to Client Secret at the top of the page and the Show checkbox next to Client ID.
 
@@ -466,7 +549,7 @@ curl --request GET \
   --header 'x-ibm-client-secret: REPLACE_WITH_CLIENT_SECRET'
 ```
 
-3. Copy and try it into your terminal windows 
+3. Copy and try it into your terminal windows
 
 If all is OK, you should see a list of ***cutomers*** in JSON format with items ***name*** and ***age***.
 
@@ -483,7 +566,7 @@ If all is OK, you should see a list of ***cutomers*** in JSON format with items 
 ![Anaytic icon app](./images/apic-analyticicon.png)
 
 5. Now you can navigate to the Analytic dasbord to show analytic informations for your API
-6. You can show 
+6. You can show
 
 ![Anaytic icon app](./images/apic-analyticdashboard.gif)
 
@@ -505,7 +588,7 @@ If all is OK, you should see a list of ***cutomers*** in JSON format with items 
 
 # Step 10 - Invoke your API from Mobile
 
-In this lab, you will learn how to consume an API from a Mobile Application. 
+In this lab, you will learn how to consume an API from a Mobile Application.
 
 In this case, we will use a very simple sample of a Mobile Hybrid Application with the framework Ionic 1.7.
 
@@ -519,8 +602,8 @@ https://github.com/fdut/bluemix-labs/raw/master/Lab%20API%20-%20Manage%20your%20
  1. Unzip file and enter in the **mobileapp** folder
  2. Install cordova and ionic 1.7 framework
 
-   ``` 
-   npm install -g cordova@6.2 ionic@1.7.6 
+   ```
+   npm install -g cordova@6.2 ionic@1.7.6
    ```
 
  1. Test installation
@@ -528,12 +611,12 @@ https://github.com/fdut/bluemix-labs/raw/master/Lab%20API%20-%20Manage%20your%20
   ```
   cordova -v
   6.2
- 
+
   ionic -v
   1.7.6
   ```
- 
- 1. Update your application with the url and the credential of your API (Remember the subscription step). 
+
+ 1. Update your application with the url and the credential of your API (Remember the subscription step).
 
  Update (with your preferred editor) the file **mobileapp/www/js/controllers.js** with your value for **urlBase** and **headersBase**
 
@@ -549,39 +632,39 @@ https://github.com/fdut/bluemix-labs/raw/master/Lab%20API%20-%20Manage%20your%20
     'accept': 'application/json'
   }
 ```
- 
+
  1. Save and go back to the root directory of you app : **mobileapp**
- 
- 
- 
-##Simulate the Mobile App in a browser. 
- 
+
+
+
+##Simulate the Mobile App in a browser.
+
  2. Enter the following command :
 
   ```
    ionic serve
   ```
   >Note : if asked, use localhost for address to use.
-  
+
   This command simulate your app in a browser.
-  
+
   If all values are correct, you should see something as the screenshot below. A list with all the entries you are "POSTed" in Cloudant
-  
+
    ![Simulate dev tools](./images/simulateapp.png)
-  
- >Note : You can activate developer tools in the browser to show the result of your API request. 
-  
+
+ >Note : You can activate developer tools in the browser to show the result of your API request.
+
    ![Simulate dev tools](./images/simulatewithtools.png)
-  
-  
+
+
 ##Emulate the Mobile App with in a Android device emulator
- 
+
  Now if you want, you can emulate you app in a emulator. In this sample we are going to use Android Emulator.
- 
+
 ### Install Android SDK
- 
+
   If Android SDK is not installed, use the following steps to install it (Example for linux)
- 
+
   ```
    wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
    tar -xzvf android-sdk_r24.4.1-linux.tgz
@@ -590,30 +673,30 @@ https://github.com/fdut/bluemix-labs/raw/master/Lab%20API%20-%20Manage%20your%20
    cd tools
 
    echo y | ./android update sdk -u -a -t "tools","platform-tools","build-tools-23.0.3","android-23","sys-img-x86_64-android-23","sys-img-x86_64-google_apis-23"
-  
+
   ```
   Add **android-sdk-linux/tools/android** in the **PATH** of your operating system
-  
+
  For linux only :
- 
+
   ```
    sudo apt-get install -y lib32gcc1 libc6-i386 lib32z1 lib32stdc++6
    sudo apt-get install -y lib32ncurses5 lib32gomp1 lib32z1-dev
   ```
- 
 
- 
- 
+
+
+
 ### Configure Android virtual device
- 
- 
+
+
  1. Configure virtual device with the following command :
- 
+
  ```
  android avd
  ```
  Click **Create** Use the following value :
- 
+
  ```
  avd name = avd1
  Device = nexus 5
@@ -621,34 +704,34 @@ https://github.com/fdut/bluemix-labs/raw/master/Lab%20API%20-%20Manage%20your%20
  cpu = intel atom x86_64
  skin = noskin
  Front camera = none
- Back Camera = none 
+ Back Camera = none
  RAM 512 vm 64
  ```
  1. And click **OK**
- 
+
 ###Launch the Mobile App with in the Android Virtual Device Emulator
- 
+
  1. In the **mobileapp** folder, enter the following command :
- 
+
  ```
  cordova platform add android
- ``` 
+ ```
  and
- 
+
  ```
  ionic emulate android
  ```
 Please wait a few time.
- 
- 
+
+
  ![Simulate dev tools](./images/emulate.png)
- 
+
 >Note : If the launch is too long. Don't close the emulator, Stop the command with Ctrl+C and launch the command again.
- 
- 
-Congratulations. You have completed this Lab! 
- 
- 
+
+
+Congratulations. You have completed this Lab!
+
+
 # Additional Resources
 
 For additional resources pay close attention to the following:
@@ -658,6 +741,7 @@ For additional resources pay close attention to the following:
 - [API Connect Developer Center](https://developer.ibm.com/apiconnect)
 - [API Connect v5 Knowledge Center](http://www.ibm.com/support/knowledgecenter/SSMNED_5.0.0/mapfiles/ic_home.html)
 - [Follow us @ibmapiconnect](https://twitter.com/ibmapiconnect)
+- [PSA Sample of customized portal](https://developer.psa-peugeot-citroen.com/)
 
 
 [bmx_dashboard_url]:  https://console.eu-gb.bluemix.net/
