@@ -17,7 +17,7 @@ In the following lab, you will learn:
 + Installation (Presentation)
 + How to create and test a REST API definition (Lab)
 + How to publish an API to Bluemix (Lab)
-+ How to sucribe to an API previously published and test in the portal (Lab)
++ How to subscribe to an API previously published and test in the portal (Lab)
 + How to create a simple LoopBack application to implement Microservice architecture (Lab)
 + How to version an API and deploy another version of an API (Lab)
 + How to create and manage a SOAP API (Lab)
@@ -49,23 +49,23 @@ To check the local version of API Connect: ```apic -v```
 This chapter does not intend to describe all the possible use cases of API Connect, but instead provide some simple and concrete common usages of API Connect.
 
 1. **Use case 1**: I have existing internal SOAP services and/or REST APIs. I want to expose and increase visibility internaly and externaly. I need to understand how my APIs/Services are used and apply quotas. I need to provide to secure the access.
-<br>Solution: Simple proxyfication, not complex policies, use OOTB portal, manager.
+<br><span style="text-decoration: underline;">Solution</span>: Simple proxyfication, not complex policies, use OOTB portal, manager.
 2. **Use case 2**: All the above + my APIs/services do not have the right granularity or the right format to be used by my Apps.
-<br>Solution: Use map policies to adapt the interfaces, and/or use JSON <-> XML policies.
+<br><span style="text-decoration: underline;">Solution</span>: Use map policies to adapt the interfaces, and/or use JSON <-> XML policies.
 3. **Use case 3**: I organise an hackathon or I'm in context of co-creation with extended eco-system and I need to rapidly create APIs from data sources or from models.
-<br>Solution: Create Loopback Applications and expose them as APIs.
+<br><span style="text-decoration: underline;">Solution</span>: Create Loopback Applications and expose them as APIs.
 4. **Use case 4**: I need some kind of composition/aggration and expose an API.
-<br>Solution: Create a Loopback Application and add remote hook
+<br><span style="text-decoration: underline;">Solution</span>: Create a Loopback Application and add remote hook
 
 # Architecture and terminology
 ## API Connect architecture onPremise
 The main components composing API Connect are:
-+ The **gateway** (either DataPower, either a NodeJS implementation called micro gateway in this case). The requests from apps are going through the gateway, policies are enforced and analytic are gathered.
-+ The **manager**  where the APIs are defined and governed. It also collects the analytics from the gateway. The manager can be used directly or more likely using the toolkit.
-+ The **portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developpers), they create Apps and susbscribe to API within the portal. Based on Drupal, it is highly customizable.
-+ The **collective member** or micro servics runtime. This is where the loopback applications are running. This component is originaly coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and aslo a good place to perform composition of APIs.
-+ Associated to the collective member is the **collective controller** that monitors the collective member and can provide advanced feature such as auto-scaling.
-+ The **toolkit**, running on the API developper, it offers the same web experience as the manager to manage APIs. But this is also the only place where you can define Loopback applications. It also contains CLI to operate directly on the manager wether it is an onPremise version or Bluemix version of API Connect.
++ The **Gateway** (either DataPower, either a NodeJS implementation called micro gateway in this case). The requests from apps are going through the gateway, policies are enforced and analytic are gathered.
++ The **Manager**  where the APIs are defined and governed. It also collects the analytics from the gateway. The manager can be used directly or more likely using the toolkit.
++ The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developpers), they create Apps and susbscribe to API within the portal. Based on Drupal, it is highly customizable.
++ The **Collective member** or micro servics runtime. This is where the loopback applications are running. This component is originaly coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and aslo a good place to perform composition of APIs.
++ Associated to the collective member is the **Collective controller** that monitors the collective member and can provide advanced feature such as auto-scaling.
++ The **Toolkit**, running on the API developper, it offers the same web experience as the manager to manage APIs. But this is also the only place where you can define Loopback applications. It also contains CLI to operate directly on the manager wether it is an onPremise version or Bluemix version of API Connect.
 
 >Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
 ![APIC Achitecture](./images/apic-archi-on-prem.png)
@@ -78,32 +78,32 @@ Well, API Connect in Bluemix, is the same product as onPremise (or almost, notic
 
 ## Terminology
 + An **API**: Can be SOAP or Representational State Transfer - REST API defined with an Open API definition (Swagger) as a YAML file. One API = one yaml file though WSDLs and Schema are separated in a zip file for a SOAP API.
-+ A **plan**: this is where we specify the quotas and if an approval is needed to subscribe to a Product/API.
-+ A **product**: this is an aggregation of APIs, and one or many plans associated to those APIs. This is what is published to a catalog.
-+ A **catalog**: it's relates to a cluster of gateways and a portal. It sounds like an environment but it also contains a business dimension. For example, good names for a catalog are Sandbox, Dev, Production, CRM (for my CRM APIs exposed to a specific population), etc ...
-+ An API Connect **cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and collective runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organisation and needs to separate the infrastructures.
-+ **Assembly panel**: this is where we specify the policies to b executed in the gateway for each transactions.
++ A **Plan**: this is where we specify the quotas and if an approval is needed to subscribe to a Product/API.
++ A **Product**: this is an aggregation of APIs, and one or many plans associated to those APIs. This is what is published to a catalog.
++ A **Catalog**: it's relates to a cluster of gateways and a portal. It sounds like an environment but it also contains a business dimension. For example, good names for a catalog are Sandbox, Dev, Production, CRM (for my CRM APIs exposed to a specific population), etc ...
++ An API Connect **Cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and collective runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organisation and needs to separate the infrastructures.
++ **Assembly panel**: this is where we specify the policies to be executed in the gateway for each transactions.
 
 ## Concepts map
 ![APIC Concepts](./images/apic-ConceptsMap.png)
 
 Below the available policies in API Connect 5.0.6
 
-Category| Name |Description ||Category| Name |Description
---------|------|------------||--------|------|------------
-Logic|Switch|switch||Transform|Set variable|set
-Logic|Operation Switch| on op||Transform|Validate|JSON schema
-Logic|If|if||Transform|Gateway script|any code
-Logic|Throw|exception handling||Transform|XML to JSON|transform
-Transform|Redac|obfuscate||Transform|JSON to XML|transform
-Transform|Map|mapping||Security|Validate JWT|JSON Web Token
-Transform|XSLT|any code||Security|Validate UNT|UserName Token
-Transform|Invoke|invoke||Security|Generate JWT|JSON Web Token
-Transform|Proxy|proxie||Security|Generate LTPA|LTPA (for WAS)
-Transform|Activity Log|audit||User Defined|Any|any logic coded in DP
+|Category| Name |Description ||Category| Name |Description|
+|--------|------|------------||--------|------|-----------|
+|Logic|Switch|switch||Transform|Set variable|set|
+|Logic|Operation Switch| on op||Transform|Validate|JSON schema|
+|Logic|If|if||Transform|Gateway script|any code|
+|Logic|Throw|exception handling||Transform|XML to JSON|transform|
+|Transform|Redac|obfuscate||Transform|JSON to XML|transform|
+|Transform|Map|mapping||Security|Validate JWT|JSON Web Token|
+|Transform|XSLT|any code||Security|Validate UNT|UserName Token|
+|Transform|Invoke|invoke||Security|Generate JWT|JSON Web Token|
+|Transform|Proxy|proxie||Security|Generate LTPA|LTPA (for WAS)|
+|Transform|Activity Log|audit||User Defined|Any|any logic coded in DP|
 
 # Installation
-This chapter just illustrate one way to install the product in a very simple case. There are many more options to deploy install API Connect including full docker installation. The goal here is just to give a feeling on the installation process.
+This chapter just illustrates one way to install the product in a very simple case. There are many more options to deploy install API Connect including full docker installation. The goal here is just to give a feeling on the installation process.
 * Install the gateway
 <br>Start the OVA in VMWare, install firmware update if needed to DataPower, adjust network settings.
 * Manager
@@ -741,6 +741,8 @@ For additional resources pay close attention to the following:
 - [API Connect Developer Center](https://developer.ibm.com/apiconnect)
 - [API Connect v5 Knowledge Center](http://www.ibm.com/support/knowledgecenter/SSMNED_5.0.0/mapfiles/ic_home.html)
 - [Follow us @ibmapiconnect](https://twitter.com/ibmapiconnect)
+- [POT API Connect](https://ibm-apiconnect.github.io/pot/)
+- [POT API Connect Customization](https://ibm-apiconnect.github.io/faststart/)
 - [PSA Sample of customized portal](https://developer.psa-peugeot-citroen.com/)
 
 
