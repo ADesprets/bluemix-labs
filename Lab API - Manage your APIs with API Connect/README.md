@@ -89,18 +89,20 @@ Well, API Connect in Bluemix, is the same product as onPremise (or almost, notic
 
 Below the available policies in API Connect 5.0.6
 
-|Category| Name |Description ||Category| Name |Description|
-|--------|------|------------||--------|------|-----------|
-|Logic|Switch|switch||Transform|Set variable|set|
-|Logic|Operation Switch| on op||Transform|Validate|JSON schema|
-|Logic|If|if||Transform|Gateway script|any code|
-|Logic|Throw|exception handling||Transform|XML to JSON|transform|
-|Transform|Redac|obfuscate||Transform|JSON to XML|transform|
-|Transform|Map|mapping||Security|Validate JWT|JSON Web Token|
-|Transform|XSLT|any code||Security|Validate UNT|UserName Token|
-|Transform|Invoke|invoke||Security|Generate JWT|JSON Web Token|
-|Transform|Proxy|proxie||Security|Generate LTPA|LTPA (for WAS)|
-|Transform|Activity Log|audit||User Defined|Any|any logic coded in DP|
+
+|Category  | Name   |Description |-|Category   | Name          |Description |
+|----------|--------|------------|-|-----------|---------------|------------|
+|Logic     |Switch  |switch      |-|Transform  |Set variable   |set         |
+|Logic     |Operation Switch |on op |-|Transform |Validate|JSON schema      |
+|Logic     |If      |if          |-|Transform  |Gateway script |any code    |
+|Logic     |Throw   |exception handling |-|Transform |XML to JSON |transform |
+|Transform |Redac   |obfuscate   |-|Transform  |JSON to XML    |transform |
+|Transform |Map     |mapping     |-|Security   |Validate JWT   |JSON Web Token |
+|Transform |XSLT    |any code    |-|Security   |Validate UNT   |UserName Token |
+|Transform |Invoke  |invoke      |-|Security   |Generate JWT   |JSON Web Token |
+|Transform |Proxy   |proxie      |-|Security   |Generate LTPA  |LTPA (for WAS) |
+|Transform |Activity Log |audit  |-|User Defined |Any          |any logic coded in DP |
+
 
 # Installation
 This chapter just illustrates one way to install the product in a very simple case. There are many more options to deploy install API Connect including full docker installation. The goal here is just to give a feeling on the installation process.
