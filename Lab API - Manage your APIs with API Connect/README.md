@@ -128,16 +128,16 @@ The corresponding back end runtimes are as follow:
 ![RuntimesAndBackEnd](./images/RuntimesAndBackEnd.png)
 This provides a mix of JAX RS, NodeJS (with Loopback Application) and Secure Gateway back end samples, demonstrating pure cloud APIs and hybrid APIs.
 
-1. [Provision API Connect in Bluemix](#Step-1---Provision-API-Connect-in-Bluemix)
-2. [Expose an existing REST API](#Step-2---Expose-an-existing-REST-API)
-3. [Publish your API to the Sandbox catalog](#Step-3---Publish-your-API-to-the-Sandbox-catalog)
-4. [Consumer Experience](#Step-4---Consumer-Experience)
-5. [Invoke the API](#Step-5---Invoke-the-API)
-6. [Analytics](#Step-6---Analytics)
-7. [Create a Cloudant service](#Step-7---Create-a-Cloudant-service)
-8. [Create a LoopBack application](#Step-8---Create-a-LoopBack-application)
-9. [Manage your API in API Designer](#Step-9---Manage-your-API-in-API-Designer)
-10. [Test your API](#Step-10---Test-your-API)
+1. [Provision API Connect in Bluemix](step-1---provision-api-connect-in-bluemix)
+2. [Expose an existing REST API](#step-2---expose-an-existing-rest-api)
+3. [Publish your API to the Sandbox catalog](#step-3---publish-your-api-to-the-sandbox-catalog)
+4. [Consumer Experience](#step-4---consumer-experience)
+5. [Invoke the API](#step-5---invoke-the-api)
+6. [Analytics](#step-6---analytics)
+7. [Create a Cloudant service](#step-7---create-a-cloudant-service)
+8. [Create a LoopBack application](#step-8---create-a-loopback-application)
+9. [Manage your API in API Designer](#step-9---manage-your-api-in-api-designer)
+10. [Test your API](#step-10---test-your-api)
 
 # Step 1 - Provision API Connect in Bluemix
 Login to the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision (create) an instance of the service **API Connect**.
