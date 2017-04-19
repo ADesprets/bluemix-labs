@@ -1,0 +1,106 @@
+swagger: '2.0'
+info:
+  description: Branch REST API
+  version: 1.0.0
+  title: Branch REST API
+  contact:
+    name: Arnauld Desprets
+    url: 'http://thequoteapi/terms.html'
+    email: arnauld_desprets@fr.ibm.com
+  x-ibm-name: branch-rest-api
+host: $(catalog.host)
+tags:
+  - name: BranchREST
+consumes:
+  - application/json
+produces:
+  - application/json
+definitions:
+  Branch:
+    type: object
+    required:
+      - id
+      - options
+      - type
+    properties:
+      id:
+        type: string
+        example: 0b3a8cf0-7e78-11e5-8059-a1020f32cce5
+        description: Unique id
+      type:
+        type: string
+        example: atm
+        description: Type (atm or branch)
+      options:
+        type: array
+        description: Options
+        items:
+          type: string
+      onlineStatus:
+        type: boolean
+        description: Online
+        default: false
+    description: A branch for a bank or an ATM standalone
+    xml:
+      name: Branch
+paths:
+  /branches:
+    get:
+      tags:
+        - BranchREST
+      operationId: getBranches
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+  /extbranches:
+    get:
+      tags:
+        - BranchREST
+      summary: List all branches
+      description: List of branches
+      operationId: getExtBranches
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: page
+          in: query
+          description: Page to fetch
+          required: true
+          type: integer
+          default: 1
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Branch'
+        '401':
+          description: Invalid credentials provided
+        '500':
+          description: Server error
+x-ibm-httpsPort: 9449
+x-ibm-httpPort: 9086
+x-ibm-services:
+  - /loanmgt
+x-ibm-configuration:
+  phase: realized
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          description: Invoking back-end service
+          title: Invocation
+          target-url: 'https://192.168.101.247:9449$(request.path)'
+basePath: /loanmgt/resources/branchs/v1

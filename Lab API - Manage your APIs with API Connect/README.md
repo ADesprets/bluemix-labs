@@ -79,7 +79,7 @@ Well, API Connect in Bluemix, is the same product as onPremise (or almost, notic
 ## Terminology
 + An **API**: Can be SOAP or Representational State Transfer - REST API defined with an Open API definition (Swagger) as a YAML file. One API = one yaml file though WSDLs and Schema are separated in a zip file for a SOAP API.
 + A **Plan**: this is where we specify the quotas and if an approval is needed to subscribe to a Product/API.
-+ A **Product**: this is an aggregation of APIs, and one or many plans associated to those APIs. This is what is published to a catalog.
++ A **Product**: this is an aggregation of APIs, and one or many plans associated to those APIs. This is what is published to a catalog. One Product = one yaml file.
 + A **Catalog**: it's relates to a cluster of gateways and a portal. It sounds like an environment but it also contains a business dimension. For example, good names for a catalog are Sandbox, Dev, Production, CRM (for my CRM APIs exposed to a specific population), etc ...
 + An API Connect **Cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and collective runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organisation and needs to separate the infrastructures.
 + **Assembly panel**: this is where we specify the policies to be executed in the gateway for each transactions.

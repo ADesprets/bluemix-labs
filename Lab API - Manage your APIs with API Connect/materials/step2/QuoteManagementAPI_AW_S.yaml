@@ -1,0 +1,252 @@
+swagger: '2.0'
+info:
+  description: Quote API
+  version: 1.0.0
+  title: Quote Management API
+  contact:
+    name: Arnauld Desprets
+    url: 'http://thequoteapi/terms.html'
+    email: arnauld_desprets@fr.ibm.com
+  x-ibm-name: quote-management-api
+host: $(catalog.host)
+tags:
+  - name: Quote
+consumes:
+  - application/json
+produces:
+  - application/json
+definitions:
+  QuoteRequest:
+    type: object
+    required:
+      - annualInterestRate
+      - loanAmount
+      - termInMonths
+    properties:
+      loanAmount:
+        type: integer
+        format: int32
+        example: '10000'
+        description: Total amount of loan
+      annualInterestRate:
+        type: number
+        format: double
+        example: '1.1'
+        description: Rate for the loan
+      termInMonths:
+        type: integer
+        format: int32
+        example: '36'
+        description: Duration of the loan
+    xml:
+      name: QuoteRequest
+  QuoteResponse:
+    type: object
+    required:
+      - annualInterestRate
+      - loanAmount
+      - monthlyPaymentAmount
+      - termInMonths
+    properties:
+      loanAmount:
+        type: integer
+        format: int32
+        example: '10000'
+        description: Total amount of loan
+      annualInterestRate:
+        type: number
+        format: double
+        example: '1.1'
+        description: Rate for the loan
+      termInMonths:
+        type: integer
+        format: int32
+        example: '36'
+        description: Duration of the loan
+      monthlyPaymentAmount:
+        type: number
+        format: double
+        example: '282.51360281363674'
+        description: Calculated monthly repayments of the loan
+  ExtQuoteResponse:
+    type: object
+    required:
+      - annualInterestRate
+      - delay
+      - loanAmount
+      - message
+      - monthlyPaymentAmount
+      - termInMonths
+    properties:
+      loanAmount:
+        type: integer
+        format: int32
+        example: '10000'
+        description: Total amount of loan
+      annualInterestRate:
+        type: number
+        format: double
+        example: '1.1'
+        description: Rate for the loan
+      termInMonths:
+        type: integer
+        format: int32
+        example: '36'
+        description: Duration of the loan
+      monthlyPaymentAmount:
+        type: number
+        format: double
+        example: '282.51360281363674'
+        description: Calculated monthly repayments of the loan
+      delay:
+        type: integer
+        format: int32
+        example: '10'
+        description: The delay used to generate the response in ms
+      message:
+        type: string
+        example: Lorem ipsum
+        description: Generated message with variable length
+paths:
+  /extQuote:
+    get:
+      tags:
+        - Quote
+      summary: >-
+        Get a loan quotation with GET verb, with variable response time and
+        variable message lenght
+      description: Duration and amount of loan are only integer
+      operationId: getExtQuote
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: loanAmount
+          in: query
+          description: The total amount of the loan
+          required: true
+          type: integer
+          default: 10000
+          format: int32
+        - name: annualInterestRate
+          in: query
+          description: The loan rate
+          required: true
+          type: number
+          default: 1.1
+          format: double
+        - name: termInMonths
+          in: query
+          description: Duration of the loan
+          required: true
+          type: integer
+          default: 36
+          format: int32
+        - name: delay
+          in: query
+          description: Delay introduced in generating the response
+          required: true
+          type: integer
+          default: 10
+          format: int32
+        - name: msgLength
+          in: query
+          description: Message length
+          required: true
+          type: integer
+          default: 725
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ExtQuoteResponse'
+        '401':
+          description: Invalid credentials provided
+        '500':
+          description: Server error
+  /quote:
+    get:
+      tags:
+        - Quote
+      summary: Get a loan quotation with GET verb
+      description: Duration and amount of loan are only integer
+      operationId: getQuote
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: loanAmount
+          in: query
+          description: The total amount of the loan
+          required: true
+          type: integer
+          default: 10000
+          format: int32
+        - name: annualInterestRate
+          in: query
+          description: The loan rate
+          required: true
+          type: number
+          default: 1.1
+          format: double
+        - name: termInMonths
+          in: query
+          description: Duration of the loan
+          required: true
+          type: integer
+          default: 36
+          format: int32
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/QuoteResponse'
+        '401':
+          description: Invalid credentials provided
+        '500':
+          description: Server error
+    post:
+      tags:
+        - Quote
+      summary: Get a loan quotation  with POST verb
+      description: Duration and amount of loan are only integer
+      operationId: postQuote
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/QuoteRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/QuoteResponse'
+        '401':
+          description: Invalid credentials provided
+        '500':
+          description: Server error
+x-ibm-httpsPort: 9449
+x-ibm-httpPort: 9086
+x-ibm-services:
+  - /loanmgt
+x-ibm-configuration:
+  phase: realized
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          description: Invoking back-end service
+          title: Invocation
+          target-url: 'https://192.168.43.66:9449$(request.path)'
+basePath: /loanmgt/resources/loans/v1
