@@ -2,10 +2,10 @@
 
 # Introduction
 
-In this lab, you’ll gain a high level understanding of the architecture, features, and development concepts related to the IBM API Connect (APIC) solution. Throughout the lab, you’ll get a chance to use the APIC command line interface for creating LoopBack applications, the intuitive Web-based user interface, and explore the various aspects associated with solution’s configuration of RESTful based services as well as their operation.
+In this lab, you’ll gain a high level understanding of the architecture, features, and development concepts related to the IBM API Connect (APIC) solution. Throughout the lab, you’ll get a chance to use the APIC command line interface for creating LoopBack applications, the intuitive Web-based user interface, and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
 
 >**Note**:
-This lab is based on version 5.0.7 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
+This lab is based on version 5.0.7.0 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
 
 
 # Objective
@@ -34,11 +34,11 @@ In the following lab, you will learn:
    ```
    npm install -g apiconnect --no-optional --ignore-scripts
    ```
-You must have version 5.0.7 or above. check the version with the following command :
+You must have version 5.0.7.0 or above. check the version with the following command :
 
   ```
    $apic -v
-   API Connect: v5.0.7 (apiconnect: v2.5.22)
+   API Connect: v5.0.7.0 (apiconnect: v2.6.2)
    ```
 
 >**Note**:
@@ -52,7 +52,7 @@ This chapter does not intend to describe all the possible use cases of API Conne
 <br><span style="text-decoration: underline;">Solution</span>: Simple proxyfication, not complex policies, use OOTB portal, manager.
 2. **Use case 2**: All the above + my APIs/services do not have the right granularity or the right format to be used by my Apps.
 <br><span style="text-decoration: underline;">Solution</span>: Use map policies to adapt the interfaces, and/or use JSON <-> XML policies.
-3. **Use case 3**: I organise an hackathon or I'm in context of co-creation with extended eco-system and I need to rapidly create APIs from data sources or from models.
+3. **Use case 3**: I organise a hackathon or I'm in context of co-creation with extended eco-system and I need to rapidly create APIs from data sources or from models.
 <br><span style="text-decoration: underline;">Solution</span>: Create Loopback Applications and expose them as APIs.
 4. **Use case 4**: I need some kind of composition/aggration and expose an API.
 <br><span style="text-decoration: underline;">Solution</span>: Create a Loopback Application and add remote hook
@@ -71,7 +71,7 @@ The main components composing API Connect are:
 ![APIC Achitecture](./images/apic-archi-on-prem.png)
 
 ## API Connect architecture in Bluemix
-Well, API Connect in Bluemix, is the same product as onPremise (or almost, notice the NodeJS runtime instead of collective member). This gives us a competitive advantage, because we have no issues at all to move from onPremise to Bluemix and vice-versa.
+Well, API Connect in Bluemix, is the same product as onPremise (or almost, notice the NodeJS runtime instead of collective member). This gives us a competitive advantage, because we have no issues at all to move from onPremise to Bluemix and vice-versa and have hybrid implementations.
 
 >Notice the **secure gateway** component that allows to connect simply IBM Bluemix and the company IT.
 ![APIC Achitecture in Bluemix](./images/apic-archi-bmx.png)
@@ -113,35 +113,202 @@ This chapter just illustrates one way to install the product in a very simple ca
 * Portal
 <br>Start the OVA in VMWare, adjust network settings and exchange keys so manager can interact with portal.
 * Toolkit
-<br>On Windows or Linux, install IBM NodeJS SDK and install api-connect toolkit using npm
+<br>On Window   tall api-connect toolkit using npm
 * Collective
 <br>Install controller (WAS liberty) + IHS + member (nodeJS) and configure IHS Plugin
 
 # Steps for the lab
 
-<To be updated from here: stop 31 st March, work in progress>
-+ How to create and test a REST API definition (Lab)
-+ How to publish an API to Bluemix (Lab)
-+ How to sucribe to an API previously published and test in the portal (Lab)
+The goal of this lab is to define the following APIs:
+![ProductsAndAPIsToBuild](./images/ProductsAPIsToBuild.png)
+This provides a mix of REST and SOAP APIs, with or without mapping, using or not a Loopback Application.
 
 
-1. [Provision API Connect in Bluemix](#step-1---provision-api-connect-in-bluemix)
-2. [Create a Cloudant service](#step-2---create-a-Cloudant-service)
-2. [Create a LoopBack application](#step-3---create-a-loopback-application)
-3. [Manage your API in API Designer](#step-4---manage-your-api-in-api-designer)
-5. [Test your API](#step-5---Test-your-API)
-6. [Publish your API to Bluemix](#step-6---publish-your-api-to-bluemix)
-7. [Consumer Experience](#step-7---consumer-experience)
-8. [Invoke the API](#step-8---invoke-the-api)
-9. [Analytics](#step-9---Analytics)
-10. [Invoke your API from Mobile](#step-10---invoke-your-api-from-mobile)
+The corresponding back end runtimes are as follow:
+![RuntimesAndBackEnd](./images/RuntimesAndBackEnd.png)
+This provides a mix of JAX RS, NodeJS (with Loopback Application) and Secure Gateway back end samples, demonstrating pure cloud APIs and hybrid APIs.
+
+1. [Provision API Connect in Bluemix](#Step-1---Provision-API-Connect-in-Bluemix)
+2. [Expose an existing REST API](#Step-2---Expose-an-existing-REST-API)
+3. [Publish your API to the Sandbox catalog](#Step-3---Publish-your-API-to-the-Sandbox-catalog)
+4. [Consumer Experience](#Step-4---Consumer-Experience)
+5. [Invoke the API](#Step-5---Invoke-the-API)
+6. [Analytics](#Step-6---Analytics)
+7. [Create a Cloudant service](#Step-7---Create-a-Cloudant-service)
+8. [Create a LoopBack application](#Step-8---Create-a-LoopBack-application)
+9. [Manage your API in API Designer](#Step-9---Manage-your-API-in-API-Designer)
+10. [Test your API](#Step-10---Test-your-API)
+
+# Step 1 - Provision API Connect in Bluemix
+Login to the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision (create) an instance of the service **API Connect**.
+We also instanciate the Portal associated to the Sandbox catalog. Click on the API Connect instance from your catalog, Go to *Dashboard* (within API Connect), click on the Sandbox catalog, then on the menu bar, click on *Settings*, then on the navigation panel, click on Portal, and select *IBM Developer Portal*, click the Save icon. This will instanciate an instance of a site within Drupal, when it is completed you will receive an email.
+
+# Step 2 - Expose an existing REST API
+For this lab, we will work directly in the Manager in Bluemix instead of using the toolkit.
+>**Note**: Using the toolkit (locally) or using manager  directly (remote server) is a pretty important decision. Using the toolkit allows to use a Source Control Management system and perform micro versioning as well as backup of the various yaml (and wsdls). It also provides a local experience with a very low response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches.
+
+In this first step, we assume that a developer of an API is providing you the Swagger associated with that API. The developer is using WAS Liberty as the runtime and he also uses JAX-RS annotations along apidiscovery feature. This allows him to get a Swagger easily consumed by API Connect. Download the Swagger [here](./materials/step2/QuoteManagementAPI_AW_S.yaml) on your file system, for example under C:\\IBM\\Afterwork
+
+1. Create a Product to include the APIs that you will create in this lab. Within your instance of API Connect in your space, click on Draft > Products and the Add button, select New product.  In the *Title* section, enter **QuoteMgmt**.
+
+1. Now we can create the API that will be included later in the Product just created. Within your instance of API Connect in your space, click on **Import API from File or URL**. This is accessible from Drafts > APIs. Specify the location of the Swagger you just downloaded. Click OK.
+
+1. We need to complete/review  a few informations, that were not specified in the generated Swagger. The amount of information that need to be completed will depend greatly on the use of the annotations or the Swagger generator used.
+
+ * Select https for the scheme, in the *Schemes* section.
+ * Create the security definition, click on + sign close to the *Security Definitions* section, and select API Key. Rename it to **cliend-id**.
+ * Specify the security of the API, click on the + sign close to the *Security* section, and check the client-id API Key
+ * Create a property to define the **target-url** of the back end API. This allows us to create a variable that may take different values based on the catalog. Click on the + sign close to the *Properties* section. Set the Property name to target-url, and enter **http://SampleJAXRS20-aw.eu-gb.mybluemix.net** in the value, close to *Default* value.
+ * Click on the Assemble menu (or Edit ssembly button), click on the Invocation policy, and set the URL property to **$(target-url)$(request.path)$(request.search)**
+ * Save the changes, by clicking on the *Save* icon at the top.
+
+1. We are almost ready to test the API. We need to add the API to the Product. You do this within the API by clicking on the ... icon on the top, and select *Add to existing products*, then select the *QuoteMgmt* and click on the Add button.
+1. To test the API from an API provider perspective, click on *Assemble*, in the left hand side panel, switch from **Micro Gateway policies** to **DataPower Gateway policies**. Save the change. click on the triangle icon (on the top left), check the catalog to run the API, select the QuoteManagement product, then select the operation to test, for example, get /extQuote, enter the parameters (amount 1000, rate 1.1, duration 36, delay 10, msg length 11) and click invoke. (If you are using the toolkit you also can do this, but in this case you need to start the micro gateway and the loopback application runtime).
+
+You can also test the API using the explore facility. You get a view similar to the API consumer in the portal, but in this case you do not need to create an Apps and subscribe to the API. Click on the *Explore* link on the top right, you see the documentation and have the possibility to test the various operations.
+
+You can perform the same set of operations for the BranchREST API and using a new product called BranchMgmt. The Swagger for the Branch API is [here](./materials/step2/BranchRESTAPI_AW_S.yaml)
+
+# Step 3 - Publish your API to the Sandbox catalog
+1. Withing the Draft area, select the **QuoteMgmt** product, and click on **Publish icon** (cloud shape) in the top right corner, select Sandbox. This does effectively stage the product in the Sandbox catalog. The product is not yet published to the Portal.
+1. Go to the Bluemix [Dashboard] [bmx_dashboard_url]. Click on the Sandbox catalog, you should see the product just staged. Click on the ... link and select Publish.
+1. Check the visibility and click on Publish button.
+1. Your QuoteMgmt is now visible in Developer Portal
+
+# Step 4 - Consumer Experience
+
+>Summary: In this step, you will learn the consumer experience for APIs that have been exposed to your developer organization. You login as a developer to register your application and then subscribe to the product just published and then test the API included in the product.
+
+## Open the Portal login page
+
+ 1. Return to the Bluemix API Manager screen.
+ 2. Navigate to the Dashboard section and click on the Sandbox catalog tile.
+ 3. Choose the Settings tab, followed by the Portal option.
+ 4. Click on the Portal URL link to launch the Developer Portal
+![Launch Portal](./images/launch-portal.png)
+ 5. Click on **API Products** to explore the available APIs
+
+## Register an Application as a developer
+
+Let's now subscribe to the Product. You will log into the portal as a user in the application developer role, then register an application that will be used to consume APIs.
+
+If you have not created a developer account, you will need to use the **Create an account** link to do so now.
+
+![Create users](./images/apic-portal.png)
+
+ 1. Enter in your account information for the developer account. This must be a different email address than your bluemix account. Click **Create New Account** once all the requisite data in the form has been filled out.
+
+ 1. A validation email will be sent out to the email address used at sign up. Click on the validation link and then you will have completed the sign up process and will be authenticated into the page.
+
+ 1. Login into the developer portal as an application developer using your developer credentials.
+
+ 2. Click the Apps link, then click on the **Create new App** link.
+
+ 3. Enter a title and description for the application and click the Submit button.
+
+ >Title: Mobile App Consumer
+
+ >Description: Test Application for the various API products
+
+ >OAuth Redirect URI: < leave blank >
+
+We need to capture the Client Secret and Client ID in a text editor for later use by our test application.
+
+  1. Select the Show Client Secret checkbox next to Client Secret at the top of the page and the Show checkbox next to Client ID.
+
+![Register app](./images/apic-registerapp.png)
 
 
-# Step 1 - Provision  API Connect in Bluemix
+  2. **Copy Client Secret and Client ID in a text editor**
 
-From the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision (create) an instance of the service **API Connect**.
+## Subscribe to a Plan for the "QuoteMgmt" product
 
-# Step 2 - Create a Cloudant service
+In this section, we will subscribe to a plan for the "QuoteMgmt" using the Mobile App Consumer application.
+
+  1. Click the ```API Products link.```
+  2. Click the QuoteMgmt (v1.0.0) API product link.
+
+You will be directed to the Product page which lists the available plans for subscription.
+
+  1. Click on the **Subscribe** button under the ***Default plan***.
+  2. Select the **Mobile App Consumer** toggle and click the **Subscribe** button.
+
+The MobileApp Consumer application is now subscribed to the **Default plan** for the QuoteMgmt product.
+
+## Test QuoteMgmt APIs from the Developer Portal
+
+In this section, we will use the developer portal to test Quote Management API REST API. This is useful for application developers to try out the APIs before their application is fully developed or to simply see the expected response based on inputs they provide the API. We will test the **Quote Management API REST** API from the developer portal.
+
+1. Click the **Quote** link on the left-hand navigation menu and then expand the GET /Customer path by clicking on the twisty next to the path.
+
+![Test app](./images/apic-testapidevportal.png)
+
+1. Scroll down to the Try this operation section for the GET /Customer path. Enter your Client ID and your Client secret and click the Call Operation button
+2. Scoll down below the Call operation button. You should see a 200 OK and a response body as shown below.
+
+![Test app](./images/apic-testapidevportalcall.gif)
+
+# Step 5 - Invoke the API
+
+Now that you have browsed the API Portal and registered / tested the API’s that **Quote** is providing, it’s time to test them out from a real application.
+
+Sample code (snippets) are provided from developer portal for different language (cUrl, Ruby, Python, PHP, Javascript, Java, Go, Swift) .
+
+  1. Login into the developer portal as an application developer using your developer credentials.
+  2. Click the **API Products link**
+  3. Click the **Quote (v1.0.0)** API product link.
+  4. Click on **Quote** API in the left panel
+  5. Now, you can discover all operations with their properties and on the right hand side sample code.
+  1. On the right hand side you'll see the ***cuRL** expression
+  1. Copy it into your text editor window replacing **REPLACE_WITH_CLIENT_ID** and **REPLACE_WITH_CLIENT_SECRET** with your client id and your client secret saved from the prior step
+  2. Remove ***"filter"*** parameter in the url the result is like this :
+
+  ```
+curl --request GET \
+  --url 'https://api.eu.apiconnect.ibmcloud.com/BLUEMIXID-BLUEMIXSPACE/sb/api/Customers' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --header 'x-ibm-client-id: REPLACE_WITH_CLIENT_ID' \
+  --header 'x-ibm-client-secret: REPLACE_WITH_CLIENT_SECRET'
+```
+
+3. Copy and try it into your terminal windows
+
+If all is OK, you should see a list of ***cutomers*** in JSON format with items ***name*** and ***age***.
+
+# Step 6 - Analytics
+
+1. Return to the Bluemix API Manager screen.
+2. Navigate to the Dashboard section and click on the **Sandbox** catalog tile.
+3. Click on your **Quote** API and you can see number of subscriptions to you API.
+
+![Anaytic screen](./images/apic-analytics.png)
+
+4. To see analytic informations, click on the analytic icon.
+![Anaytic icon app](./images/apic-analyticicon.png)
+
+5. Now you can navigate to the Analytic dasbord to show analytic informations for your API
+6. You can show
+
+![Anaytic icon app](./images/apic-analyticdashboard.gif)
+
+1. Click on the ```Sandbox``` catalog tile
+2. From the ```Sandbox``` catalog configuration screen, click on the ```Analytics``` tab.
+ ![Anaytic screen](./images/analytics-tab.png)
+
+3. The default dashboard gives some general information like the 5 most active Products and 5 most active APIs. This information is interesting, but we can see much more information by customizing the dashboard. Add a new visualization by clicking on the ```+ Add Visualization icon.```
+
+ ![Anaytic screen](./images/analytics-add-visualization.png)
+
+4. This will bring a list of some of the standard visualizations. You can then type in a string to filter through visualizations or use the arrows to page through the list.
+5. Add the API Calls visualization to the dashboard by simply clicking on it. The new visualization will be added to the bottom of our dashboard.
+ ![Anaytic screen](./images/analytics-add-visualization-item.png)
+5. Scroll down to find the new visualization. You can adjust the size by clicking and dragging the border from the lower right. Additionally, you can adjust its position by clicking and dragging the box to where you want it.
+ ![Anaytic screen](./images/analytics-add-visualization-new.png)
+6. Feel free to play around with the other visualizations by adding them to the Dashboard. You can also save the dashboard by clicking on the Save Dashboard button:
+ ![Anaytic screen](./images/analytics-save-dashboard.png)
+
+# Step 7 - Create a Cloudant service
 
 In order to store our data used by our API, we will need a persistent storage. To do so, we will use a Cloudant NoSQL database, a JSON document oriented store, compatible with CouchDB.
 
@@ -176,7 +343,7 @@ You can use a existing Cloudant service or create an instance of the service Clo
 
 
 
-# Step 3 - Create a LoopBack application
+# Step 8 - Create a LoopBack application
 
 API Connect comes with a developer toolkit. This toolkit provides an offline graphical user interace named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs, and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
 
@@ -200,10 +367,10 @@ To create a new LoopBack project, use the command apic loopback; then use the ap
   $ apic loopback
   ```
 
- Next you will be asked to supply the name of the directory where the application will be created. Enter **demo**
+ Next you will be asked to supply the name of the directory where the application will be created. Enter **Customer**
 
   ```
-  What's the name of your application? demo
+  What's the name of your application? Quote
   ```
 
 1. LoopBack will default the project directory name to the name of the application.
@@ -218,15 +385,15 @@ To create a new LoopBack project, use the command apic loopback; then use the ap
 
   ```
   ? Please review the license for API Connect available in /usr/local/lib/node_modules/apiconnect/LICENSE.txt and select yes to accept. yese arrow keys)
-  ? What's the name of your application? demo
-  ? Enter name of the directory to contain the project: demo
+  ? What's the name of your application? Customer
+  ? Enter name of the directory to contain the project: Customer
   ? What kind of application do you have in mind? empty-server (An empty LoopBack API, without any configured models or datasources)
   ```
 
 1. Change directory to your application directory
 
   ```
-  cd demo
+  cd Customer
   ```
 
 ### Create a Datasource Connector to Cloudant
@@ -235,10 +402,10 @@ The datasource is what allows the API to communicate with the backend data repos
 
 There are two parts to this. First is the definition of how to connect to the backend system. The second is downloading the actual loopback connector for Cloudant.
 
-In your terminal ensure that you are in the **demo** directory.
+In your terminal ensure that you are in the **Customer** directory.
 
   ```
-  cd demo
+  cd Customer
   ```
 
 In your terminal, type:
@@ -284,7 +451,7 @@ Connector-specific configuration:
 >**Note**:
 By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloudant Connector will be downloaded and saved to your project automatically.
 
->This will create a connection profile in the ~/demo/server/datasources.json file. It is effectively the same as running the following to install the connector:
+>This will create a connection profile in the ~/Customer/server/datasources.json file. It is effectively the same as running the following to install the connector:
 
 >npm install loopback-connector-cloudant --save
 
@@ -296,7 +463,7 @@ By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloud
 >Note: You can create an API or Product from an OpenAPI (Swagger 2.0) template file by using the '--template template-name' option.
 
 
-# Step 4 - Manage your API in API Designer
+# Step 9 - Manage your API in API Designer
 
 1. Launch API Connect Designer
 
@@ -312,9 +479,9 @@ By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloud
 
 ![APIC Screenshot](./images/apic-firstscreen.png)
 
-###Create a Model for the **demo** items
+###Create a Model for the **Customer** items
 
-In this section, you will define the item data model for our **demo** API and attach it to the Cloudant datasource. LoopBack is a data model driven framework. The properties of the data model will become the JSON elements of the API request and response payloads.
+In this section, you will define the item data model for our **Customer** API and attach it to the Cloudant datasource. LoopBack is a data model driven framework. The properties of the data model will become the JSON elements of the API request and response payloads.
 
 1. Click the **Models** tab.
 
@@ -342,11 +509,10 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 
 ![All Models](./images/allmodel.png)
 
-
 2. Click the All Models link to return to the main API Designer page.
 
 
-# Step 5 - Test your API
+# Step 10 - Test your API
 
 1. Let's test the API in the Designer. First, start the server by clicking the play button in bottom left corner. Once the server is started, you should see the endpoint of the Local Micro Gateway.
 
@@ -363,7 +529,6 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
   }
   ```
 ![APIC Test](./images/apic-test.gif)
-
 
 1. The first time you will most likely get a CORS error as follows:
 
@@ -385,354 +550,7 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 
 1. Congratulations you successfullly tested your API.
 
-
-# Step 6 - Publish your API to Bluemix
-
-1. In the API Designer, select the tab APIs and click on your **demo** API. Switch from the *Design* view to *Assemble*. In the left hand side panel, switch from **Micro Gateway policies** to **DataPower Gateway policies**. Save the change.
-
-1. Click on **Publish** in the top right corner. Select **Add and Manage Targets**.
-
-1. Select **Add IBM Bluemix Target**. Select the Region such as United Kingdom where you created the API connect instance, then the Organization (Space). Finally, select the default catalog **Sandbox** and **Next**
-
-1. In the page Select a Bluemix application, type a new application name such as **demo-app**. Click + to add your app in the list. Then Save.
-
-1. Click again on Publish in the top right corner. Select the newly created target.
-
-1. Check the box **Publish Application** and **Stage or Publish products > Stage only**. Click Publish.
-
-
->Note:
-Here we have the opportunity to select what gets published. If we were working on multiple API products as part of this project, we could chose specific ones to publish.
-
->Also, the option exists to only Stage the product. A Stage-only action implies that we’ll push the configuration to the Management server, but not actually make it available for consumption yet. The reason for doing this may be because your user permissions only allow staging, or that a different group is in charge of publishing Products.
-
-1. The publishing operation generates messages in the terminal window where you started APIC. You can see that some properties are updated during publush process.
-
-```
-Deploying to Bluemix
-...preparing project
-...building package for deploy
-...uploading package
-Runtime published successfully.
-
-Management URL: https://new-console.eu-gb.bluemix.net/apps/e48d87d6-6fbe-4be1-9795-958f0ef532bb
-API target urls: apiconnect-e48d87d6-6fbe-4be1-9795-958f0ef532bb.fredericdutheilfribmcom-fdulondonspace.apic.eu-gb.mybluemix.net
-API invoke tls-profile: client:Loopback-client
-Updated demo.yaml with tls-profile and target-url.
-Found 1 files to publish.
-Staged /Users/fred/Works/Sandbox/demo/definitions/demo-product.yaml to fredericdutheilfribmcom-fdulondonspace:sb [demo:1.0.0]
-Successfully published products
-
-```
-
-1. Go to the Bluemix [Dashboard] [bmx_dashboard_url]. You should see a new Cloud Foundry app called **demo-app** which is the Loopback app we just published.
-
-At this time, your API is not avaible for consumer. First you need initialize the API Portal and publish your API on it.
-
-1. Open the service instance api-connect. Launch API Manager.
-
-1. In the main page, click the Sandbox catalog.
-
-1. Click on the tab **Settings**, then select the sub menu Portal. In the Portal Configuration, select IBM Developper portal instead of None. and then click **Save**. It will automatically generate the portal URL and the portal as well.
-
-  A pop up screen will let you know that the process to create your portal has started.
-  ```Creating the developer portal for catalog 'Sandbox' may take a few minutes. You will receive an email when the portal is available.```
-
-It might take some time for your developer portal to get created, but usually the process is pretty quick. Once the portal is done creating, you will receive an email.
-
-So now we are going to publish our API
-
-1. In the API manager, on the product **demo**, click the **...** next to the state and click on **Publish** in the menu. Use default value and then click **Publish** again
-
-![APIC Publish](./images/apic-publish.gif)
-
-2. Your demo API is now visible in Developer Portal
-
-
-
-# Step 7 - Consumer Experience
-
->Summary: In this lab, you will learn the consumer experience for APIs that have been exposed to your developer organization. Using the developer portal, you will first login in as the admin user to load a Think IBM custom theme. You will then login as a developer to register your application and then subscribe to an API and test that API.
-
- 1. Return to the Bluemix API Manager screen.
- 2. Navigate to the Dashboard section and click on the Sandbox catalog tile.
- 3. Choose the Settings tab, followed by the Portal option.
- 4. Click on the Portal URL link to launch the Developer Portal
-
-![Launch Portal](./images/launch-portal.png)
-
- 5. Login into the developer portal as an administrator using admin as  username and the password you set up in previous Lab.
-
- 6. Click on **API Products** to explore the available APIs
-
-
-## Register an Application as a developer
-
-Let's now subscribe to the API. You will log into the portal as a user in the application developer role, then register an application that will be used to consume APIs.
-
-If you have not created a developer account, you will need to use the **Create an account** link to do so now.
-
-![Create users](./images/apic-portal.png)
-
- 1. Enter in your account information for the developer account. This must be a different email address than your bluemix account. Click **Create New Account** once all the requisite data in the form has been filled out.
-
- 1. A validation email will be sent out to the email address used at sign up. Click on the validation link and then you will have completed the sign up process and will be authenticated into the page.
-
- 1. Login into the developer portal as an application developer using your developer credentials.
-
- 2. Click the Apps link, then click on the **Create new App** link.
-
- 3. Enter a title and description for the application and click the Submit button.
-
- >Title: Mobile App Consumer
-
- >Description: Test Application for demo APIs
-
- >OAuth Redirect URI: < leave blank >
-
-We need to capture the Client Secret and Client ID in a text editor for later use by our test application.
-
-  1. Select the Show Client Secret checkbox next to Client Secret at the top of the page and the Show checkbox next to Client ID.
-
-![Register app](./images/apic-registerapp.png)
-
-
-  2. **Copy Client Secret and Client ID in a text editor**
-
-## Subscribe to a Plan for the demo APIs
-
-In this section, we will subscribe to a plan for the demo APIs using the Mobile App Consumer application.
-
-  1. Click the ```API Products link.``
-  2. Click the demo (v1.0.0) API product link.
-
-You will be directed to the Product page which lists the available plans for subscription.
-
-  1. Click on the **Subscribe** button under the ***Default plan***.
-  2. Select the **Mobile App Consumer** toggle and click the **Subscribe** button.
-
-The MobileApp Consumer application is now subscribed to the **Default plan** for the think API product.
-
-## Test demo Product APIs from the Developer Portal
-
-In this section, we will use the developer portal to test demo API. This is useful for application developers to try out the APIs before their application is fully developed or to simply see the expected response based on inputs they provide the API. We will test the **demo** API from the developer portal.
-
-1. Click the **demo** link on the left-hand navigation menu and then expand the GET /Customer path by clicking on the twisty next to the path.
-
-![Test app](./images/apic-testapidevportal.png)
-
-1. Scroll down to the Try this operation section for the GET /Customer path. Enter your Client ID and your Client secret and click the Call Operation button
-2. Scoll down below the Call operation button. You should see a 200 OK and a response body as shown below.
-
-![Test app](./images/apic-testapidevportalcall.gif)
-
-
-# Step 8 - Invoke the API
-
-Now that you have browsed the API Portal and registered / tested the API’s that **demo** is providing, it’s time to test them out from a real application.
-
-Sample code (snippets) are provided from developer portal for different language (cUrl, Ruby, Python, PHP, Javascript, Java, Go, Swift) .
-
-  1. Login into the developer portal as an application developer using your developer credentials.
-  2. Click the **API Products link**
-  3. Click the **demo (v1.0.0)** API product link.
-  4. Click on **demo** API in the left panel
-  5. Now, you can discover all operations with their properties and on the right hand side sample code.
-  1. On the right hand side you'll see the ***cuRL** expression
-  1. Copy it into your text editor window replacing **REPLACE_WITH_CLIENT_ID** and **REPLACE_WITH_CLIENT_SECRET** with your client id and your client secret saved from the prior step
-  2. Remove ***"filter"*** parameter in the url the result is like this :
-
-  ```
-curl --request GET \
-  --url 'https://api.eu.apiconnect.ibmcloud.com/BLUEMIXID-BLUEMIXSPACE/sb/api/Customers' \
-  --header 'accept: application/json' \
-  --header 'content-type: application/json' \
-  --header 'x-ibm-client-id: REPLACE_WITH_CLIENT_ID' \
-  --header 'x-ibm-client-secret: REPLACE_WITH_CLIENT_SECRET'
-```
-
-3. Copy and try it into your terminal windows
-
-If all is OK, you should see a list of ***cutomers*** in JSON format with items ***name*** and ***age***.
-
-
-# Step 9 - Analytics
-
-1. Return to the Bluemix API Manager screen.
-2. Navigate to the Dashboard section and click on the **Sandbox** catalog tile.
-3. Click on your **demo** API and you can see number of subscriptions to you API.
-
-![Anaytic screen](./images/apic-analytics.png)
-
-4. To see analytic informations, click on the analytic icon.
-![Anaytic icon app](./images/apic-analyticicon.png)
-
-5. Now you can navigate to the Analytic dasbord to show analytic informations for your API
-6. You can show
-
-![Anaytic icon app](./images/apic-analyticdashboard.gif)
-
-1. Click on the ```Sandbox``` catalog tile
-2. From the ```Sandbox``` catalog configuration screen, click on the ```Analytics``` tab.
- ![Anaytic screen](./images/analytics-tab.png)
-
-3. The default dashboard gives some general information like the 5 most active Products and 5 most active APIs. This information is interesting, but we can see much more information by customizing the dashboard. Add a new visualization by clicking on the ```+ Add Visualization icon.```
-
- ![Anaytic screen](./images/analytics-add-visualization.png)
-
-4. This will bring a list of some of the standard visualizations. You can then type in a string to filter through visualizations or use the arrows to page through the list.
-5. Add the API Calls visualization to the dashboard by simply clicking on it. The new visualization will be added to the bottom of our dashboard.
- ![Anaytic screen](./images/analytics-add-visualization-item.png)
-5. Scroll down to find the new visualization. You can adjust the size by clicking and dragging the border from the lower right. Additionally, you can adjust its position by clicking and dragging the box to where you want it.
- ![Anaytic screen](./images/analytics-add-visualization-new.png)
-6. Feel free to play around with the other visualizations by adding them to the Dashboard. You can also save the dashboard by clicking on the Save Dashboard button:
- ![Anaytic screen](./images/analytics-save-dashboard.png)
-
-# Step 10 - Invoke your API from Mobile
-
-In this lab, you will learn how to consume an API from a Mobile Application.
-
-In this case, we will use a very simple sample of a Mobile Hybrid Application with the framework Ionic 1.7.
-
-##Prepare your environment and the Mobile Application
-
- 1. Retrieve the sample from this url
-
- [Mobile App Sample](https://github.com/fdut/bluemix-labs/raw/master/Lab%20API%20-%20Manage%20your%20APIs%20with%20API%20Connect/mobileapp.zip)
-https://github.com/fdut/bluemix-labs/raw/master/Lab%20API%20-%20Manage%20your%20APIs%20with%20API%20Connect/mobileapp.zip
-
- 1. Unzip file and enter in the **mobileapp** folder
- 2. Install cordova and ionic 1.7 framework
-
-   ```
-   npm install -g cordova@6.2 ionic@1.7.6
-   ```
-
- 1. Test installation
-
-  ```
-  cordova -v
-  6.2
-
-  ionic -v
-  1.7.6
-  ```
-
- 1. Update your application with the url and the credential of your API (Remember the subscription step).
-
- Update (with your preferred editor) the file **mobileapp/www/js/controllers.js** with your value for **urlBase** and **headersBase**
-
- ```
-  var urlBase = 'https://api.eu.apiconnect.ibmcloud.com/fredericdutheilfribmcom-fdulondonspace/sb/api/Customers'; //MUST REPLACE WITH API URL
-
-  var headersBase =
-
-  {
-    'X-IBM-Client-Id': '262fc263-3776-422b-bdcb-f2c1649a8d3d', //MUST REPLACE WITH CLIENT ID
-    'X-IBM-Client-Secret': 'vJ0aE1wI4kI6aT5fO8pD8uI2sS7sN4pD0cW6kJ6nQ8mY4qS5rH', //MUST REPLACE WITH CLIENT SECRET
-    'content-type': 'application/json',
-    'accept': 'application/json'
-  }
-```
-
- 1. Save and go back to the root directory of you app : **mobileapp**
-
-
-
-##Simulate the Mobile App in a browser.
-
- 2. Enter the following command :
-
-  ```
-   ionic serve
-  ```
-  >Note : if asked, use localhost for address to use.
-
-  This command simulate your app in a browser.
-
-  If all values are correct, you should see something as the screenshot below. A list with all the entries you are "POSTed" in Cloudant
-
-   ![Simulate dev tools](./images/simulateapp.png)
-
- >Note : You can activate developer tools in the browser to show the result of your API request.
-
-   ![Simulate dev tools](./images/simulatewithtools.png)
-
-
-##Emulate the Mobile App with in a Android device emulator
-
- Now if you want, you can emulate you app in a emulator. In this sample we are going to use Android Emulator.
-
-### Install Android SDK
-
-  If Android SDK is not installed, use the following steps to install it (Example for linux)
-
-  ```
-   wget http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
-   tar -xzvf android-sdk_r24.4.1-linux.tgz
-
-   cd android-sdk-linux
-   cd tools
-
-   echo y | ./android update sdk -u -a -t "tools","platform-tools","build-tools-23.0.3","android-23","sys-img-x86_64-android-23","sys-img-x86_64-google_apis-23"
-
-  ```
-  Add **android-sdk-linux/tools/android** in the **PATH** of your operating system
-
- For linux only :
-
-  ```
-   sudo apt-get install -y lib32gcc1 libc6-i386 lib32z1 lib32stdc++6
-   sudo apt-get install -y lib32ncurses5 lib32gomp1 lib32z1-dev
-  ```
-
-
-
-
-### Configure Android virtual device
-
-
- 1. Configure virtual device with the following command :
-
- ```
- android avd
- ```
- Click **Create** Use the following value :
-
- ```
- avd name = avd1
- Device = nexus 5
- Target = Android 6.0
- cpu = intel atom x86_64
- skin = noskin
- Front camera = none
- Back Camera = none
- RAM 512 vm 64
- ```
- 1. And click **OK**
-
-###Launch the Mobile App with in the Android Virtual Device Emulator
-
- 1. In the **mobileapp** folder, enter the following command :
-
- ```
- cordova platform add android
- ```
- and
-
- ```
- ionic emulate android
- ```
-Please wait a few time.
-
-
- ![Simulate dev tools](./images/emulate.png)
-
->Note : If the launch is too long. Don't close the emulator, Stop the command with Ctrl+C and launch the command again.
-
-
 Congratulations. You have completed this Lab!
-
 
 # Additional Resources
 
