@@ -134,10 +134,12 @@ This provides a mix of JAX RS, NodeJS (with Loopback Application) and Secure Gat
 4. [Consumer Experience](#step-4---consumer-experience)
 5. [Invoke the API](#step-5---invoke-the-api)
 6. [Analytics](#step-6---analytics)
-7. [Create a Cloudant service](#step-7---create-a-cloudant-service)
-8. [Create a LoopBack application](#step-8---create-a-loopback-application)
-9. [Manage your API in API Designer](#step-9---manage-your-api-in-api-designer)
-10. [Test your API](#step-10---test-your-api)
+7. [Create a SOAP API ](#step-7---create-a-soap-api)
+8. [Create a SOAP to REST API ](#step-8---create-a-soap-to-rest-api)
+9. [Create a Cloudant service](#step-9---create-a-cloudant-service)
+10. [Create a LoopBack application](#step-10---create-a-loopback-application)
+11. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
+12. [Test your API](#step-12---test-your-api)
 
 # Step 1 - Provision API Connect in Bluemix
 Login to the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision (create) an instance of the service **API Connect**.
@@ -218,7 +220,6 @@ We need to capture the Client Secret and Client ID in a text editor for later us
 
 ![Register app](./images/apic-registerapp.png)
 
-
   2. **Copy Client Secret and Client ID in a text editor**
 
 ## Subscribe to a Plan for the "QuoteMgmt" product
@@ -239,14 +240,14 @@ The MobileApp Consumer application is now subscribed to the **Default plan** for
 
 In this section, we will use the developer portal to test Quote Management API REST API. This is useful for application developers to try out the APIs before their application is fully developed or to simply see the expected response based on inputs they provide the API. We will test the **Quote Management API REST** API from the developer portal.
 
-1. Click the **Quote** link on the left-hand navigation menu and then expand the GET /Customer path by clicking on the twisty next to the path.
+1. Click the **Quote** link on the left-hand navigation menu and then expand the GET /quote path by clicking on the twisty next to the path.
 
 ![Test app](./images/apic-testapidevportal.png)
 
-1. Scroll down to the Try this operation section for the GET /Customer path. Enter your Client ID and your Client secret and click the Call Operation button
+1. Scroll down to the Try this operation section for the GET /quote path. Enter your Client ID and your Client secret and click the Call Operation button
 2. Scoll down below the Call operation button. You should see a 200 OK and a response body as shown below.
 
-![Test app](./images/apic-testapidevportalcall.gif)
+![Test app](./images/apic-testapidevportalcall.png)
 
 # Step 5 - Invoke the API
 
@@ -265,16 +266,15 @@ Sample code (snippets) are provided from developer portal for different language
 
   ```
 curl --request GET \
-  --url 'https://api.eu.apiconnect.ibmcloud.com/BLUEMIXID-BLUEMIXSPACE/sb/api/Customers' \
+  --url 'https://api.eu.apiconnect.ibmcloud.com/BLUEMIXID-BLUEMIXSPACE/sb/loanmgt/resources/loans/v1/quote?loanAmount=10000&annualInterestRate=1.1&termInMonths=36' \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
-  --header 'x-ibm-client-id: REPLACE_WITH_CLIENT_ID' \
-  --header 'x-ibm-client-secret: REPLACE_WITH_CLIENT_SECRET'
+  --header 'x-ibm-client-id: REPLACE_WITH_CLIENT_ID'
 ```
 
 3. Copy and try it into your terminal windows
 
-If all is OK, you should see a list of ***cutomers*** in JSON format with items ***name*** and ***age***.
+If all is OK, you should see the result of the quote in JSON format.
 
 # Step 6 - Analytics
 
@@ -308,7 +308,85 @@ If all is OK, you should see a list of ***cutomers*** in JSON format with items 
 6. Feel free to play around with the other visualizations by adding them to the Dashboard. You can also save the dashboard by clicking on the Save Dashboard button:
  ![Anaytic screen](./images/analytics-save-dashboard.png)
 
-# Step 7 - Create a Cloudant service
+# Step 7 - Create a SOAP API
+This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. We assule that we are still using the Manager (remote server in Bluemix), this would be the same user exeprience with the toolkit.
+
+1. Download the WSDL for the Branch SOAP Service, you can find it  [here](./materials/step7/BranchSOAP.wsdl)
+
+1. In the Draft area, in the APIs menu, click on Add and select API from a SOAP service
+ ![SOAP API Create](./images/apic-soap-create.png)
+
+1. Select the BranchSOAP.wsdl file to load
+![SOAP API Load](./images/apic-soap-create-load.png)
+and click Done.
+
+1. Rename the API to **Branch SOAP** by changing the title.
+
+1. Add this new SOAP API to the existing BranchMgmt product
+![SOAP API Add to Product](./images/apic-soap-create-addtoproduct.png)
+Select The BranchMgmt product.
+![SOAP API Add to BranchMgmt Product](./images/apic-soap-addtoBranchProduct.png)
+
+1. The BranchMgmt product now contains two APIs
+![SOAP API BranchMgmt Product](./images/apic-soap-product-with-two-APIs.png)
+
+1. Publish the Product into the Sandbox catalog and test the getAllBranches operation in the Portal
+![SOAP API Test](./images/apic-soap-test.png)
+
+
+>**Note:** We did not use a Properties and did not change the endpoint for the Proxy policy in the assembly panel, because the WSDL does have the correct endpoint on the Secure Gateway in Bluemix. In reality, you would probably want to create a properties that will point to the right endpoint depending on the environment.
+
+# Step 8 - Create a SOAP to REST API
+>In this step, we are going to create a New API (blank), add the Service definition using the Branch.wsdl file from the previous step, and then in the assembly will perform the mapping. You will see that API Connect supports array of objects or arrays of arrays very easily.
+
+Click on Add, and select New API
+
+![SOAP API REST Create](./images/apic-soap-rest-create.png)
+
+Specify the following
+> Title: Branch SOAP to REST
+
+> Base path: /branch-s2r
+
+Then click on Create API button.
+
+![SOAP API REST new](./images/apic-soap-rest-new.png)
+
+Add to the the existing BranchMgmt product.
+
+Add the Service definition and upload the BranchSOAP.wsdl file, by clicking on the + icon close to the Services definition
+
+![SOAP API REST new](./images/apic-soap-rest-service-def.png)
+
+You can see the deails of the Service, click on Done.
+
+![SOAP API REST new service](./images/apic-soap-rest-service-def2.png)
+
+Now click on the Assemble menu.
+Make sure that you have the DataPower Gateway policies selected
+
+![SOAP API REST WDP Policies](./images/apic-soap-rest-assembly-wdp.png)
+
+Remove the Invoke policy, by clicking on the Trash icon when you hoover your mouse on the Invoke policy.
+
+![SOAP API REST remove invoke](./images/apic-remove-policy.png)
+
+Drag and drop the getAllBranches Web Service Operations Policy from the palette.
+
+![SOAP API REST remove invoke](./images/apic-soap-rest-service-policy.png)
+
+This automatically generate all you need to do the mapping.
+
+![SOAP API REST remove invoke](./images/apic-soap-rest-assembly-generated.png)
+
+Unfortunately, you will have to wait for the details to do the mapping.
+In two words, we need to define the REST interface, and do the mapping.
+
+To be continued ....
+
+
+
+# Step 9 - Create a Cloudant service
 
 In order to store our data used by our API, we will need a persistent storage. To do so, we will use a Cloudant NoSQL database, a JSON document oriented store, compatible with CouchDB.
 
@@ -342,8 +420,7 @@ You can use a existing Cloudant service or create an instance of the service Clo
 1. Copy the url, username and password from the credentials into the your prefered editor. we will use these values later.
 
 
-
-# Step 8 - Create a LoopBack application
+# Step 10 - Create a LoopBack application
 
 API Connect comes with a developer toolkit. This toolkit provides an offline graphical user interace named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs, and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
 
@@ -463,7 +540,7 @@ By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloud
 >Note: You can create an API or Product from an OpenAPI (Swagger 2.0) template file by using the '--template template-name' option.
 
 
-# Step 9 - Manage your API in API Designer
+# Step 11 - Manage your API in API Designer
 
 1. Launch API Connect Designer
 
@@ -512,7 +589,7 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 2. Click the All Models link to return to the main API Designer page.
 
 
-# Step 10 - Test your API
+# Step 12 - Test your API
 
 1. Let's test the API in the Designer. First, start the server by clicking the play button in bottom left corner. Once the server is started, you should see the endpoint of the Local Micro Gateway.
 

@@ -2,12 +2,12 @@ swagger: '2.0'
 info:
   description: Quote API
   version: 1.0.0
-  title: Quote Management API
+  title: Quote API
   contact:
     name: Arnauld Desprets
     url: 'http://thequoteapi/terms.html'
     email: arnauld_desprets@fr.ibm.com
-  x-ibm-name: quote-management-api
+  x-ibm-name: quote-api
 host: $(catalog.host)
 tags:
   - name: Quote

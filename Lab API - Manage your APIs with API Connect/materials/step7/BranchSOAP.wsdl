@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Branches" targetNamespace="http://ws.ad.ibm.com/branches/" xmlns:bra="http://ws.ad.ibm.com/branches/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://ws.ad.ibm.com/branches/">
+      <xsd:element name="getAllBranches">
+        <xsd:complexType>
+          <xsd:sequence/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getAllBranchesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="branch" type="bra:Branch" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getArrayS">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="value" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getArraySResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="values" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="Branch">
+        <xsd:sequence>
+          <xsd:element name="id" type="xsd:string"/>
+          <xsd:element name="type" type="xsd:string"/>
+          <xsd:element name="phones" type="bra:Phone" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="address" type="bra:Address"/>
+          <xsd:element name="options" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+          <xsd:element name="onlineStatus" type="xsd:boolean"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Phone">
+        <xsd:sequence>
+          <xsd:element name="type" type="xsd:string"/>
+          <xsd:element name="number" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Address">
+        <xsd:sequence>
+          <xsd:element name="street1" type="xsd:string"/>
+          <xsd:element name="street2" type="xsd:string"/>
+          <xsd:element name="zip-code" type="xsd:string"/>
+          <xsd:element name="city" type="xsd:string"/>
+          <xsd:element name="state" type="xsd:string"/>
+          <xsd:element name="country" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getAllBranchesRequest">
+    <wsdl:part element="bra:getAllBranches" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getAllBranchesResponse">
+    <wsdl:part element="bra:getAllBranchesResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="getArraySRequest">
+    <wsdl:part name="parameters" element="bra:getArrayS"/>
+  </wsdl:message>
+  <wsdl:message name="getArraySResponse">
+    <wsdl:part name="parameters" element="bra:getArraySResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="Branches">
+    <wsdl:operation name="getAllBranches">
+      <wsdl:input message="bra:getAllBranchesRequest"/>
+      <wsdl:output message="bra:getAllBranchesResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getArrayS">
+      <wsdl:input message="bra:getArraySRequest"/>
+      <wsdl:output message="bra:getArraySResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BranchesSOAP" type="bra:Branches">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getAllBranches">
+      <soap:operation soapAction="http://ws.ad.ibm.com/branches/getAllBranches"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getArrayS">
+      <soap:operation soapAction="http://ws.ad.ibm.com/branches/getArrayS"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Branches">
+    <wsdl:port binding="bra:BranchesSOAP" name="BranchesSOAP">
+      <soap:address location="http://caplonsgprd-5.integration.ibmcloud.com:15066/branches"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
