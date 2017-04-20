@@ -63,15 +63,15 @@ The main components composing API Connect are:
 + The **Gateway** (either DataPower, either a NodeJS implementation called micro gateway in this case). The requests from apps are going through the gateway, policies are enforced and analytic are gathered.
 + The **Manager**  where the APIs are defined and governed. It also collects the analytics from the gateway. The manager can be used directly or more likely using the toolkit.
 + The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developpers), they create Apps and susbscribe to API within the portal. Based on Drupal, it is highly customizable.
-+ The **Collective member** or micro servics runtime. This is where the loopback applications are running. This component is originaly coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and aslo a good place to perform composition of APIs.
-+ Associated to the collective member is the **Collective controller** that monitors the collective member and can provide advanced feature such as auto-scaling.
++ The **Loopback runtime** or micro servics runtime. This is where the loopback applications are running. This component is originaly coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and aslo a good place to perform composition of APIs.
++ Associated to the Loopback runtime is the **Kubernetes** that monitors the Loopback runtime and can provide advanced feature such as auto-scaling.
 + The **Toolkit**, running on the API developper, it offers the same web experience as the manager to manage APIs. But this is also the only place where you can define Loopback applications. It also contains CLI to operate directly on the manager wether it is an onPremise version or Bluemix version of API Connect.
 
 >Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
 ![APIC Achitecture](./images/apic-archi-on-prem.png)
 
 ## API Connect architecture in Bluemix
-Well, API Connect in Bluemix, is the same product as onPremise (or almost, notice the NodeJS runtime instead of collective member). This gives us a competitive advantage, because we have no issues at all to move from onPremise to Bluemix and vice-versa and have hybrid implementations.
+Well, API Connect in Bluemix, is the same product as onPremise (use of NodeJS for the loopback application). This gives us a competitive advantage, because we have no issues at all to move from onPremise to Bluemix and vice-versa and have hybrid implementations.
 
 >Notice the **secure gateway** component that allows to connect simply IBM Bluemix and the company IT.
 ![APIC Achitecture in Bluemix](./images/apic-archi-bmx.png)
@@ -81,7 +81,7 @@ Well, API Connect in Bluemix, is the same product as onPremise (or almost, notic
 + A **Plan**: this is where we specify the quotas and if an approval is needed to subscribe to a Product/API.
 + A **Product**: this is an aggregation of APIs, and one or many plans associated to those APIs. This is what is published to a catalog. One Product = one yaml file.
 + A **Catalog**: it's relates to a cluster of gateways and a portal. It sounds like an environment but it also contains a business dimension. For example, good names for a catalog are Sandbox, Dev, Production, CRM (for my CRM APIs exposed to a specific population), etc ...
-+ An API Connect **Cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and collective runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organisation and needs to separate the infrastructures.
++ An API Connect **Cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and loopback applications runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organisation and needs to separate the infrastructures.
 + **Assembly panel**: this is where we specify the policies to be executed in the gateway for each transactions.
 
 ## Concepts map
@@ -114,7 +114,7 @@ This chapter just illustrates one way to install the product in a very simple ca
 <br>Start the OVA in VMWare, adjust network settings and exchange keys so manager can interact with portal.
 * Toolkit
 <br>On Window   tall api-connect toolkit using npm
-* Collective
+* Loopbacl application
 <br>Install controller (WAS liberty) + IHS + member (nodeJS) and configure IHS Plugin
 
 # Steps for the lab
