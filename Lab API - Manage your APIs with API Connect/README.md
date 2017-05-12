@@ -130,7 +130,7 @@ The corresponding back end runtimes are as follow:
 ![RuntimesAndBackEnd](./images/RuntimesAndBackEnd.png)
 This provides a mix of JAX RS, NodeJS (with Loopback Application) and Secure Gateway back end samples, demonstrating pure cloud APIs and hybrid APIs.
 
-1. [Provision API Connect in Bluemix](step-1---provision-api-connect-in-bluemix)
+1. [Provision API Connect in Bluemix](#step-1---provision-api-connect-in-bluemix)
 2. [Expose an existing REST API](#step-2---expose-an-existing-rest-api)
 3. [Publish your API to the Sandbox catalog](#step-3---publish-your-api-to-the-sandbox-catalog)
 4. [Consumer Experience](#step-4---consumer-experience)
