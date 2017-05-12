@@ -7,6 +7,8 @@ In this lab, you’ll gain a high level understanding of the architecture, featu
 >**Note**:
 This lab is based on version 5.0.7.0 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
 
+>For any comments, please send me, Arnauld Desprets, an email to arnauld_desprets@fr.ibm.com
+
 
 # Objective
 
@@ -143,7 +145,18 @@ This provides a mix of JAX RS, NodeJS (with Loopback Application) and Secure Gat
 
 # Step 1 - Provision API Connect in Bluemix
 Login to the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision (create) an instance of the service **API Connect**.
-We also instanciate the Portal associated to the Sandbox catalog. Click on the API Connect instance from your catalog, Go to *Dashboard* (within API Connect), click on the Sandbox catalog, then on the menu bar, click on *Settings*, then on the navigation panel, click on Portal, and select *IBM Developer Portal*, click the Save icon. This will instanciate an instance of a site within Drupal, when it is completed you will receive an email.
+
+![APIC Instance Creation](./images/bluemix-createapic.png)
+
+When the API connect instance is created in your space for the organization, you should get the following screen. Notice that you can create only one instance of API connect per bluemix space.
+
+![APIC Instance Created](./images/bluemix-apiccreated.png)
+The bold red box belongs to Bluemix, the Hamburger (small red box) give menus specific to Bluemix.
+
+The bold blue box belongs to API Connect, the chevrons (small blue box) gives menus specific to API connect.
+
+We also instantiate the Portal associated to the Sandbox catalog. Click on the API Connect instance from your catalog, Go to *Dashboard* (within API Connect), click on the Sandbox catalog, then on the menu bar, click on *Settings*, then on the navigation panel, click on Portal, and select *IBM Developer Portal*, click the Save icon. This will instanciate an instance of a site within Drupal, when it is completed you will receive an email.
+![APIC Portal Configuration](./images/bluemix-configportal.png)
 
 # Step 2 - Expose an existing REST API
 For this lab, we will work directly in the Manager in Bluemix instead of using the toolkit.
@@ -337,7 +350,7 @@ Select The BranchMgmt product.
 >**Note:** We did not use a Properties and did not change the endpoint for the Proxy policy in the assembly panel, because the WSDL does have the correct endpoint on the Secure Gateway in Bluemix. In reality, you would probably want to create a properties that will point to the right endpoint depending on the environment.
 
 # Step 8 - Create a SOAP to REST API
->In this step, we are going to create a New API (blank), specify the REST interface (paths, verbs and parameters) and add the Service definition using the Branch.wsdl file from the previous step, and then in the assembly will perform the mapping. You will see that API Connect supports array of objects or arrays of arrays very easily.
+>In this step, we are going to create a New API (blank), specify the REST interface (paths, verbs and parameters) and add the Service definition using the Branch.wsdl file from the previous step, and then in the assembly will perform the mapping. You will see that API Connect supports array of objects or arrays of arrays very easily. Notice that SOAP to REST in this context means that we have a SOAP back end and we expose it in REST JSON, hence SOAP to REST. We could have had a another view and call it REST to SOAP :-)
 
 Click on Add, and select New API
 
@@ -346,13 +359,52 @@ Click on Add, and select New API
 Specify the following
 > Title: Branch SOAP to REST
 
-> Base path: /branch-s2r
+> Base path: /branch-s2r/v1
 
 Then click on Create API button.
 
 ![SOAP API REST new](./images/apic-soap-rest-new.png)
 
-Add to the the existing BranchMgmt product.
+Add it to the the existing BranchMgmt product.
+
+Since we do not have a Swagger in this case, we need to define the various definitions for the interface manually and in particular for the response.
+The SOAP response is as follow:
+```
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:getAllBranchesResponse xmlns="http://ws.ad.ibm.com/branches/getBranchById" xmlns:ns2="http://ws.ad.ibm.com/branches/">
+         <ns2:branch>
+            <ns2:id>123</ns2:id>
+            <ns2:type>atm</ns2:type>
+            <ns2:phones>
+               <ns2:type>personal</ns2:type>
+               <ns2:number>978-899-3445</ns2:number>
+            </ns2:phones>
+            <ns2:phones>
+               <ns2:type>professional</ns2:type>
+               <ns2:number>978-899-3446</ns2:number>
+            </ns2:phones>
+            <ns2:address>
+               <ns2:street1>600 Anton Blvd.</ns2:street1>
+               <ns2:street2>Appt 1</ns2:street2>
+               <ns2:zip-code>92626</ns2:zip-code>
+               <ns2:city>Costa Mesa</ns2:city>
+               <ns2:state>CA</ns2:state>
+               <ns2:country>USA</ns2:country>
+            </ns2:address>
+            <ns2:options>color screen</ns2:options>
+            <ns2:options>large screen</ns2:options>
+            <ns2:onlineStatus>true</ns2:onlineStatus>
+         </ns2:branch>
+      </ns2:getAllBranchesResponse>
+   </soap:Body>
+</soap:Envelope>
+```
+
+In this step, we only will implement the getAllBranches operation.
+
+We start by creating the definitions.
+We need To be continued...
 
 Add the Service definition and upload the BranchSOAP.wsdl file, by clicking on the + icon close to the Services definition
 
@@ -378,6 +430,9 @@ Drag and drop the getAllBranches Web Service Operations Policy from the palette.
 This automatically generate all you need to do the mapping.
 
 ![SOAP API REST remove invoke](./images/apic-soap-rest-assembly-generated.png)
+
+We just need to complete the mapping for both request and response.
+The first Map policy will convert the JSON request to a SOAP request, the second will convert the SOAP response into a JSON response. With the getAllBranches operation, there is a paricularity. The request does not take any parameter. So there is not explicit mapping to perform. We are just going to open the first Map policy to understand what is happening. Click on the first Map policy, this opens the mapping editor. You can see on the right, the SOAP message, and nothing on the left. We do not need to specify an input in this case. The SOAP message contains everything needed, i.e. The SOAP headers, body, operation and setting the two specific HHTP Header SOAP action and the .
 
 Unfortunately, you will have to wait for the details to do the mapping.
 In two words, we need to define the REST interface, and do the mapping.
