@@ -182,6 +182,24 @@ In this first step, we assume that a developer of an API is providing you the Sw
 
 You can also test the API using the explore facility. You get a view similar to the API consumer in the portal, but in this case you do not need to create an Apps and subscribe to the API. Click on the *Explore* link on the top right, you see the documentation and have the possibility to test the various operations.
 
+>**Note**: Documenting an API is very important. API Connect supports the MarkDown format, which is popular in the GitHub sphere.
+Below some samples of usefull MarkDown instructions.
+* Sample inline code `api.instagram.com` : use single quote around
+* Sample of code block
+```
+some information
+```
+: use triple ' and separate with line
+* Sample of URL without displaying the URL:
+ [IBM](https://www.ibm.com) : use [text] and then (URL) no spaces
+* Sample of table
+
+| Header1 |  Header 2 |
+| ------------- | ------------- |
+| Value 1 | Value 2 |
+
+: use | to delimit columns, a line with `| - |` for the headers and a line before and after the table
+
 You can perform the same set of operations for the BranchREST API and using a new product called BranchMgmt. The Swagger for the Branch API is [here](./materials/step2/BranchRESTAPI_AW_S.yaml)
 
 # Step 3 - Publish your API to the Sandbox catalog
@@ -404,7 +422,11 @@ The SOAP response is as follow:
 In this step, we only will implement the getAllBranches operation.
 
 We start by creating the definitions.
-We need To be continued...
+We need to create: a Branch, an Address and a Phone for the basic types and the following objects to implement the arrays: a PhoneArray, an OptionArray and finaly a BranchArray. From the soap message above it is pretty obvious to determine the properties associated to those definitions. We use string for all properties except the onlineStatus property which is a boolean.
+
+
+
+
 
 Add the Service definition and upload the BranchSOAP.wsdl file, by clicking on the + icon close to the Services definition
 
