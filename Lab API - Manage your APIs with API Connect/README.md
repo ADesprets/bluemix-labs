@@ -7,7 +7,7 @@ In this lab, you’ll gain a high level understanding of the architecture, featu
 >**Note**:
 This lab is based on version 5.0.7.0 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
 
->For any comments, please send me, Arnauld Desprets, an email to arnauld_desprets@fr.ibm.com
+>For any comments, please send an email to arnauld_desprets@fr.ibm.com (Arnauld Desprets)
 
 
 # Objective
@@ -53,9 +53,9 @@ This chapter does not intend to describe all the possible use cases of API Conne
 1. **Use case 1**: I have existing internal SOAP services and/or REST APIs. I want to expose and increase visibility internaly and externaly. I need to understand how my APIs/Services are used and apply quotas. I need to provide to secure the access.
 <br><span style="text-decoration: underline;">Solution</span>: Simple proxyfication, not complex policies, use OOTB portal, manager.
 2. **Use case 2**: All the above + my APIs/services do not have the right granularity or the right format to be used by my Apps.
-<br><span style="text-decoration: underline;">Solution</span>: Use map policies to adapt the interfaces, and/or use JSON <-> XML policies.
+<br><span style="text-decoration: underline;">Solution</span>: Use map policies to adapt the interfaces, and/or use JSON <-> XML policies with a powerful versioning management.
 3. **Use case 3**: I organise a hackathon or I'm in context of co-creation with extended eco-system and I need to rapidly create APIs from data sources or from models.
-<br><span style="text-decoration: underline;">Solution</span>: Create Loopback Applications and expose them as APIs.
+<br><span style="text-decoration: underline;">Solution</span>: Create Loopback Applications and expose them as APIs. Cloud workload are good candidates.
 4. **Use case 4**: I need some kind of composition/aggration and expose an API.
 <br><span style="text-decoration: underline;">Solution</span>: Create a Loopback Application and add remote hook
 
@@ -115,8 +115,8 @@ This chapter just illustrates one way to install the product in a very simple ca
 * Portal
 <br>Start the OVA in VMWare, adjust network settings and exchange keys so manager can interact with portal.
 * Toolkit
-<br>On Window   tall api-connect toolkit using npm
-* Loopbacl application
+<br>On Windows install api-connect toolkit using npm
+* Loopback application
 <br>Install controller (WAS liberty) + IHS + member (nodeJS) and configure IHS Plugin
 
 # Steps for the lab
@@ -124,7 +124,6 @@ This chapter just illustrates one way to install the product in a very simple ca
 The goal of this lab is to define the following APIs:
 ![ProductsAndAPIsToBuild](./images/ProductsAPIsToBuild.png)
 This provides a mix of REST and SOAP APIs, with or without mapping, using or not a Loopback Application.
-
 
 The corresponding back end runtimes are as follow:
 ![RuntimesAndBackEnd](./images/RuntimesAndBackEnd.png)
@@ -422,17 +421,36 @@ The SOAP response is as follow:
 In this step, we only will implement the getAllBranches operation.
 
 We start by creating the definitions.
-We need to create: a Branch, an Address and a Phone for the basic types and the following objects to implement the arrays: a PhoneArray, an OptionArray and finaly a BranchArray. From the soap message above it is pretty obvious to determine the properties associated to those definitions. We use string for all properties except the onlineStatus property which is a boolean.
+Looking a the SOAP message, we need to create : a branch, an address and a phone for the basic types and the following objects to implement the arrays: a phoneArray, an optionArray and finaly a branchArray. From the soap message above it is pretty obvious to determine the properties associated to those definitions. We use string for all properties except the onlineStatus property which is a boolean.
+ Go to the definitions section, click on the + sign on the right. Rename the new definition to branch, keep the type to object
 
+![Create Branch definition](./images/branchdef1.png)
 
+Change the new property-1 to id, specify the description, keep the type to string and specify a sample value.
 
+![Adding a property](./images/branchdef2.png)
+
+Repeat the same for the other preperties.
+For example, here is the phone definition: ![phone definition](./images/branchdef3.png)
+
+For the arrays, this is the same principle, except that we create an object of type array, and then select the type of intems in the array. Below the phoneArray object
+
+![phoneArray definition](./images/branchdef4.png)
+
+When you have created all the definitions, you should have something similar to this.
+
+![all definitions](./images/branchdef5.png)
+
+We can now create the path. In the Paths section, click on + sign on the right. Rename the path to /branches., expand the GET operation, provide an Operation ID, provide information on the path in the Description section. For the response, in the 200 status code section, specify the schema of the response, in our case, select branchArray.
+
+![path definitions](./images/branchdef6.png)
 
 
 Add the Service definition and upload the BranchSOAP.wsdl file, by clicking on the + icon close to the Services definition
 
 ![SOAP API REST new](./images/apic-soap-rest-service-def.png)
 
-You can see the deails of the Service, click on Done.
+You can see the details of the Service, click on Done.
 
 ![SOAP API REST new service](./images/apic-soap-rest-service-def2.png)
 
@@ -449,19 +467,15 @@ Drag and drop the getAllBranches Web Service Operations Policy from the palette.
 
 ![SOAP API REST remove invoke](./images/apic-soap-rest-service-policy.png)
 
-This automatically generate all you need to do the mapping.
+This automatically generates all you need to do the mapping.
 
 ![SOAP API REST remove invoke](./images/apic-soap-rest-assembly-generated.png)
 
 We just need to complete the mapping for both request and response.
 The first Map policy will convert the JSON request to a SOAP request, the second will convert the SOAP response into a JSON response. With the getAllBranches operation, there is a paricularity. The request does not take any parameter. So there is not explicit mapping to perform. We are just going to open the first Map policy to understand what is happening. Click on the first Map policy, this opens the mapping editor. You can see on the right, the SOAP message, and nothing on the left. We do not need to specify an input in this case. The SOAP message contains everything needed, i.e. The SOAP headers, body, operation and setting the two specific HHTP Header SOAP action and the .
 
-Unfortunately, you will have to wait for the details to do the mapping.
-In two words, we need to define the REST interface, and do the mapping.
-
-To be continued ....
-
-
+Mapping the response
+![Response mapping](./images/restTOsoapMapOutput.png)
 
 # Step 9 - Create a Cloudant service
 
