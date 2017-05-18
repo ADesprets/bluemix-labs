@@ -50,13 +50,13 @@ To check the local version of API Connect: ```apic -v```
 # Goals of API Connect, main use cases
 This chapter does not intend to describe all the possible use cases of API Connect, but instead provide some simple and concrete common usages of API Connect.
 
-1. **Use case 1**: I have existing internal SOAP services and/or REST APIs. I want to expose and increase visibility internaly and externaly. I need to understand how my APIs/Services are used and apply quotas. I need to provide to secure the access.
+1. **Use case 1**: I have existing internal SOAP services and/or REST APIs. I want to expose and increase visibility internally and externally. I need to understand how my APIs/Services are used and apply quotas. I need to provide to secure the access.
 <br><span style="text-decoration: underline;">Solution</span>: Simple proxyfication, not complex policies, use OOTB portal, manager.
 2. **Use case 2**: All the above + my APIs/services do not have the right granularity or the right format to be used by my Apps.
 <br><span style="text-decoration: underline;">Solution</span>: Use map policies to adapt the interfaces, and/or use JSON <-> XML policies with a powerful versioning management.
 3. **Use case 3**: I organise a hackathon or I'm in context of co-creation with extended eco-system and I need to rapidly create APIs from data sources or from models.
 <br><span style="text-decoration: underline;">Solution</span>: Create Loopback Applications and expose them as APIs. Cloud workload are good candidates.
-4. **Use case 4**: I need some kind of composition/aggration and expose an API.
+4. **Use case 4**: I need some kind of composition/aggregation and expose an API.
 <br><span style="text-decoration: underline;">Solution</span>: Create a Loopback Application and add remote hook
 
 # Architecture and terminology
@@ -64,10 +64,10 @@ This chapter does not intend to describe all the possible use cases of API Conne
 The main components composing API Connect are:
 + The **Gateway** (either DataPower, either a NodeJS implementation called micro gateway in this case). The requests from apps are going through the gateway, policies are enforced and analytic are gathered.
 + The **Manager**  where the APIs are defined and governed. It also collects the analytics from the gateway. The manager can be used directly or more likely using the toolkit.
-+ The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developpers), they create Apps and susbscribe to API within the portal. Based on Drupal, it is highly customizable.
-+ The **Loopback runtime** or micro servics runtime. This is where the loopback applications are running. This component is originaly coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and aslo a good place to perform composition of APIs.
++ The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developpers), they create Apps and subscribe to API within the portal. Based on Drupal, it is highly customizable.
++ The **Loopback runtime** or micro services runtime. This is where the loopback applications are running. This component is originally coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and also a good place to perform composition of APIs.
 + Associated to the Loopback runtime is the **Kubernetes** that monitors the Loopback runtime and can provide advanced feature such as auto-scaling.
-+ The **Toolkit**, running on the API developper, it offers the same web experience as the manager to manage APIs. But this is also the only place where you can define Loopback applications. It also contains CLI to operate directly on the manager wether it is an onPremise version or Bluemix version of API Connect.
++ The **Toolkit**, running on the API developer, it offers the same web experience as the manager to manage APIs. But this is also the only place where you can define Loopback applications. It also contains CLI to operate directly on the manager whether it is an onPremise version or Bluemix version of API Connect.
 
 >Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
 ![APIC Achitecture](./images/apic-archi-on-prem.png)
@@ -202,7 +202,7 @@ some information
 You can perform the same set of operations for the BranchREST API and using a new product called BranchMgmt. The Swagger for the Branch API is [here](./materials/step2/BranchRESTAPI_AW_S.yaml)
 
 # Step 3 - Publish your API to the Sandbox catalog
-1. Withing the Draft area, select the **QuoteMgmt** product, and click on **Publish icon** (cloud shape) in the top right corner, select Sandbox. This does effectively stage the product in the Sandbox catalog. The product is not yet published to the Portal.
+1. Within the Draft area, select the **QuoteMgmt** product, and click on **Publish icon** (cloud shape) in the top right corner, select Sandbox. This does effectively stage the product in the Sandbox catalog. The product is not yet published to the Portal.
 1. Go to the Bluemix [Dashboard] [bmx_dashboard_url]. Click on the Sandbox catalog, you should see the product just staged. Click on the ... link and select Publish.
 1. Check the visibility and click on Publish button.
 1. Your QuoteMgmt is now visible in Developer Portal
@@ -228,7 +228,7 @@ If you have not created a developer account, you will need to use the **Create a
 
 ![Create users](./images/apic-portal.png)
 
- 1. Enter in your account information for the developer account. This must be a different email address than your bluemix account. Click **Create New Account** once all the requisite data in the form has been filled out.
+ 1. Enter in your account information for the developer account. This must be a different email address than your Bluemix account. Click **Create New Account** once all the requisite data in the form has been filled out.
 
  1. A validation email will be sent out to the email address used at sign up. Click on the validation link and then you will have completed the sign up process and will be authenticated into the page.
 
@@ -275,7 +275,7 @@ In this section, we will use the developer portal to test Quote Management API R
 ![Test app](./images/apic-testapidevportal.png)
 
 1. Scroll down to the Try this operation section for the GET /quote path. Enter your Client ID and your Client secret and click the Call Operation button
-2. Scoll down below the Call operation button. You should see a 200 OK and a response body as shown below.
+2. Scroll down below the Call operation button. You should see a 200 OK and a response body as shown below.
 
 ![Test app](./images/apic-testapidevportalcall.png)
 
@@ -314,10 +314,10 @@ If all is OK, you should see the result of the quote in JSON format.
 
 ![Anaytic screen](./images/apic-analytics.png)
 
-4. To see analytic informations, click on the analytic icon.
+4. To see analytic information, click on the analytic icon.
 ![Anaytic icon app](./images/apic-analyticicon.png)
 
-5. Now you can navigate to the Analytic dasbord to show analytic informations for your API
+5. Now you can navigate to the Analytic dashboard to show analytic informatios for your API
 6. You can show
 
 ![Anaytic icon app](./images/apic-analyticdashboard.gif)
@@ -339,7 +339,7 @@ If all is OK, you should see the result of the quote in JSON format.
  ![Anaytic screen](./images/analytics-save-dashboard.png)
 
 # Step 7 - Create a SOAP API
-This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. We assule that we are still using the Manager (remote server in Bluemix), this would be the same user exeprience with the toolkit.
+This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. We assume that we are still using the Manager (remote server in Bluemix), this would be the same user experience with the toolkit.
 
 1. Download the WSDL for the Branch SOAP Service, you can find it  [here](./materials/step7/BranchSOAP.wsdl)
 
@@ -382,7 +382,7 @@ Then click on Create API button.
 
 ![SOAP API REST new](./images/apic-soap-rest-new.png)
 
-Add it to the the existing BranchMgmt product.
+Add it to the existing BranchMgmt product.
 
 Since we do not have a Swagger in this case, we need to define the various definitions for the interface manually and in particular for the response.
 The SOAP response is as follow:
@@ -421,7 +421,7 @@ The SOAP response is as follow:
 In this step, we only will implement the getAllBranches operation.
 
 We start by creating the definitions.
-Looking a the SOAP message, we need to create : a branch, an address and a phone for the basic types and the following objects to implement the arrays: a phoneArray, an optionArray and finaly a branchArray. From the soap message above it is pretty obvious to determine the properties associated to those definitions. We use string for all properties except the onlineStatus property which is a boolean.
+Looking a the SOAP message, we need to create: a branch, an address and a phone for the basic types and the following objects to implement the arrays: a phoneArray, an optionArray and finaly a branchArray. From the soap message above it is pretty obvious to determine the properties associated to those definitions. We use string for all properties except the onlineStatus property which is a boolean.
  Go to the definitions section, click on the + sign on the right. Rename the new definition to branch, keep the type to object
 
 ![Create Branch definition](./images/branchdef1.png)
@@ -430,10 +430,10 @@ Change the new property-1 to id, specify the description, keep the type to strin
 
 ![Adding a property](./images/branchdef2.png)
 
-Repeat the same for the other preperties.
+Repeat the same for the other properties.
 For example, here is the phone definition: ![phone definition](./images/branchdef3.png)
 
-For the arrays, this is the same principle, except that we create an object of type array, and then select the type of intems in the array. Below the phoneArray object
+For the arrays, this is the same principle, except that we create an object of type array, and then select the type of items in the array. Below the phoneArray object
 
 ![phoneArray definition](./images/branchdef4.png)
 
@@ -446,7 +446,7 @@ We can now create the path. In the Paths section, click on + sign on the right. 
 ![path definitions](./images/branchdef6.png)
 
 
-Add the Service definition and upload the BranchSOAP.wsdl file, by clicking on the + icon close to the Services definition
+Add the Service definition by uploading the BranchSOAP.wsdl file, click on the + icon close to the Services definition
 
 ![SOAP API REST new](./images/apic-soap-rest-service-def.png)
 
@@ -472,10 +472,12 @@ This automatically generates all you need to do the mapping.
 ![SOAP API REST remove invoke](./images/apic-soap-rest-assembly-generated.png)
 
 We just need to complete the mapping for both request and response.
-The first Map policy will convert the JSON request to a SOAP request, the second will convert the SOAP response into a JSON response. With the getAllBranches operation, there is a paricularity. The request does not take any parameter. So there is not explicit mapping to perform. We are just going to open the first Map policy to understand what is happening. Click on the first Map policy, this opens the mapping editor. You can see on the right, the SOAP message, and nothing on the left. We do not need to specify an input in this case. The SOAP message contains everything needed, i.e. The SOAP headers, body, operation and setting the two specific HHTP Header SOAP action and the .
+The first Map policy will convert the JSON request to a SOAP request, the second will convert the SOAP response into a JSON response. With the getAllBranches operation, there is a particularity. The request does not take any parameter. So there is not explicit mapping to perform. We are just going to open the first Map policy to understand what is happening. Click on the first Map policy, this opens the mapping editor. You can see on the right, the SOAP message, and nothing on the left. We do not need to specify an input in this case. The SOAP message contains everything needed, i.e. The SOAP headers, body, operation and setting the two specific HTTP Header SOAP action and the content-type for the request.
 
 Mapping the response
 ![Response mapping](./images/restTOsoapMapOutput.png)
+
+The endpoint for the back end SOAP service is the same as in Step 8: https://addressmanagementwebservice.eu-gb.mybluemix.net/branches/Branches.
 
 # Step 9 - Create a Cloudant service
 
@@ -493,7 +495,7 @@ You can use a existing Cloudant service or create an instance of the service Clo
 
 3. Launch the Cloudand Dashboard. A new tab should open automatically with the list of databases.
 
-4. Create a new database with the button on top right corner. Call this dabase : **test**. Make sure to use this name as this is expected by the persistence layer of API Connect.
+4. Create a new database with the button on top right corner. Call this database : **test**. Make sure to use this name as this is expected by the persistence layer of API Connect.
 
 5. Go back to Bluemix console and click the tab Service Credentials.
 
@@ -524,7 +526,7 @@ The developer toolkit provides an integrated development environment for develop
 
 To create a new LoopBack project, use the command apic loopback; then use the apic edit command to edit the project in the API Designer.
 
->**Note**: When working with the toolkit always be careful of where you are located on your file system. The working directory from where the apic command are started will be considered as the root of the loopback projects and products/APIs you are working at some point. Cautious must be taken on how you organise the directories. It also msut take in considerations that at some point you will want to source control some of the generated files (such as the yaml files for example) in a Source Control Management system such as github.
+>**Note**: When working with the toolkit always be careful of where you are located on your file system. The working directory from where the apic command are started will be considered as the root of the loopback projects and products/APIs you are working at some point. Cautious must be taken on how you organise the directories. It also must take in considerations that at some point you will want to source control some of the generated files (such as the yaml files for example) in a Source Control Management system such as github.
 
 
 1. Create an API Connect LoopBack application.
