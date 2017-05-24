@@ -101,7 +101,7 @@
   </wsdl:binding>
   <wsdl:service name="Branches">
     <wsdl:port binding="bra:BranchesSOAP" name="BranchesSOAP">
-      <soap:address location="http://caplonsgprd-5.integration.ibmcloud.com:15066/branches"/>
+      <soap:address location="https://addressmanagementwebservice.eu-gb.mybluemix.net/branches/Branches"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

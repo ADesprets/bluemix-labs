@@ -123,6 +123,7 @@ This chapter just illustrates one way to install the product in a very simple ca
 
 The goal of this lab is to define the following APIs:
 ![ProductsAndAPIsToBuild](./images/ProductsAPIsToBuild.png)
+
 This provides a mix of REST and SOAP APIs, with or without mapping, using or not a Loopback Application.
 
 The corresponding back end runtimes are as follow:
@@ -197,6 +198,7 @@ You can also test the API using the explore facility. You get a view similar to 
 
 >**Note**: Documenting an API is very important. API Connect supports the MarkDown format, which is popular in the GitHub sphere.
 Below some samples of usefull MarkDown instructions.
+# Title: `use #`
 * Sample inline code `api.instagram.com` : use single quote around
 * Sample of code block
 ```
@@ -217,7 +219,7 @@ You can perform the same set of operations for the BranchREST API and using a ne
 
 # Step 3 - Publish your API to the Sandbox catalog
 1. Within the Draft area, select the **QuoteMgmt** product, and click on **Publish icon** (cloud shape) in the top right corner, select Sandbox. This does effectively stage the product in the Sandbox catalog. The product is not yet published to the Portal.
- ![QuoteStage](./images/QuoteStage.png)
+![QuoteStage](./images/QuoteStage.png)
 1. Go to the Bluemix [Dashboard] [bmx_dashboard_url]. Click on the Sandbox catalog, you should see the product just staged. Click on the ... link and select Publish.
 ![QuotePublish](./images/QuotePublish.png)
 1. Check the visibility and click on Publish button.
@@ -358,26 +360,36 @@ If all is OK, you should see the result of the quote in JSON format.
 # Step 7 - Create a SOAP API
 This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. We assume that we are still using the Manager (remote server in Bluemix), this would be the same user experience with the toolkit.
 
-1. Download the WSDL for the Branch SOAP Service, you can find it  [here](./materials/step7/BranchSOAP.wsdl)
+1. Download the WSDL for the Branch SOAP Service, you can find it
+ [here](./materials/step7/BranchSOAP.wsdl).
+ You can also get the WSDL at the following URL https://addressmanagementwebservice.eu-gb.mybluemix.net/branches/Branches?WSDL
 
 1. In the Draft area, in the APIs menu, click on Add and select API from a SOAP service
+
  ![SOAP API Create](./images/apic-soap-create.png)
 
 1. Select the BranchSOAP.wsdl file to load
+
 ![SOAP API Load](./images/apic-soap-create-load.png)
+
 and click Done.
 
 1. Rename the API to **Branch SOAP** by changing the title.
 
 1. Add this new SOAP API to the existing BranchMgmt product
+
 ![SOAP API Add to Product](./images/apic-soap-create-addtoproduct.png)
+
 Select The BranchMgmt product.
+
 ![SOAP API Add to BranchMgmt Product](./images/apic-soap-addtoBranchProduct.png)
 
 1. The BranchMgmt product now contains two APIs
+
 ![SOAP API BranchMgmt Product](./images/apic-soap-product-with-two-APIs.png)
 
 1. Publish the Product into the Sandbox catalog and test the getAllBranches operation in the Portal
+
 ![SOAP API Test](./images/apic-soap-test.png)
 
 
