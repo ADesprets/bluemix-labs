@@ -119,7 +119,7 @@ This chapter just illustrates one way to install the product in a very simple ca
 * Loopback application
 <br>Install controller (WAS liberty) + IHS + member (nodeJS) and configure IHS Plugin
 
-# Steps for the lab
+# Overall design of the lab
 
 The goal of this lab is to define the following APIs:
 ![ProductsAndAPIsToBuild](./images/ProductsAPIsToBuild.png)
@@ -127,20 +127,22 @@ This provides a mix of REST and SOAP APIs, with or without mapping, using or not
 
 The corresponding back end runtimes are as follow:
 ![RuntimesAndBackEnd](./images/RuntimesAndBackEnd.png)
-This provides a mix of JAX RS, NodeJS (with Loopback Application) and Secure Gateway back end samples, demonstrating pure cloud APIs and hybrid APIs.
+This provides a mix of JAX RS, JAX WS, and NodeJS (with Loopback Application) for pure cloud APIs. The use of Secure Gateway in relation with a local deployment would demonstrate hybrid APIs.
+
+# Steps for the lab
 
 1. [Provision API Connect in Bluemix](#step-1---provision-api-connect-in-bluemix)
-2. [Expose an existing REST API](#step-2---expose-an-existing-rest-api)
-3. [Publish your API to the Sandbox catalog](#step-3---publish-your-api-to-the-sandbox-catalog)
-4. [Consumer Experience](#step-4---consumer-experience)
-5. [Invoke the API](#step-5---invoke-the-api)
-6. [Analytics](#step-6---analytics)
-7. [Create a SOAP API ](#step-7---create-a-soap-api)
-8. [Create a SOAP to REST API ](#step-8---create-a-soap-to-rest-api)
-9. [Create a Cloudant service](#step-9---create-a-cloudant-service)
-10. [Create a LoopBack application](#step-10---create-a-loopback-application)
-11. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
-12. [Test your API](#step-12---test-your-api)
+1. [Expose an existing REST API](#step-2---expose-an-existing-rest-api)
+1. [Publish your API to the Sandbox catalog](#step-3---publish-your-api-to-the-sandbox-catalog)
+1. [Consumer Experience](#step-4---consumer-experience)
+1. [Invoke the API](#step-5---invoke-the-api)
+1. [Analytics](#step-6---analytics)
+1. [Create a SOAP API ](#step-7---create-a-soap-api)
+1. [Create a SOAP to REST API ](#step-8---create-a-soap-to-rest-api)
+1. [Create a Cloudant service](#step-9---create-a-cloudant-service)
+1. [Create a LoopBack application](#step-10---create-a-loopback-application)
+1. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
+1. [Test your API](#step-12---test-your-api)
 
 # Step 1 - Provision API Connect in Bluemix
 Login to the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision (create) an instance of the service **API Connect**.
@@ -150,16 +152,17 @@ Login to the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision
 When the API connect instance is created in your space for the organization, you should get the following screen. Notice that you can create only one instance of API connect per bluemix space.
 
 ![APIC Instance Created](./images/bluemix-apiccreated.png)
-The bold red box belongs to Bluemix, the Hamburger (small red box) give menus specific to Bluemix.
 
-The bold blue box belongs to API Connect, the chevrons (small blue box) gives menus specific to API connect.
+* The bold red box belongs to Bluemix, the Hamburger (small red box) give menus specific to Bluemix.
+* The bold blue box belongs to API Connect, the chevrons (small blue box) gives menus specific to API connect.
 
 We also instantiate the Portal associated to the Sandbox catalog. Click on the API Connect instance from your catalog, Go to *Dashboard* (within API Connect), click on the Sandbox catalog, then on the menu bar, click on *Settings*, then on the navigation panel, click on Portal, and select *IBM Developer Portal*, click the Save icon. This will instanciate an instance of a site within Drupal, when it is completed you will receive an email.
+
 ![APIC Portal Configuration](./images/bluemix-configportal.png)
 
 # Step 2 - Expose an existing REST API
 For this lab, we will work directly in the Manager in Bluemix instead of using the toolkit.
->**Note**: Using the toolkit (locally) or using manager  directly (remote server) is a pretty important decision. Using the toolkit allows to use a Source Control Management system and perform micro versioning as well as backup of the various yaml (and wsdls). It also provides a local experience with a very low response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches.
+>**Note**: Using the toolkit (locally) or using manager  directly (remote server) is a pretty important decision. Using the toolkit allows to use a Source Control Management System and perform micro versioning as well as backup of the various yaml (and wsdls). It also provides a local experience with a very low response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches.
 
 In this first step, we assume that a developer of an API is providing you the Swagger associated with that API. The developer is using WAS Liberty as the runtime and he also uses JAX-RS annotations along apidiscovery feature. This allows him to get a Swagger easily consumed by API Connect. Download the Swagger [here](./materials/step2/QuoteManagementAPI_AW_S.yaml) on your file system, for example under C:\\IBM\\Afterwork
 
@@ -170,16 +173,27 @@ In this first step, we assume that a developer of an API is providing you the Sw
 1. We need to complete/review  a few informations, that were not specified in the generated Swagger. The amount of information that need to be completed will depend greatly on the use of the annotations or the Swagger generator used.
 
  * Select https for the scheme, in the *Schemes* section.
+ ![QuoteSchemes](./images/QuoteSchemes.png)
  * Create the security definition, click on + sign close to the *Security Definitions* section, and select API Key. Rename it to **cliend-id**.
+  ![QuoteSecurityDef](./images/QuoteSecurityDef.png)
  * Specify the security of the API, click on the + sign close to the *Security* section, and check the client-id API Key
- * Create a property to define the **target-url** of the back end API. This allows us to create a variable that may take different values based on the catalog. Click on the + sign close to the *Properties* section. Set the Property name to target-url, and enter **http://SampleJAXRS20-aw.eu-gb.mybluemix.net** in the value, close to *Default* value.
+ ![QuoteSecurity](./images/QuoteSecurity.png)
+ * Create a property to define the **target-url** of the back end API. This allows us to create a variable that may take different values based on the catalog instance. Click on the + sign close to the *Properties* section. Set the Property name to target-url, and enter **http://SampleJAXRS20-aw.eu-gb.mybluemix.net** in the value, close to *Default* value.
+  ![QuoteProperty](./images/QuoteProperty.png)
  * Click on the Assemble menu (or Edit ssembly button), click on the Invocation policy, and set the URL property to **$(target-url)$(request.path)$(request.search)**
+ ![QuoteInvoke](./images/QuoteInvoke.png)
  * Save the changes, by clicking on the *Save* icon at the top.
 
-1. We are almost ready to test the API. We need to add the API to the Product. You do this within the API by clicking on the ... icon on the top, and select *Add to existing products*, then select the *QuoteMgmt* and click on the Add button.
-1. To test the API from an API provider perspective, click on *Assemble*, in the left hand side panel, switch from **Micro Gateway policies** to **DataPower Gateway policies**. Save the change. click on the triangle icon (on the top left), check the catalog to run the API, select the QuoteManagement product, then select the operation to test, for example, get /extQuote, enter the parameters (amount 1000, rate 1.1, duration 36, delay 10, msg length 11) and click invoke. (If you are using the toolkit you also can do this, but in this case you need to start the micro gateway and the loopback application runtime).
+1. We are almost ready to test the API. We need to add the API to the Product. You do this within the API by clicking on the ... icon on the top right, and select *Add to existing products*, then select the *QuoteMgmt* and click on the Add button.
+1. To test the API from an API provider perspective, click on *Assemble*, in the left hand side panel, switch from **Micro Gateway policies** to **DataPower Gateway policies**.
+ ![QuoteDPPolicies](./images/QuoteDPPolicies.png)
+Save the change. click on the triangle icon (on the top left), check the catalog to run the API, select the QuoteManagement product, then select the operation to test, for example, get /extQuote, enter the parameters (amount 1000, rate 1.1, duration 36, delay 10, msg length 11) and click invoke. (If you are using the toolkit you also can do this, but in this case you need to start the micro gateway and the loopback application runtime).
+
+ ![QuoteTest](./images/QuoteTest.png)
 
 You can also test the API using the explore facility. You get a view similar to the API consumer in the portal, but in this case you do not need to create an Apps and subscribe to the API. Click on the *Explore* link on the top right, you see the documentation and have the possibility to test the various operations.
+ ![QuoteExploreButton](./images/QuoteExploreButton.png)
+ ![QuoteExplore](./images/QuoteExplore.png)
 
 >**Note**: Documenting an API is very important. API Connect supports the MarkDown format, which is popular in the GitHub sphere.
 Below some samples of usefull MarkDown instructions.
@@ -203,8 +217,11 @@ You can perform the same set of operations for the BranchREST API and using a ne
 
 # Step 3 - Publish your API to the Sandbox catalog
 1. Within the Draft area, select the **QuoteMgmt** product, and click on **Publish icon** (cloud shape) in the top right corner, select Sandbox. This does effectively stage the product in the Sandbox catalog. The product is not yet published to the Portal.
+ ![QuoteStage](./images/QuoteStage.png)
 1. Go to the Bluemix [Dashboard] [bmx_dashboard_url]. Click on the Sandbox catalog, you should see the product just staged. Click on the ... link and select Publish.
+![QuotePublish](./images/QuotePublish.png)
 1. Check the visibility and click on Publish button.
+![QuoteVisibility](./images/QuoteVisibility.png)
 1. Your QuoteMgmt is now visible in Developer Portal
 
 # Step 4 - Consumer Experience
