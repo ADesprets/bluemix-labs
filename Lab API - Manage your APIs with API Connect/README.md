@@ -49,7 +49,7 @@ To check the local version of API Connect: ```apic -v```
 
 # Goals of API Connect, main use cases
 This chapter does not intend to describe all the possible use cases of API Connect, but instead provide some simple and concrete common usages of API Connect.
-
+## Main use cases
 1. **Use case 1**: I have existing internal SOAP services and/or REST APIs. I want to expose and increase visibility internally and externally. I need to understand how my APIs/Services are used and apply quotas. I need to provide to secure the access.
 <br><span style="text-decoration: underline;">Solution</span>: Simple proxyfication, not complex policies, use OOTB portal, manager.
 2. **Use case 2**: All the above + my APIs/services do not have the right granularity or the right format to be used by my Apps.
@@ -58,6 +58,15 @@ This chapter does not intend to describe all the possible use cases of API Conne
 <br><span style="text-decoration: underline;">Solution</span>: Create Loopback Applications and expose them as APIs. Cloud workload are good candidates.
 4. **Use case 4**: I need some kind of composition/aggregation and expose an API.
 <br><span style="text-decoration: underline;">Solution</span>: Create a Loopback Application and add remote hook
+## Where APIs are used in companies?
+Here is the result of Forrester study, performed in February 2017.
+
+![ForresterStudy](./images/ForresterStudy.png)
+
+As you can see a lot of project are suing API internally, and the very visible part, the public projects represents 35%.
+
+Read the full study: The Total Economic Impact™ of an API Management Solution http://ibm.biz/APICTEIstudy
+
 
 # Architecture and terminology
 ## API Connect architecture onPremise
@@ -763,6 +772,7 @@ For additional resources pay close attention to the following:
 - [POT API Connect](https://ibm-apiconnect.github.io/pot/)
 - [POT API Connect Customization](https://ibm-apiconnect.github.io/faststart/)
 - [PSA Sample of customized portal](https://developer.psa-peugeot-citroen.com/)
+- [Royal mail portal](https://developer.royalmail.net/node/2757)
 
 
 [bmx_dashboard_url]:  https://console.eu-gb.bluemix.net/
