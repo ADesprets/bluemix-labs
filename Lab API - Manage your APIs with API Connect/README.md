@@ -4,7 +4,7 @@
 
 In this lab, you’ll gain a high level understanding of the architecture, features, and development concepts related to the IBM API Connect (APIC) solution. Throughout the lab, you’ll get a chance to use the APIC command line interface for creating LoopBack applications, the intuitive Web-based user interface, and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
 
->**Note**:
+> **Note**:
 This lab is based on version 5.0.7.0 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
 
 >For any comments, please send an email to arnauld_desprets@fr.ibm.com (Arnauld Desprets)
@@ -25,7 +25,7 @@ In the following lab, you will learn:
 + How to create and manage a SOAP API (Lab)
 + Basics about the command line apic to script recurring operations (Lab)
 + Transformation JSON to SOAP (Lab)
-+ API security (pres)
++ API security (Lab)
 
 
 # Pre-Requisites
@@ -63,7 +63,7 @@ Here is the result of Forrester study, performed in February 2017.
 
 ![ForresterStudy](./images/ForresterStudy.png)
 
-As you can see a lot of project are suing API internally, and the very visible part, the public projects represents 35%.
+As you can see a lot of projects are using API internally , and the very visible part, the public projects represents 35%.
 
 Read the full study: The Total Economic Impact™ of an API Management Solution http://ibm.biz/APICTEIstudy
 
@@ -153,6 +153,7 @@ This provides a mix of JAX RS, JAX WS, and NodeJS (with Loopback Application) fo
 1. [Create a LoopBack application](#step-10---create-a-loopback-application)
 1. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
 1. [Test your API](#step-12---test-your-api)
+1. [Using OAuth to protect your API](#step-13---using-oauth-to-protect-your-api)
 
 # Step 1 - Provision API Connect in Bluemix
 Login to the Bluemix [Catalog] [bmx_catalog_uk_url], in the UK region, provision (create) an instance of the service **API Connect**.
@@ -587,7 +588,9 @@ To create a new LoopBack project, use the command apic loopback; then use the ap
 
 1. Next you will be asked to select the type of application. Use the arrow keys to select the **empty-server** option and press the ***Enter*** or ***Return*** key.
 
-```❯ empty-server (An empty LoopBack API, without any configured models or datasources) ```
+```
+❯ empty-server (An empty LoopBack API, without any configured models or datasources)
+```
 
 1. At this point, the project builder will install the core dependencies for our Node.js application.
 
@@ -656,7 +659,8 @@ Connector-specific configuration:
 ? Install loopback-connector-cloudant@^1.0.4 Yes
 ```
 
->**Note**:
+
+> **Note**:
 By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloudant Connector will be downloaded and saved to your project automatically.
 
 >This will create a connection profile in the ~/Customer/server/datasources.json file. It is effectively the same as running the following to install the connector:
@@ -675,11 +679,15 @@ By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloud
 
 1. Launch API Connect Designer
 
-  ```apic edit```
+  ```
+  apic edit
+  ```
 
   If the designer started correctly, a webpage will automatically opens and the terminal will show a message similar to this one:
 
-  ```Express server listening on http://127.0.0.1:9000```
+  ```
+  Express server listening on http://127.0.0.1:9000
+  ```
 
 1. Click **Sign in with Bluemix**. If you're already sign in with Bluemix, you'll be automatically signed into the designer.
 
@@ -757,6 +765,19 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 1. If you have kept the Cloudant DB dahsboard open, you can select the database **test** and view the newly created record.
 
 1. Congratulations you successfullly tested your API.
+
+# Step 13 - Using OAuth to protect you API
+OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an acces token without the need of re-entering the user's credentials, it is possible to perform authorisation with the notion of scope, it is possible to authorise and a third party to access your data without authenticating (or using your credentials) to this thrid party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc ...
+
+> **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question, and there are different ways to get user information like having the back end performing a call back with the OAuth token to get information.
+
+In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorisation to extract identity, the user will be authenticated against an LDAP Server.
+
+This configuration requires two steps:
+1. Creating an OAuth API
+1. Configuring the API to be protected to use this OAuth API
+
+TO BE COMPLETED
 
 Congratulations. You have completed this Lab!
 
