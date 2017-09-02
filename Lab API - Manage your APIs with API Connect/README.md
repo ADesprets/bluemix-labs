@@ -34,7 +34,7 @@ In the following lab, you will learn:
 + Install (or Update) API Connect Toolkit [API Connect Developer Toolkit](https://www.npmjs.com/package/apiconnect) by issuing the following command:
 
    ```
-   npm install -g apiconnect --no-optional --ignore-scripts
+   npm install -g apiconnect
    ```
 You must have version 5.0.7.0 or above. check the version with the following command :
 
@@ -767,15 +767,41 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 1. Congratulations you successfullly tested your API.
 
 # Step 13 - Using OAuth to protect your API
-OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an acces token without the need of re-entering the user's credentials, it is possible to perform authorisation with the notion of scope, it is possible to authorise and a third party to access your data without authenticating (or using your credentials) to this thrid party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc ...
+OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an acces token without the need of re-entering the user's credentials, it is possible to perform authorisation with the notion of scope, it is possible to authorise a third party to access your data without authenticating (or using your credentials) to this thrid party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc ...
 
 > **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question, and there are different ways to get user information like having the back end performing a call back with the OAuth token to get information.
 
-In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorisation to extract identity, the user will be authenticated against an LDAP Server.
+In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorisation to extract identity, the user will be authenticated against an LDAP Server. We do use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider.
 
 This configuration requires two steps:
 1. Creating an OAuth API
 1. Configuring the API to be protected to use this OAuth API
+
+
+* Creation of the OAuth API
+From the API page, click on Create OAuth 2.0 Provider API.
+![Create OAuth API menu](./images/createOAuthAPIMenu.png)
+
+For the title enter *Banking Mgt OAuth Provider* for example, and change the version to add a version number which is a good practice, for example /banking-mgt-oauth-provider/v1.
+![Create OAuth API Title](./images/createOAuthAPITitle.png)
+
+
+ Enter the following information:
+
+| Field name               | Value           |
+|:-------------------------|:---------------:|
+| Client type              | Confidential    |
+| Scope name               | calculate_loans |
+| Grants                   | Password        |
+| Identity extraction      | Basic           |
+| Authentication           | User registry   |
+| User registry            | MyLDAP          |
+| Authorization            | Default form    |
+
+Only one scope, so you can remove the other ones.
+
+For now, unselect Enable refresh tokens, Enable revocation, and Enable token introspection. We will play with those options later.
+
 
 TO BE COMPLETED
 
