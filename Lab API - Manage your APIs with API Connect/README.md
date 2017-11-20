@@ -98,6 +98,10 @@ Well, API Connect in Bluemix, is the same product as onPremise (use of NodeJS fo
 ## Concepts map
 ![APIC Concepts](./images/apic-ConceptsMap.png)
 
+Below the concepts related to the subscription of an App to a Plan within a product refering to all APIs or a set of APIs within that product.
+![APIC Subscription](./images/subscription.png)
+
+
 Below the available policies in API Connect 5.0.6
 
 
@@ -114,6 +118,12 @@ Below the available policies in API Connect 5.0.6
 |Transform |Proxy   |proxie      |-|Security   |Generate LTPA  |LTPA (for WAS) |
 |Transform |Activity Log |audit  |-|User Defined |Any          |any logic coded in DP |
 
+# Lifecycle of a Product
+The lifecycle of a product is as follow:
+
+![ProductsLifeCycle](./images/diagram_product_lifecycle.jpg)
+
+It is possible to use an approbation control between each transistion (except Retired to Staged and Deprecated to Published)
 
 # Installation
 This chapter just illustrates one way to install the product in a very simple case. There are many more options to deploy install API Connect including full docker installation. The goal here is just to give a feeling on the installation process.
