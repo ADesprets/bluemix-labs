@@ -95,12 +95,22 @@ Well, API Connect in Bluemix, is the same product as onPremise (use of NodeJS fo
 + An API Connect **Cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and loopback applications runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organisation and needs to separate the infrastructures.
 + **Assembly panel**: this is where we specify the policies to be executed in the gateway for each transactions.
 
-## Concepts map
+## Concepts maps
+Below the concepts related to the overall product. There are many ways to choose the right deployment based on requirements.
+
+The questions to ask:
+1. How many APIC clouds? (usually between 1 and 3, driver: production separated or not from non production and other environments)
+1. How many clusters of gateways? (separate instances, driver: usually security zones (DMZ or not and others zones))
+1. How many gateway services? (drivers: the number of clusters of gateway above, and isolation)
+1. How many instances for each components? (how many instances of managers (usually 2 per APIC Cloud), instances of gateways (usually at least 2 depending on the traffic and high availability desired), instances of portals (usually 3 per APIC Cloud))
 ![APIC Concepts](./images/apic-ConceptsMap.png)
 
-Below the concepts related to the subscription of an App to a Plan within a product refering to all APIs or a set of APIs within that product.
+
+Below the concepts related to the subscription of an App to a Plan within a product referring to all APIs or a set of APIs within that product.
 ![APIC Subscription](./images/subscription.png)
 
+Below the concepts related to the organisation of the user registries.
+![APIC User Registries](./images/apic-registries.png)
 
 Below the available policies in API Connect 5.0.6
 
