@@ -6,6 +6,7 @@ In this lab, you’ll gain a high level understanding of the architecture, featu
 
 > **Note**:
 This lab is based on version 5.0.8.4 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
+The version 2018.x is out since 30th March 2018, and the LTS has been released on 15th November 2018. Due to the significant changes brought by APIC V2018 and also because IBM Cloud (former Bluemix) is using API Connect v5 as of today (16th November 2018), this lab will remains as is, and a complete new version of the lab will be introduced when the IBM Cloud infrastructure is updated.
 
 >For any comments, please send an email to arnauld_desprets@fr.ibm.com (Arnauld Desprets)
 
@@ -29,7 +30,7 @@ In the following lab, you will learn:
 
 
 # Pre-Requisites
-+ Sign in to [Bluemix](https://bluemix.net) and set up your IBM ID
++ Sign in to [IBM CLoud](https://bluemix.net) and set up your IBM ID
 + Install IBM Node SDK 6.x [Node.js](https://developer.ibm.com/node/sdk/v6/)
 + Install (or Update) API Connect Toolkit [API Connect Developer Toolkit](https://www.npmjs.com/package/apiconnect) by issuing the following command:
 
@@ -73,7 +74,7 @@ Read the full study: The Total Economic Impact™ of an API Management Solution 
 The main components composing API Connect are:
 + The **Gateway** (either DataPower, either a NodeJS implementation called micro gateway in this case). The requests from apps are going through the gateway, policies are enforced and analytic are gathered.
 + The **Manager**  where the APIs are defined and governed. It also collects the analytics from the gateway. The manager can be used directly or more likely using the toolkit.
-+ The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developpers), they create Apps and subscribe to API within the portal. Based on Drupal, it is highly customizable.
++ The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developers), they create Apps and subscribe to API within the portal. Based on Drupal, it is highly customizable.
 + The **Loopback runtime** or micro services runtime. This is where the loopback applications are running. This component is originally coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and also a good place to perform composition of APIs.
 + Associated to the Loopback runtime is the **Kubernetes** that monitors the Loopback runtime and can provide advanced feature such as auto-scaling.
 + The **Toolkit**, running on the API developer, it offers the same web experience as the manager to manage APIs. But this is also the only place where you can define Loopback applications. It also contains CLI to operate directly on the manager whether it is an onPremise version or Bluemix version of API Connect.
@@ -133,7 +134,7 @@ The lifecycle of a product is as follow:
 
 ![ProductsLifeCycle](./images/diagram_product_lifecycle.jpg)
 
-It is possible to use an approbation control between each transistion (except Retired to Staged and Deprecated to Published)
+It is possible to use an approbation control between each transition (except Retired to Staged and Deprecated to Published)
 
 # Installation
 This chapter just illustrates one way to install the product in a very simple case. There are many more options to deploy install API Connect including full docker installation. The goal here is just to give a feeling on the installation process.
@@ -187,7 +188,7 @@ When the API connect instance is created in your space for the organization, you
 * The bold red box belongs to Bluemix, the Hamburger (small red box) give menus specific to Bluemix.
 * The bold blue box belongs to API Connect, the chevrons (small blue box) gives menus specific to API connect.
 
-We also instantiate the Portal associated to the Sandbox catalog. Click on the API Connect instance from your catalog, Go to *Dashboard* (within API Connect), click on the Sandbox catalog, then on the menu bar, click on *Settings*, then on the navigation panel, click on Portal, and select *IBM Developer Portal*, click the Save icon. This will instanciate an instance of a site within Drupal, when it is completed you will receive an email.
+We also instantiate the Portal associated to the Sandbox catalog. Click on the API Connect instance from your catalog, Go to *Dashboard* (within API Connect), click on the Sandbox catalog, then on the menu bar, click on *Settings*, then on the navigation panel, click on Portal, and select *IBM Developer Portal*, click the Save icon. This will instantiate an instance of a site within Drupal, when it is completed you will receive an email.
 
 ![APIC Portal Configuration](./images/bluemix-configportal.png)
 
@@ -201,7 +202,7 @@ In this first step, we assume that a developer of an API is providing you the Sw
 
 1. Now we can create the API that will be included later in the Product just created. Within your instance of API Connect in your space, click on **Import API from File or URL**. This is accessible from Drafts > APIs. Specify the location of the Swagger you just downloaded. Click OK.
 
-1. We need to complete/review  a few informations, that were not specified in the generated Swagger. The amount of information that need to be completed will depend greatly on the use of the annotations or the Swagger generator used.
+1. We need to complete/review  a few information, that were not specified in the generated Swagger. The amount of information that need to be completed will depend greatly on the use of the annotations or the Swagger generator used.
 
  * Select https for the scheme, in the *Schemes* section.
  ![QuoteSchemes](./images/QuoteSchemes.png)
@@ -211,11 +212,11 @@ In this first step, we assume that a developer of an API is providing you the Sw
  ![QuoteSecurity](./images/QuoteSecurity.png)
  * Create a property to define the **target-url** of the back end API. This allows us to create a variable that may take different values based on the catalog instance. Click on the + sign close to the *Properties* section. Set the Property name to target-url, and enter **http://SampleJAXRS20-aw.eu-gb.mybluemix.net** in the value, close to *Default* value.
   ![QuoteProperty](./images/QuoteProperty.png)
- * Click on the Assemble menu (or Edit ssembly button), click on the Invocation policy, and set the URL property to **$(target-url)$(request.path)$(request.search)**
+ * Click on the Assemble menu (or Edit Assembly button), click on the Invocation policy, and set the URL property to **$(target-url)$(request.path)$(request.search)**
  ![QuoteInvoke](./images/QuoteInvoke.png)
  * Save the changes, by clicking on the *Save* icon at the top.
 
-1. We are almost ready to test the API. We need to add the API to the Product. You do this within the API by clicking on the ... icon on the top right, and select *Add to existing products*, then select the *QuoteMgmt* and click on the Add button.
+1. We are almost ready to test the API. We need to add the API to the Product. You do this within the API by clicking on the … icon on the top right, and select *Add to existing products*, then select the *QuoteMgmt* and click on the Add button.
 1. To test the API from an API provider perspective, click on *Assemble*, in the left hand side panel, switch from **Micro Gateway policies** to **DataPower Gateway policies**.
  ![QuoteDPPolicies](./images/QuoteDPPolicies.png)
 Save the change. click on the triangle icon (on the top left), check the catalog to run the API, select the QuoteManagement product, then select the operation to test, for example, get /extQuote, enter the parameters (amount 1000, rate 1.1, duration 36, delay 10, msg length 11) and click invoke. (If you are using the toolkit you also can do this, but in this case you need to start the micro gateway and the loopback application runtime).
@@ -227,7 +228,7 @@ You can also test the API using the explore facility. You get a view similar to 
  ![QuoteExplore](./images/QuoteExplore.png)
 
 >**Note**: Documenting an API is very important. API Connect supports the MarkDown format, which is popular in the GitHub sphere.
-Below some samples of usefull MarkDown instructions.
+Below some samples of useful MarkDown instructions.
 # Title: `use #`
 * Sample inline code `api.instagram.com` : use single quote around
 * Sample of code block
@@ -361,31 +362,31 @@ If all is OK, you should see the result of the quote in JSON format.
 2. Navigate to the Dashboard section and click on the **Sandbox** catalog tile.
 3. Click on your **Quote** API and you can see number of subscriptions to you API.
 
-![Anaytic screen](./images/apic-analytics.png)
+![Analytic screen](./images/apic-analytics.png)
 
 4. To see analytic information, click on the analytic icon.
-![Anaytic icon app](./images/apic-analyticicon.png)
+![Analytic icon app](./images/apic-analyticicon.png)
 
 5. Now you can navigate to the Analytic dashboard to show analytic informatios for your API
 6. You can show
 
-![Anaytic icon app](./images/apic-analyticdashboard.gif)
+![Analytic icon app](./images/apic-analyticdashboard.gif)
 
 1. Click on the ```Sandbox``` catalog tile
 2. From the ```Sandbox``` catalog configuration screen, click on the ```Analytics``` tab.
- ![Anaytic screen](./images/analytics-tab.png)
+ ![Analytic screen](./images/analytics-tab.png)
 
 3. The default dashboard gives some general information like the 5 most active Products and 5 most active APIs. This information is interesting, but we can see much more information by customizing the dashboard. Add a new visualization by clicking on the ```+ Add Visualization icon.```
 
- ![Anaytic screen](./images/analytics-add-visualization.png)
+ ![Analytic screen](./images/analytics-add-visualization.png)
 
 4. This will bring a list of some of the standard visualizations. You can then type in a string to filter through visualizations or use the arrows to page through the list.
 5. Add the API Calls visualization to the dashboard by simply clicking on it. The new visualization will be added to the bottom of our dashboard.
- ![Anaytic screen](./images/analytics-add-visualization-item.png)
+ ![Analytic screen](./images/analytics-add-visualization-item.png)
 5. Scroll down to find the new visualization. You can adjust the size by clicking and dragging the border from the lower right. Additionally, you can adjust its position by clicking and dragging the box to where you want it.
- ![Anaytic screen](./images/analytics-add-visualization-new.png)
+ ![Analytic screen](./images/analytics-add-visualization-new.png)
 6. Feel free to play around with the other visualizations by adding them to the Dashboard. You can also save the dashboard by clicking on the Save Dashboard button:
- ![Anaytic screen](./images/analytics-save-dashboard.png)
+ ![Analytic screen](./images/analytics-save-dashboard.png)
 
 # Step 7 - Create a SOAP API
 This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. We assume that we are still using the Manager (remote server in Bluemix), this would be the same user experience with the toolkit.
@@ -480,7 +481,7 @@ The SOAP response is as follow:
 In this step, we only will implement the getAllBranches operation.
 
 We start by creating the definitions.
-Looking a the SOAP message, we need to create: a branch, an address and a phone for the basic types and the following objects to implement the arrays: a phoneArray, an optionArray and finaly a branchArray. From the soap message above it is pretty obvious to determine the properties associated to those definitions. We use string for all properties except the onlineStatus property which is a boolean.
+Looking a the SOAP message, we need to create: a branch, an address and a phone for the basic types and the following objects to implement the arrays: a phoneArray, an optionArray and finally a branchArray. From the soap message above it is pretty obvious to determine the properties associated to those definitions. We use string for all properties except the onlineStatus property which is a boolean.
  Go to the definitions section, click on the + sign on the right. Rename the new definition to branch, keep the type to object
 
 ![Create Branch definition](./images/branchdef1.png)
@@ -574,7 +575,7 @@ You can use a existing Cloudant service or create an instance of the service Clo
 
 # Step 10 - Create a LoopBack application
 
-API Connect comes with a developer toolkit. This toolkit provides an offline graphical user interace named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs, and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
+API Connect comes with a developer toolkit. This toolkit provides an offline graphical user interface named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs, and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
 
 1. Get help on the **apic** command set:
   ```
@@ -585,7 +586,7 @@ The developer toolkit provides an integrated development environment for develop
 
 To create a new LoopBack project, use the command apic loopback; then use the apic edit command to edit the project in the API Designer.
 
->**Note**: When working with the toolkit always be careful of where you are located on your file system. The working directory from where the apic command are started will be considered as the root of the loopback projects and products/APIs you are working at some point. Cautious must be taken on how you organise the directories. It also must take in considerations that at some point you will want to source control some of the generated files (such as the yaml files for example) in a Source Control Management system such as github.
+>**Note**: When working with the toolkit always be careful of where you are located on your file system. The working directory from where the apic command are started will be considered as the root of the loopback projects and products/APIs you are working at some point. Cautious must be taken on how you organize the directories. It also must take in considerations that at some point you will want to source control some of the generated files (such as the yaml files for example) in a Source Control Management system such as github.
 
 
 1. Create an API Connect LoopBack application.
@@ -615,7 +616,7 @@ To create a new LoopBack project, use the command apic loopback; then use the ap
 1. At this point, the project builder will install the core dependencies for our Node.js application.
 
   ```
-  ? Please review the license for API Connect available in /usr/local/lib/node_modules/apiconnect/LICENSE.txt and select yes to accept. yese arrow keys)
+  ? Please review the license for API Connect available in /usr/local/lib/node_modules/apiconnect/LICENSE.txt and select yes to accept. yes arrow keys)
   ? What's the name of your application? Customer
   ? Enter name of the directory to contain the project: Customer
   ? What kind of application do you have in mind? empty-server (An empty LoopBack API, without any configured models or datasources)
@@ -627,9 +628,9 @@ To create a new LoopBack project, use the command apic loopback; then use the ap
   cd Customer
   ```
 
-### Create a Datasource Connector to Cloudant
+### Create a Data source Connector to Cloudant
 
-The datasource is what allows the API to communicate with the backend data repository. In this case we will be using Cloudant to store the data item information.
+The data source is what allows the API to communicate with the backend data repository. In this case we will be using Cloudant to store the data item information.
 
 There are two parts to this. First is the definition of how to connect to the backend system. The second is downloading the actual loopback connector for Cloudant.
 
@@ -645,7 +646,7 @@ In your terminal, type:
  apic create --type datasource
  ```
 
- The terminal will bring up the configuration wizard for our new datasource for the item database. The configuration wizard will prompt you with a series of questions. Some questions require text input, others offer a selectable menu of pre-defined choices.
+ The terminal will bring up the configuration wizard for our new data source for the item database. The configuration wizard will prompt you with a series of questions. Some questions require text input, others offer a selectable menu of pre-defined choices.
 
 Answer the questions with the following data:
 
@@ -692,7 +693,7 @@ By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloud
 
 >Note : You can create an api directly from a existing web service from the wsdl. Create a SOAP API definition from a WSDL definition file, or a .zip file that contains the WSDL definition files for a service with the following command: ```apic create --type api --wsdl filename```
 
->Note: You can create an API or Product from an OpenAPI (Swagger 2.0) template file by using the '--template template-name' option.
+>Note: You can create an API or Product from an Open API (Swagger 2.0) template file by using the '--template template-name' option.
 
 
 # Step 11 - Manage your API in API Designer
@@ -784,14 +785,14 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 
 1. If you have kept the Cloudant DB dahsboard open, you can select the database **test** and view the newly created record.
 
-1. Congratulations you successfullly tested your API.
+1. Congratulations you successfully tested your API.
 
 # Step 13 - Using OAuth to protect your API
-OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an acces token without the need of re-entering the user's credentials, it is possible to perform authorisation with the notion of scope, it is possible to authorise a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc ...
+OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
 
 > **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question, and there are different ways to get user information like having the back end performing a call back with the OAuth token to get information.
 
-In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorisation to extract identity, the user will be authenticated against an LDAP Server. We do use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider.
+In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorization to extract identity, the user will be authenticated against an LDAP Server. We do use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider.
 
 This configuration requires two steps:
 1. Creating an OAuth API
