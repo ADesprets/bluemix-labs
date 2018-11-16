@@ -5,7 +5,7 @@
 In this lab, you’ll gain a high level understanding of the architecture, features, and development concepts related to the IBM API Connect (APIC) solution. Throughout the lab, you’ll get a chance to use the APIC command line interface for creating LoopBack applications, the intuitive Web-based user interface, and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
 
 > **Note**:
-This lab is based on version 5.0.7.0 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
+This lab is based on version 5.0.8.4 It will be updated as much as possible to follow the new versions of API Connect. Many new features have been announced at InterConnect 2017. [Statement of directions - 2017 March 14th](https://www-01.ibm.com/common/ssi/ShowDoc.wss?docURL=/common/ssi/rep_ca/2/897/ENUS217-152/index.html&lang=en&request_locale=en#abstrx).
 
 >For any comments, please send an email to arnauld_desprets@fr.ibm.com (Arnauld Desprets)
 
@@ -36,11 +36,11 @@ In the following lab, you will learn:
    ```
    npm install -g apiconnect
    ```
-You must have version 5.0.7.0 or above. check the version with the following command :
+You must have version 5.0.8.4 or above. check the version with the following command :
 
   ```
    $apic -v
-   API Connect: v5.0.7.0 (apiconnect: v2.6.2)
+   API Connect: v5.0.8.4 (apiconnect: v2.8.39)
    ```
 
 >**Note**:
