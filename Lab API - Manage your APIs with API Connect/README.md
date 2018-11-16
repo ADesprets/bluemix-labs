@@ -251,7 +251,7 @@ You can perform the same set of operations for the BranchREST API and using a ne
 # Step 3 - Publish your API to the Sandbox catalog
 1. Within the Draft area, select the **QuoteMgmt** product, and click on **Publish icon** (cloud shape) in the top right corner, select Sandbox. This does effectively stage the product in the Sandbox catalog. The product is not yet published to the Portal.
 ![QuoteStage](./images/QuoteStage.png)
-1. Go to the Bluemix [Dashboard] [bmx_dashboard_url]. Click on the Sandbox catalog, you should see the product just staged. Click on the ... link and select Publish.
+1. Go to API connect Dashboard ![Dashboard](./images/apic-Dashboard.png). Click on the Sandbox catalog, you should see the product just staged. Click on the … link and select Publish.
 ![QuotePublish](./images/QuotePublish.png)
 1. Check the visibility and click on Publish button.
 ![QuoteVisibility](./images/QuoteVisibility.png)
