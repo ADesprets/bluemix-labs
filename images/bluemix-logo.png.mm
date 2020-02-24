@@ -2,7 +2,7 @@
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
 <node CREATED="1574338438421" ID="ID_695182537" MODIFIED="1574338446581" TEXT="ICP4I Scenario">
 <node CREATED="1574338475695" ID="ID_347893770" MODIFIED="1574338478490" POSITION="right" TEXT="Objectives">
-<node CREATED="1574338448956" ID="ID_442108874" MODIFIED="1574338474311" TEXT="Create a scenario that is easily understood by business">
+<node CREATED="1574338448956" ID="ID_442108874" MODIFIED="1576752531002" TEXT="Create a scenario/story that is easily understood by business">
 <node CREATED="1574338803529" ID="ID_26059689" MODIFIED="1574338812660" TEXT="Must be applicable to multiple industries">
 <node CREATED="1574340780112" ID="ID_1456547721" MODIFIED="1574340782616" TEXT="Banking"/>
 <node CREATED="1574340783443" ID="ID_1273653834" MODIFIED="1574340784750" TEXT="Retail"/>
@@ -27,8 +27,8 @@
 <node CREATED="1574340038607" ID="ID_98993748" MODIFIED="1574340161003" TEXT="World-wide implication"/>
 </node>
 <node CREATED="1574338605949" ID="ID_1434849217" MODIFIED="1574338608041" POSITION="left" TEXT="Scenario">
+<node CREATED="1574338965905" ID="ID_1261362042" MODIFIED="1576684235418" TEXT="Integration of a complex system SAP or ordering system?"/>
 <node CREATED="1574338858823" ID="ID_185905716" MODIFIED="1574339357436" TEXT="Based on American Airline scenario">
-<node CREATED="1574338965905" ID="ID_1261362042" MODIFIED="1574338987630" TEXT="Integration of a complex system SAP or ordering system?"/>
 <node CREATED="1574338988833" ID="ID_1172549211" MODIFIED="1574339981395" TEXT="Integrate event stream and sends message to web app/device"/>
 <node CREATED="1574339360785" ID="ID_955287032" MODIFIED="1574339367539">
 <richcontent TYPE="NODE"><html>
@@ -38,8 +38,7 @@
   <body>
     <img src="../../../../../ICP4I/Demonstration/Airline.png" />
   </body>
-</html>
-</richcontent>
+</html></richcontent>
 </node>
 </node>
 </node>
@@ -54,6 +53,8 @@
 <node CREATED="1574341817959" ID="ID_430458921" MODIFIED="1574341844751" TEXT="File Connector"/>
 <node CREATED="1574341822082" ID="ID_905177857" MODIFIED="1574341840839" TEXT="SAP connector"/>
 <node CREATED="1574341831389" ID="ID_304427214" MODIFIED="1574341836940" TEXT="SalesForce"/>
+<node CREATED="1576752557494" ID="ID_1875287133" MODIFIED="1576752559783" TEXT="WorkDay"/>
+<node CREATED="1576752609327" ID="ID_1319764427" MODIFIED="1576752613320" TEXT="Weather"/>
 </node>
 <node CREATED="1574338773835" ID="ID_1721283953" MODIFIED="1574338779321" TEXT="Protocol switching"/>
 </node>

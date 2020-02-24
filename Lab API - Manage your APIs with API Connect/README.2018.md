@@ -169,9 +169,9 @@ For this lab, we are going to use the Designer instead of using the manager. We 
 >**Note**: Using the toolkit/designer (locally) or using manager directly (remote server) is a pretty important decision. Using the toolkit has the benefit to use a Source Control Management System and perform micro versioning as well as backup of the various yaml (and wsdls). It also provides a local experience with usually a lower response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches, especially considering a devOps approach.I'm using a Linux environment, you may have to adjust the commands with your specific environment being Windows or MacOS.
 
 Let's check that development environment is ok.
-We first prepare he docker environment to start the local test environment. `sudo docker load < apic-lte-images-2018.4.1.8-ifix2.0.tar.gz`.
+We first prepare the docker environment to start the local test environment. `sudo docker load < apic-lte-images-2018.4.1.8-ifix2.0.tar.gz`.
 The information on the local test environment can be found under the title *Testing an API with the Local Test Environment* in the IBM Knowledge Center.
-To start the lte, in my case, cd `linux`, then `sudo ./start-lte start`.
+To start the lte, in my case, cd `~/apic-lte/linux`, then `sudo ./apic-lte start`.
 
 ![Start LTE](./images/start-lte.png)
 
