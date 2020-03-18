@@ -82,7 +82,7 @@ From an architecture point of view and it is important to consider that for HA t
 In more details some of the communications between each components in an OVA deployment non HA. For more information, see the Required Ports between zones [here](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.install.doc/overview_apimgmt_portreqs_vmware.html) for OVA deployments or [here](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.install.doc/overview_apimgmt_portreqs.html) for Kubernetes deployments.
 
 ![V2018 APIC communications](./images/V2018OVADeploymentCommunications.png)
-<br>*Fig. 3: Communications between componants*</br>
+<br>*Fig. 3: Communications between components*</br>
 
 ### A word on quorum
 Nowadays a lot of systems containing data are distributed. This increases availability but at the same time data consistency between the various instances is highly required. There are several strategies to support this requirement, active-passive, active-active where it becomes a little bit more difficult. One approach to solve this is to use the notion of quorum, where using a simple mathematical decision (N-1)/2 a decision can be taken to identify whether the system should be shut down in order to avoid data corruption or to keep the system available but alert that data corruption has occurred and some reconciliation work may have to happen. Many components in API Connect or related to API Connect are based on distributed databases. Kubernetes etcd, Elastic Stack, Cassandra, Redis, etc ... When you design your topology, I would really advise that you understand what you want, what can be done and what may happened if losing quorum, how the individual component will behave. You should also perform some disaster testing according what you try to achieve. There are a lot of literature on this topic available. One final word, for fun, remember that ∀ n ∈ ℕ (n-1)/2 < n/2 , that means that if you loose half of your instances you are in trouble and you need to start worrying about what is happening!
@@ -161,8 +161,7 @@ This provides a mix of JAX RS, JAX WS, and NodeJS (with Loopback Application) fo
 1. [Create a Cloudant service](#step-9---create-a-cloudant-service)
 1. [Create a LoopBack application](#step-10---create-a-loopback-application)
 1. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
-1. [Test your API](#step-12---test-your-api)
-1. [Using OAuth to protect your API](#step-13---using-oauth-to-protect-your-api)
+1. [Using OAuth to protect your API](#step-12---using-oauth-to-protect-your-api)
 
 # Step 1 - Check the development environment
 For this lab, we are going to use the Designer instead of using the manager. We also use the Local Test Environment to perform basic testing. We will then deploy the API into the sandbox catalog from the designer.
@@ -171,7 +170,7 @@ For this lab, we are going to use the Designer instead of using the manager. We 
 Let's check that development environment is ok.
 We first prepare the docker environment to start the local test environment. `sudo docker load < apic-lte-images-2018.4.1.8-ifix2.0.tar.gz`.
 The information on the local test environment can be found under the title *Testing an API with the Local Test Environment* in the IBM Knowledge Center.
-To start the lte, in my case, cd `~/apic-lte/linux`, then `sudo ./apic-lte start`.
+To start the lte, in my case, `cd ~/apic-lte/linux`, then `sudo ./apic-lte start`.
 
 ![Start LTE](./images/start-lte.png)
 
@@ -345,7 +344,7 @@ Select the Quote API by clicking on the check box and the click *Next* button.
 
 ![Designer New product Select API](./images/designer-new-product-selectapi.png)
 
-Change or adjust the according your requirements plan and then click on *Next* button.
+Change or adjust the plan according your requirements plan and then click on *Next* button.
 
 ![Designer New product Select plan](./images/designer-new-product-plan.png)
 
@@ -371,6 +370,99 @@ We can check on the remote Manager that the Product containing the Quote API has
 
 ![Designer Quote product publish remote](./images/designer-publish-product-remote.png)
 
+We want to automate the publishing and do not use the Designer and instead the CLI.
+
+**Hint:** If you want to use the REST API, it is easy to use the CLI with the --debug option at the end. This will show you exactly the REST commands issued under the cover.
+
+For example:
+```
+apic login -s manager.159.8.70.38.xip.io -u org1owner -p ******** -r provider/default-idp-2 --debug
+2020/03/17 07:27:11 CURL:
+curl -X 'POST' -d '{"client_id":"599b7aef-8841-4ee2-88a0-84d49c4d6ff2","client_secret":"0ea28423-e73b-47d4-b40e-ddb45c48bb0c","grant_type":"password","password":"********","realm":"provider/default-idp-2","username":"org1owner"}
+' -H 'Accept: application/json' -H 'Accept-Language: en-us' -H 'Content-Type: application/json' -H 'User-Agent: Toolkit/c81e13c07d3c2c7730827610fcaf08bbec88fe04' -H 'X-Ibm-Client-Id: 599b7aef-8841-4ee2-88a0-84d49c4d6ff2' -H 'X-Ibm-Client-Secret: 0ea28423-e73b-47d4-b40e-ddb45c48bb0c' 'https://manager.159.8.70.38.xip.io/api/token'
+
+, Request dump:
+POST /api/token HTTP/1.1
+Host: manager.159.8.70.38.xip.io
+User-Agent: Toolkit/c81e13c07d3c2c7730827610fcaf08bbec88fe04
+Content-Length: 211
+Accept: application/json
+Accept-Language: en-us
+Content-Type: application/json
+X-Ibm-Client-Id: 599b7aef-8841-4ee2-88a0-84d49c4d6ff2
+X-Ibm-Client-Secret: 0ea28423-e73b-47d4-b40e-ddb45c48bb0c
+Accept-Encoding: gzip
+
+
+, Request body:
+{"client_id":"599b7aef-8841-4ee2-88a0-84d49c4d6ff2","client_secret":"0ea28423-e73b-47d4-b40e-ddb45c48bb0c","grant_type":"password","password":"********","realm":"provider/default-idp-2","username":"org1owner"}
+
+2020/03/17 07:27:11 Response dump:
+HTTP/1.1 200 OK
+Transfer-Encoding: chunked
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization
+Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, OPTIONS
+Access-Control-Allow-Origin: *
+Cache-Control: no-store
+Connection: keep-alive
+Content-Type: application/json; charset=utf-8
+Date: Tue, 17 Mar 2020 14:27:11 GMT
+Etag: W/"796-uuzjeFcKQJgIb4beYqsTqyRZQww"
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000; includeSubDomains;
+Vary: Accept-Encoding
+X-Request-Id: 6c9542e7c7951b4512235eb5d404740a
+
+796
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4MGU2MjM4Yy01MzE1LTRjODUtYTYwNS1kODAzNmZmMjdiNDUiLCJuYW1lc3BhY2UiOiIzMGEzOTllYi1mMDk5LTRlNzctYTgxMS01MmRjYThhYTEyMTA6NmYzNzQzZDMtZjAyYS00ODhjLWE0ZGItOWY4NWVmNTEzZmQ5OmVmNDgwZGRkLWVmMmUtNDY3Mi05MTk2LWFhZTE3ODJiOWE5OSIsImF1ZCI6Ii9hcGkvY2xvdWQvcmVnaXN0cmF0aW9ucy8yZmY0NWY0Ny05MGJlLTQ1NDEtYmYxMi04ZjlhNDJjOGQ0NzkiLCJzdWIiOiIvYXBpL3VzZXItcmVnaXN0cmllcy8zMGEzOTllYi1mMDk5LTRlNzctYTgxMS01MmRjYThhYTEyMTAvNmYzNzQzZDMtZjAyYS00ODhjLWE0ZGItOWY4NWVmNTEzZmQ5L3VzZXJzL2VmNDgwZGRkLWVmMmUtNDY3Mi05MTk2LWFhZTE3ODJiOWE5OSIsImlzcyI6IklCTSBBUEkgQ29ubmVjdCIsImV4cCI6MTU4NDQ4NDAzMSwiaWF0IjoxNTg0NDU1MjMxLCJncmFudF90eXBlIjoicGFzc3dvcmQiLCJ1c2VyX3JlZ2lzdHJ5X3VybCI6Ii9hcGkvdXNlci1yZWdpc3RyaWVzLzMwYTM5OWViLWYwOTktNGU3Ny1hODExLTUyZGNhOGFhMTIxMC82ZjM3NDNkMy1mMDJhLTQ4OGMtYTRkYi05Zjg1ZWY1MTNmZDkiLCJyZWFsbSI6InByb3ZpZGVyL2RlZmF1bHQtaWRwLTIiLCJ1c2VybmFtZSI6Im9yZzFvd25lciIsImlkX3Rva2VuIjoiZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5Sm1hWEp6ZEY5dVlXMWxJam9pYjNKbk1XOTNibVZ5SWl3aWJHRnpkRjl1WVcxbElqb2liM0puTVc5M2JtVnlJaXdpZFhObGNsOXBaQ0k2SW1Fek5qUm1PRGcwTFRnMlpEWXRORGc1TXkxaE1XWmxMVGRoWVRCbU1tTmhOVFExTkNJc0luVnpaWEp1WVcxbElqb2liM0puTVc5M2JtVnlJaXdpYVdGMElqb3hOVGcwTkRVMU1qTXhmUS5vdTZuM3VxeG83aWdSQ21vVVlaU0E1WXMyY25GX3FtTlBfcGF6WEdvZlVnIiwic2NvcGVzIjpbImNsb3VkOnZpZXciLCJjbG91ZDptYW5hZ2UiLCJwcm92aWRlci1vcmc6dmlldyIsInByb3ZpZGVyLW9yZzptYW5hZ2UiLCJvcmc6dmlldyIsIm9yZzptYW5hZ2UiLCJkcmFmdHM6dmlldyIsImRyYWZ0czplZGl0IiwiY2hpbGQ6dmlldyIsImNoaWxkOmNyZWF0ZSIsImNoaWxkOm1hbmFnZSIsInByb2R1Y3Q6dmlldyIsInByb2R1Y3Q6c3RhZ2UiLCJwcm9kdWN0Om1hbmFnZSIsImFwcHJvdmFsOnZpZXciLCJhcHByb3ZhbDptYW5hZ2UiLCJhcGktYW5hbHl0aWNzOnZpZXciLCJhcGktYW5hbHl0aWNzOm1hbmFnZSIsImNvbnN1bWVyLW9yZzp2aWV3IiwiY29uc3VtZXItb3JnOm1hbmFnZSIsImFwcDp2aWV3OmFsbCIsImFwcDptYW5hZ2U6YWxsIiwibXk6dmlldyIsIm15Om1hbmFnZSIsIndlYmhvb2s6dmlldyJdfQ.PJ29zR15LMo1TcpF_qc2iAISRnubNF4MkTD2SfQxnTg",
+    "token_type": "Bearer",
+    "expires_in": 28800
+}
+0
+
+
+Logged into manager.159.8.70.38.xip.io successfully
+2020/03/17 07:27:11 CURL:
+curl -X 'GET' -H 'Accept: application/yaml' -H 'Accept-Language: en-us' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4MGU2MjM4Yy01MzE1LTRjODUtYTYwNS1kODAzNmZmMjdiNDUiLCJuYW1lc3BhY2UiOiIzMGEzOTllYi1mMDk5LTRlNzctYTgxMS01MmRjYThhYTEyMTA6NmYzNzQzZDMtZjAyYS00ODhjLWE0ZGItOWY4NWVmNTEzZmQ5OmVmNDgwZGRkLWVmMmUtNDY3Mi05MTk2LWFhZTE3ODJiOWE5OSIsImF1ZCI6Ii9hcGkvY2xvdWQvcmVnaXN0cmF0aW9ucy8yZmY0NWY0Ny05MGJlLTQ1NDEtYmYxMi04ZjlhNDJjOGQ0NzkiLCJzdWIiOiIvYXBpL3VzZXItcmVnaXN0cmllcy8zMGEzOTllYi1mMDk5LTRlNzctYTgxMS01MmRjYThhYTEyMTAvNmYzNzQzZDMtZjAyYS00ODhjLWE0ZGItOWY4NWVmNTEzZmQ5L3VzZXJzL2VmNDgwZGRkLWVmMmUtNDY3Mi05MTk2LWFhZTE3ODJiOWE5OSIsImlzcyI6IklCTSBBUEkgQ29ubmVjdCIsImV4cCI6MTU4NDQ4NDAzMSwiaWF0IjoxNTg0NDU1MjMxLCJncmFudF90eXBlIjoicGFzc3dvcmQiLCJ1c2VyX3JlZ2lzdHJ5X3VybCI6Ii9hcGkvdXNlci1yZWdpc3RyaWVzLzMwYTM5OWViLWYwOTktNGU3Ny1hODExLTUyZGNhOGFhMTIxMC82ZjM3NDNkMy1mMDJhLTQ4OGMtYTRkYi05Zjg1ZWY1MTNmZDkiLCJyZWFsbSI6InByb3ZpZGVyL2RlZmF1bHQtaWRwLTIiLCJ1c2VybmFtZSI6Im9yZzFvd25lciIsImlkX3Rva2VuIjoiZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5Sm1hWEp6ZEY5dVlXMWxJam9pYjNKbk1XOTNibVZ5SWl3aWJHRnpkRjl1WVcxbElqb2liM0puTVc5M2JtVnlJaXdpZFhObGNsOXBaQ0k2SW1Fek5qUm1PRGcwTFRnMlpEWXRORGc1TXkxaE1XWmxMVGRoWVRCbU1tTmhOVFExTkNJc0luVnpaWEp1WVcxbElqb2liM0puTVc5M2JtVnlJaXdpYVdGMElqb3hOVGcwTkRVMU1qTXhmUS5vdTZuM3VxeG83aWdSQ21vVVlaU0E1WXMyY25GX3FtTlBfcGF6WEdvZlVnIiwic2NvcGVzIjpbImNsb3VkOnZpZXciLCJjbG91ZDptYW5hZ2UiLCJwcm92aWRlci1vcmc6dmlldyIsInByb3ZpZGVyLW9yZzptYW5hZ2UiLCJvcmc6dmlldyIsIm9yZzptYW5hZ2UiLCJkcmFmdHM6dmlldyIsImRyYWZ0czplZGl0IiwiY2hpbGQ6dmlldyIsImNoaWxkOmNyZWF0ZSIsImNoaWxkOm1hbmFnZSIsInByb2R1Y3Q6dmlldyIsInByb2R1Y3Q6c3RhZ2UiLCJwcm9kdWN0Om1hbmFnZSIsImFwcHJvdmFsOnZpZXciLCJhcHByb3ZhbDptYW5hZ2UiLCJhcGktYW5hbHl0aWNzOnZpZXciLCJhcGktYW5hbHl0aWNzOm1hbmFnZSIsImNvbnN1bWVyLW9yZzp2aWV3IiwiY29uc3VtZXItb3JnOm1hbmFnZSIsImFwcDp2aWV3OmFsbCIsImFwcDptYW5hZ2U6YWxsIiwibXk6dmlldyIsIm15Om1hbmFnZSIsIndlYmhvb2s6dmlldyJdfQ.PJ29zR15LMo1TcpF_qc2iAISRnubNF4MkTD2SfQxnTg' -H 'User-Agent: Toolkit/c81e13c07d3c2c7730827610fcaf08bbec88fe04' -H 'X-Ibm-Client-Id: 599b7aef-8841-4ee2-88a0-84d49c4d6ff2' -H 'X-Ibm-Client-Secret: 0ea28423-e73b-47d4-b40e-ddb45c48bb0c' 'https://manager.159.8.70.38.xip.io/api/me?fields=force_password_change'
+
+, Request dump:
+GET /api/me?fields=force_password_change HTTP/1.1
+Host: manager.159.8.70.38.xip.io
+User-Agent: Toolkit/c81e13c07d3c2c7730827610fcaf08bbec88fe04
+Accept: application/yaml
+Accept-Language: en-us
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4MGU2MjM4Yy01MzE1LTRjODUtYTYwNS1kODAzNmZmMjdiNDUiLCJuYW1lc3BhY2UiOiIzMGEzOTllYi1mMDk5LTRlNzctYTgxMS01MmRjYThhYTEyMTA6NmYzNzQzZDMtZjAyYS00ODhjLWE0ZGItOWY4NWVmNTEzZmQ5OmVmNDgwZGRkLWVmMmUtNDY3Mi05MTk2LWFhZTE3ODJiOWE5OSIsImF1ZCI6Ii9hcGkvY2xvdWQvcmVnaXN0cmF0aW9ucy8yZmY0NWY0Ny05MGJlLTQ1NDEtYmYxMi04ZjlhNDJjOGQ0NzkiLCJzdWIiOiIvYXBpL3VzZXItcmVnaXN0cmllcy8zMGEzOTllYi1mMDk5LTRlNzctYTgxMS01MmRjYThhYTEyMTAvNmYzNzQzZDMtZjAyYS00ODhjLWE0ZGItOWY4NWVmNTEzZmQ5L3VzZXJzL2VmNDgwZGRkLWVmMmUtNDY3Mi05MTk2LWFhZTE3ODJiOWE5OSIsImlzcyI6IklCTSBBUEkgQ29ubmVjdCIsImV4cCI6MTU4NDQ4NDAzMSwiaWF0IjoxNTg0NDU1MjMxLCJncmFudF90eXBlIjoicGFzc3dvcmQiLCJ1c2VyX3JlZ2lzdHJ5X3VybCI6Ii9hcGkvdXNlci1yZWdpc3RyaWVzLzMwYTM5OWViLWYwOTktNGU3Ny1hODExLTUyZGNhOGFhMTIxMC82ZjM3NDNkMy1mMDJhLTQ4OGMtYTRkYi05Zjg1ZWY1MTNmZDkiLCJyZWFsbSI6InByb3ZpZGVyL2RlZmF1bHQtaWRwLTIiLCJ1c2VybmFtZSI6Im9yZzFvd25lciIsImlkX3Rva2VuIjoiZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5Sm1hWEp6ZEY5dVlXMWxJam9pYjNKbk1XOTNibVZ5SWl3aWJHRnpkRjl1WVcxbElqb2liM0puTVc5M2JtVnlJaXdpZFhObGNsOXBaQ0k2SW1Fek5qUm1PRGcwTFRnMlpEWXRORGc1TXkxaE1XWmxMVGRoWVRCbU1tTmhOVFExTkNJc0luVnpaWEp1WVcxbElqb2liM0puTVc5M2JtVnlJaXdpYVdGMElqb3hOVGcwTkRVMU1qTXhmUS5vdTZuM3VxeG83aWdSQ21vVVlaU0E1WXMyY25GX3FtTlBfcGF6WEdvZlVnIiwic2NvcGVzIjpbImNsb3VkOnZpZXciLCJjbG91ZDptYW5hZ2UiLCJwcm92aWRlci1vcmc6dmlldyIsInByb3ZpZGVyLW9yZzptYW5hZ2UiLCJvcmc6dmlldyIsIm9yZzptYW5hZ2UiLCJkcmFmdHM6dmlldyIsImRyYWZ0czplZGl0IiwiY2hpbGQ6dmlldyIsImNoaWxkOmNyZWF0ZSIsImNoaWxkOm1hbmFnZSIsInByb2R1Y3Q6dmlldyIsInByb2R1Y3Q6c3RhZ2UiLCJwcm9kdWN0Om1hbmFnZSIsImFwcHJvdmFsOnZpZXciLCJhcHByb3ZhbDptYW5hZ2UiLCJhcGktYW5hbHl0aWNzOnZpZXciLCJhcGktYW5hbHl0aWNzOm1hbmFnZSIsImNvbnN1bWVyLW9yZzp2aWV3IiwiY29uc3VtZXItb3JnOm1hbmFnZSIsImFwcDp2aWV3OmFsbCIsImFwcDptYW5hZ2U6YWxsIiwibXk6dmlldyIsIm15Om1hbmFnZSIsIndlYmhvb2s6dmlldyJdfQ.PJ29zR15LMo1TcpF_qc2iAISRnubNF4MkTD2SfQxnTg
+X-Ibm-Client-Id: 599b7aef-8841-4ee2-88a0-84d49c4d6ff2
+X-Ibm-Client-Secret: 0ea28423-e73b-47d4-b40e-ddb45c48bb0c
+Accept-Encoding: gzip
+
+
+, Request body:
+
+2020/03/17 07:27:11 Response dump:
+HTTP/1.1 200 OK
+Content-Length: 2
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization
+Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, OPTIONS
+Access-Control-Allow-Origin: *
+Connection: keep-alive
+Content-Type: application/json; charset=utf-8
+Date: Tue, 17 Mar 2020 14:27:11 GMT
+Etag: W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"
+Strict-Transport-Security: max-age=31536000; includeSubDomains;
+Vary: Accept-Encoding
+X-Request-Id: 68312d45ecdaa0a9cbf972f5dd8a49c5
+
+{}
+```
+
+First let's make sure with in the right directory (where the swaggers are created), in my case, `cd apic-dev`, then let's login to the remote manager with apic. `apic login -s manager.159.8.70.38.xip.io -u org1owner -p ********* -r provider/default-idp-2` then we are ready to publish the product into the Staging environment for example. We issue the command: `apic products publish -s manager.159.8.70.38.xip.io -o org1 -c integration  quote-management-product_1.0.0.yaml`
+![Publish a product using CLI](./images/cli_publish.png)
+
+
 # Step 4 - Consumer Experience
 
 >Summary: In this step, you will learn the consumer experience for APIs that have been exposed to your developer organization. You login as a developer to register your application and then subscribe to the product just published and then test the API included in the product. We are referring to the Portal that is associated with the "remote" API Connect Cloud.
@@ -378,14 +470,16 @@ We can check on the remote Manager that the Product containing the Quote API has
 ## Open the Portal login page
 You can get the URL of the portal associated to a catalog in the settings of this catalog.
 
-> Toto
-
  1. Go to the API Manager screen, in my case, https://manager.159.8.70.38.xip.io.
- 2. Navigate to the Dashboard section and click on the Sandbox catalog tile.
+ 2. Click on Manage, and click on the Integration Catalog tile (created previously and we assume that the Portal was instantiated for this catalog here)
  3. Choose the Settings tab, followed by the Portal option.
  4. Click on the Portal URL link to launch the Developer Portal
-![Launch Portal](./images/launch-portal.png)
- 5. Click on **API Products** to explore the available APIs
+
+![Launch Integration Portal](./images/launch-portal2018.png)
+
+ 5. Click on **Quote Management Product 1.0.0 Product** **API Products** to explore the API
+
+ ![Quote Product in the Portal](./images/portal_QuoteProduct.png)
 
 ## Register an Application as a developer
 
@@ -393,7 +487,8 @@ Let's now subscribe to the Product. You will log into the portal as a user in th
 
 If you have not created a developer account, you will need to use the **Create an account** link to do so now.
 
-![Create users](./images/apic-portal.png)
+![Create account](./images/portal_createAcount.png)
+
 
  1. Enter in your account information for the developer account. This must be a different email address than your Bluemix account. Click **Create New Account** once all the requisite data in the form has been filled out.
 
@@ -403,6 +498,8 @@ If you have not created a developer account, you will need to use the **Create a
 
  2. Click the Apps link, then click on the **Create new App** link.
 
+![Create app button](./images/portal_createAppButton.png)
+
  3. Enter a title and description for the application and click the Submit button.
 
  >Title: Mobile App Consumer
@@ -411,20 +508,24 @@ If you have not created a developer account, you will need to use the **Create a
 
  >OAuth Redirect URI: < leave blank >
 
+![Create app input](./images/portal_createAppInput.png)
+
 We need to capture the Client Secret and Client ID in a text editor for later use by our test application.
 
-  1. Select the Show Client Secret checkbox next to Client Secret at the top of the page and the Show checkbox next to Client ID.
+  1. Select the Show check boxes for the Key and Secret.
 
-![Register app](./images/apic-registerapp.png)
+![Create app keys](./images/portal_createAppKeys.png)
 
-  2. **Copy Client Secret and Client ID in a text editor**
+  2. **Copy Client Secret and Client ID in a text editor** and keep them securely.
 
 ## Subscribe to a Plan for the "QuoteMgmt" product
 
 In this section, we will subscribe to a plan for the "QuoteMgmt" using the Mobile App Consumer application.
 
   1. Click the ```API Products link.```
-  2. Click the QuoteMgmt (v1.0.0) API product link.
+  2. Click the Quote Management Product (1.0.0) API product link.
+
+  ![Create app keys](./images/portal_quoteMgmtProd.png)
 
 You will be directed to the Product page which lists the available plans for subscription.
 
@@ -437,14 +538,14 @@ The MobileApp Consumer application is now subscribed to the **Default plan** for
 
 In this section, we will use the developer portal to test Quote Management API REST API. This is useful for application developers to try out the APIs before their application is fully developed or to simply see the expected response based on inputs they provide the API. We will test the **Quote Management API REST** API from the developer portal.
 
-1. Click the **Quote** link on the left-hand navigation menu and then expand the GET /quote path by clicking on the twisty next to the path.
+1. Click the **Quote API** link on the left-hand navigation menu and then expand the GET /quote path by clicking on the twisty next to the path, click on the Try it tab.
 
-![Test app](./images/apic-testapidevportal.png)
+![Test app](./images/portal-testapi.png)
 
-1. Scroll down to the Try this operation section for the GET /quote path. Enter your Client ID and your Client secret and click the Call Operation button
+1. Scroll down, click on the three *Generate* link to populate the values and click the Send button
 2. Scroll down below the Call operation button. You should see a 200 OK and a response body as shown below.
-
-![Test app](./images/apic-testapidevportalcall.png)
+You get the response from the back end.
+![Test app](./images/portal-testsend.png)
 
 # Step 5 - Invoke the API
 
@@ -453,210 +554,132 @@ Now that you have browsed the API Portal and registered / tested the API’s tha
 Sample code (snippets) are provided from developer portal for different language (cUrl, Ruby, Python, PHP, Javascript, Java, Go, Swift) .
 
   1. Login into the developer portal as an application developer using your developer credentials.
-  2. Click the **API Products link**
-  3. Click the **Quote (v1.0.0)** API product link.
-  4. Click on **Quote** API in the left panel
-  5. Now, you can discover all operations with their properties and on the right hand side sample code.
-  1. On the right hand side you'll see the ***cuRL** expression
-  1. Copy it into your text editor window replacing **REPLACE_WITH_CLIENT_ID** and **REPLACE_WITH_CLIENT_SECRET** with your client id and your client secret saved from the prior step
-  2. Remove ***"filter"*** parameter in the url the result is like this :
+  1. Click the **API Products** link
+  1. Click the **Quote API (1.0.0)** API link within the Quote Management Product.
+  1. Now, you can discover all operations with their properties and on the right hand side sample code.
+  1. Select an Operation, for example, **POST /quote**
+  1. On the right hand side you'll see the **curl** expression
+  1. Copy it into your text editor window replacing **Client ID** with your client id and your client secret saved from the prior step
 
-  ```
-curl --request GET \
-  --url 'https://api.eu.apiconnect.ibmcloud.com/BLUEMIXID-BLUEMIXSPACE/sb/loanmgt/resources/loans/v1/quote?loanAmount=10000&annualInterestRate=1.1&termInMonths=36' \
+```
+curl --request POST \
+  --url https://gw.159.8.70.38.xip.io/org1/integration/loans/v1/quote \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
-  --header 'x-ibm-client-id: REPLACE_WITH_CLIENT_ID'
+  --header 'x-ibm-client-id: Client ID' \
+  --data '{"loanAmount":"10000","annualInterestRate":"1.1","termInMonths":"36"}'
 ```
 
 3. Copy and try it into your terminal windows
 
-If all is OK, you should see the result of the quote in JSON format.
+If all is OK, you should see the result of the quote in JSON format. (Below slightly modified for Windows)
+
+![Portal curl](./images/portal-testcurl.png)
 
 # Step 6 - Analytics
 
-1. Return to the Bluemix API Manager screen.
-2. Navigate to the Dashboard section and click on the **Sandbox** catalog tile.
-3. Click on your **Quote** API and you can see number of subscriptions to you API.
+1. Return to the API Manager screen.
+2. Click on the Manage Catalogs tile, and click on the **Integration** catalog tile.
+3. Click on the Analytics navigation menu.
 
-![Analytic screen](./images/apic-analytics.png)
+![Analytic screen](./images/manager-analytics.png)
 
-4. To see analytic information, click on the analytic icon.
-![Analytic icon app](./images/apic-analyticicon.png)
+4. Select the API Default dashboard.
 
-5. Now you can navigate to the Analytic dashboard to show analytic informatios for your API
-6. You can show
+![Analytic icon app](./images/manager-analytic-defaultdb.png)
 
-![Analytic icon app](./images/apic-analyticdashboard.gif)
+5. You can also look at all the events, click on Discover link, and then on All events link
 
-1. Click on the ```Sandbox``` catalog tile
-2. From the ```Sandbox``` catalog configuration screen, click on the ```Analytics``` tab.
- ![Analytic screen](./images/analytics-tab.png)
+![Analytic icon app](./images/manager-analytics-events.png)
 
-3. The default dashboard gives some general information like the 5 most active Products and 5 most active APIs. This information is interesting, but we can see much more information by customizing the dashboard. Add a new visualization by clicking on the ```+ Add Visualization icon.```
+There are many dashboards provided out of the box and also events discoveries that focus on specific aspects such as the latencies, the errors, the data sizes, etc...
+Do not hesitate to explore the various dashboards and events lists.
+You can create your own dashboards and events lists with predefined filters.
 
- ![Analytic screen](./images/analytics-add-visualization.png)
-
-4. This will bring a list of some of the standard visualizations. You can then type in a string to filter through visualizations or use the arrows to page through the list.
-5. Add the API Calls visualization to the dashboard by simply clicking on it. The new visualization will be added to the bottom of our dashboard.
- ![Analytic screen](./images/analytics-add-visualization-item.png)
-5. Scroll down to find the new visualization. You can adjust the size by clicking and dragging the border from the lower right. Additionally, you can adjust its position by clicking and dragging the box to where you want it.
- ![Analytic screen](./images/analytics-add-visualization-new.png)
-6. Feel free to play around with the other visualizations by adding them to the Dashboard. You can also save the dashboard by clicking on the Save Dashboard button:
- ![Analytic screen](./images/analytics-save-dashboard.png)
+![Analytic icon app](./images/manager-analytics-dashboards.png)
 
 # Step 7 - Create a SOAP API
-This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. We assume that we are still using the Manager (remote server in Bluemix), this would be the same user experience with the toolkit.
+This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. Before starting, it is important to understand what we try to achieve. In the designer (or the Manager), you find two different possibilities regarding the integration of an existing SOAP API from the WSDL defining this service. The first one is a SOAP proxy which means that we create an API (An Open API document) that exposes SOAP and accesses the SOAP service back end, the second one is a REST proxy which means that we create an API (An Open API document) that exposes REST/JSON and accesses the SOAP service back end. This is very different scenario, we will discuss the difference of implementation in the next Step.
 
 1. Download the WSDL for the Branch SOAP Service, you can find it
  [here](./materials/step7/BranchSOAP.wsdl).
  You can also get the WSDL at the following URL https://addressmanagementwebservice.eu-gb.mybluemix.net/branches/Branches?WSDL
 
-1. In the Draft area, in the APIs menu, click on Add and select API from a SOAP service
+2. In the Designer, click on Add API and select From existing WSDL service (SOAP proxy)
 
- ![SOAP API Create](./images/apic-soap-create.png)
+ ![SOAP API Create](./images/manager-soap-create.png)
 
-1. Select the BranchSOAP.wsdl file to load
+3. Select the BranchSOAP.wsdl file to load
 
-![SOAP API Load](./images/apic-soap-create-load.png)
+![SOAP API Load](./images/designer-soap-create-load.png)
 
-and click Done.
+and click Next.
 
-1. Rename the API to **Branch SOAP** by changing the title.
+4. You can check the Service defined in the WSDL, click Next
 
-1. Add this new SOAP API to the existing BranchMgmt product
+![SOAP API Load Service Def](./images/designer-soap-service-load.png)
 
-![SOAP API Add to Product](./images/apic-soap-create-addtoproduct.png)
+5. Review the API definitions such as name, version and description
+For example, add SOAP API to get Branches information for the description field, click Next button.
 
-Select The BranchMgmt product.
+![SOAP API Load API Definition](./images/designer-soap-api-def-load.png)
 
-![SOAP API Add to BranchMgmt Product](./images/apic-soap-addtoBranchProduct.png)
+6. Review the Security and CORS definitions, click Next
 
-1. The BranchMgmt product now contains two APIs
+![SOAP API Load CORS and Security](./images/designer-soap-cors-load.png)
 
-![SOAP API BranchMgmt Product](./images/apic-soap-product-with-two-APIs.png)
+7. Click Edit API button
 
-1. Publish the Product into the Sandbox catalog and test the getAllBranches operation in the Portal
+![SOAP API Load end](./images/designer-soap-edit-load.png)
 
-![SOAP API Test](./images/apic-soap-test.png)
+You can see what has been generated under the cover. As expected, the consume content type is text/xml and produce content type is application/xml in the assembly panel. In the assembly panrel we see only one Invoke action, the invoke URL is the one extracted from the WSDL.
 
+![SOAP Proxy Assembly](./images/designer-soap-proxy-assembly.png)
+
+We are going to test it. Go to the Assembly panel. Click on the Test icon, and Activate API button. Then choose an operation to test for example, post /getAllBranches, click on the generate link for the body parameter and click Invoke button. You should get a response from the SOAP backend service.
+
+![SOAP API Proxy test](./images/designer-soap-proxy-test-allB.png)
 
 >**Note:** We did not use a Properties and did not change the endpoint for the Proxy policy in the assembly panel, because the WSDL does have the correct endpoint on the Secure Gateway in Bluemix. In reality, you would probably want to create a properties that will point to the right endpoint depending on the environment.
+We did not publish the service in the intregation catalog on the remote Manager, since this is exactlyt the same procedure as for a REST Service.
 
 # Step 8 - Create a SOAP to REST API
->In this step, we are going to create a New API (blank), specify the REST interface (paths, verbs and parameters) and add the Service definition using the Branch.wsdl file from the previous step, and then in the assembly will perform the mapping. You will see that API Connect supports array of objects or arrays of arrays very easily. Notice that SOAP to REST in this context means that we have a SOAP back end and we expose it in REST JSON, hence SOAP to REST. We could have had a another view and call it REST to SOAP :-)
+>With the 2018 version, this step has been greatly simplified. Similarly to the previous step we use the designer but instead of using SOAP proxy, we use a REST proxy. We will see that API Connect generates a lot of configurations automatically. Notice that SOAP to REST in this context means that we have a SOAP back end and we expose it in REST JSON, hence SOAP to REST. We could have had a another view and call it REST to SOAP :-). We are not documenting all the steps to add the API because it is very similar to the previous step, the only diference being the selection af REST proxy at the very begining.
 
-Click on Add, and select New API
+1. Click on Add, and select New API
 
-![SOAP API REST Create](./images/apic-soap-rest-create.png)
+![SOAP API REST Create](./images/designer-soap-rest-create.png)
 
-Specify the following
-> Title: Branch SOAP to REST
+The next steps are as before. For the Info panel, I used:
+>Title: BranchesREST
 
-> Base path: /branch-s2r/v1
+>Description: REST exposure for the back end SOAP service
 
-Then click on Create API button.
+At the end click on the Edit API button.
 
-![SOAP API REST new](./images/apic-soap-rest-new.png)
+Let's see two seconds the definition, unlike the previous step, the consume and produce contet-types are now application/json. The definitions have been auto generated. And we can see for the XSD elements corresponding JSON elements. This is a great feature and nice enhancement from the V5 version.
 
-Add it to the existing BranchMgmt product.
+![SOAP API REST Create](./images/designer-soap-rest-definitions.png)
 
-Since we do not have a Swagger in this case, we need to define the various definitions for the interface manually and in particular for the response.
-The SOAP response is as follow:
-```
-<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-   <soap:Body>
-      <ns2:getAllBranchesResponse xmlns="http://ws.ad.ibm.com/branches/getBranchById" xmlns:ns2="http://ws.ad.ibm.com/branches/">
-         <ns2:branch>
-            <ns2:id>123</ns2:id>
-            <ns2:type>atm</ns2:type>
-            <ns2:phones>
-               <ns2:type>personal</ns2:type>
-               <ns2:number>978-899-3445</ns2:number>
-            </ns2:phones>
-            <ns2:phones>
-               <ns2:type>professional</ns2:type>
-               <ns2:number>978-899-3446</ns2:number>
-            </ns2:phones>
-            <ns2:address>
-               <ns2:street1>600 Anton Blvd.</ns2:street1>
-               <ns2:street2>Appt 1</ns2:street2>
-               <ns2:zip-code>92626</ns2:zip-code>
-               <ns2:city>Costa Mesa</ns2:city>
-               <ns2:state>CA</ns2:state>
-               <ns2:country>USA</ns2:country>
-            </ns2:address>
-            <ns2:options>color screen</ns2:options>
-            <ns2:options>large screen</ns2:options>
-            <ns2:onlineStatus>true</ns2:onlineStatus>
-         </ns2:branch>
-      </ns2:getAllBranchesResponse>
-   </soap:Body>
-</soap:Envelope>
-```
+We can see that in the Assembly, it is quite different than before.
 
-In this step, we only will implement the getAllBranches operation.
+![SOAP API REST Create](./images/designer-soap-rest-assembly.png)
 
-We start by creating the definitions.
-Looking a the SOAP message, we need to create: a branch, an address and a phone for the basic types and the following objects to implement the arrays: a phoneArray, an optionArray and finally a branchArray. From the soap message above it is pretty obvious to determine the properties associated to those definitions. We use string for all properties except the onlineStatus property which is a boolean.
- Go to the definitions section, click on the + sign on the right. Rename the new definition to branch, keep the type to object
+You can see that for each operation, there are two REST operations created a GET and a POST.
+For each operation, you can see two mapping actions, REST to SOAP (for the request) and SOAP to REST (for the response).
+You can also see that for each operation there are one or two parse actions. This is a very important concept to understand and understand when to use it or not. By default, the with new API Gateway gateway (Native Gateway) messages and using the streaming capabilities of the gateway and messages are not buffered. This is a very efficient way to serve messages, since the messages can be sent directly to the back end even if the message was not received completely. This is a very common approaches when dealing with video streaming. Now, when you want to manipulate the message, you cannot do that, let's say you want to remove some pieces especially at the begining, so you have to ge tthe full message and in order to manipulate you need to get the message and parse it (in other words deserialize it). This is what the parse action does in those flows. Notice that this applies to JSON or XML since you may need to deserialize both types of messages. Of course, parsing a message  has a cost in termes of resources and latency, and the price will vary a lot depending on the size and complexity of the message.
 
-![Create Branch definition](./images/branchdef1.png)
+Looking at the mappig actions, we see that it is a very simple one, and you have also the opportunity to make more complex ones. As you can see in the following sample, the response of the XML/SOAP mesage is simply copied to the response to the JSON response.
 
-Change the new property-1 to id, specify the description, keep the type to string and specify a sample value.
+![SOAP API REST Create](./images/designer-soap-rest-map.png)
 
-![Adding a property](./images/branchdef2.png)
+Let's test it, as usual we use the Test feature within the Assembly panel. We have a similar result than before, except that the response is in JSON (as the request).
 
-Repeat the same for the other properties.
-For example, here is the phone definition: ![phone definition](./images/branchdef3.png)
+![SOAP API REST Create](./images/designer-soap-rest-test.png)
 
-For the arrays, this is the same principle, except that we create an object of type array, and then select the type of items in the array. Below the phoneArray object
-
-![phoneArray definition](./images/branchdef4.png)
-
-When you have created all the definitions, you should have something similar to this.
-
-![all definitions](./images/branchdef5.png)
-
-We can now create the path. In the Paths section, click on + sign on the right. Rename the path to /branches., expand the GET operation, provide an Operation ID, provide information on the path in the Description section. For the response, in the 200 status code section, specify the schema of the response, in our case, select branchArray.
-
-![path definitions](./images/branchdef6.png)
-
-
-Add the Service definition by uploading the BranchSOAP.wsdl file, click on the + icon close to the Services definition
-
-![SOAP API REST new](./images/apic-soap-rest-service-def.png)
-
-You can see the details of the Service, click on Done.
-
-![SOAP API REST new service](./images/apic-soap-rest-service-def2.png)
-
-Now click on the Assemble menu.
-Make sure that you have the DataPower Gateway policies selected
-
-![SOAP API REST WDP Policies](./images/apic-soap-rest-assembly-wdp.png)
-
-Remove the Invoke policy, by clicking on the Trash icon when you hoover your mouse on the Invoke policy.
-
-![SOAP API REST remove invoke](./images/apic-remove-policy.png)
-
-Drag and drop the getAllBranches Web Service Operations Policy from the palette.
-
-![SOAP API REST remove invoke](./images/apic-soap-rest-service-policy.png)
-
-This automatically generates all you need to do the mapping.
-
-![SOAP API REST remove invoke](./images/apic-soap-rest-assembly-generated.png)
-
-We just need to complete the mapping for both request and response.
-The first Map policy will convert the JSON request to a SOAP request, the second will convert the SOAP response into a JSON response. With the getAllBranches operation, there is a particularity. The request does not take any parameter. So there is not explicit mapping to perform. We are just going to open the first Map policy to understand what is happening. Click on the first Map policy, this opens the mapping editor. You can see on the right, the SOAP message, and nothing on the left. We do not need to specify an input in this case. The SOAP message contains everything needed, i.e. The SOAP headers, body, operation and setting the two specific HTTP Header SOAP action and the content-type for the request.
-
-Mapping the response
-![Response mapping](./images/restTOsoapMapOutput.png)
-
-The endpoint for the back end SOAP service is the same as in Step 8: https://addressmanagementwebservice.eu-gb.mybluemix.net/branches/Branches.
 
 # Step 9 - Create a Cloudant service
+**This section has not been upated yet because we want to show the new advanced security features included in 2018**
 
 In order to store our data used by our API, we will need a persistent storage. To do so, we will use a Cloudant NoSQL database, a JSON document oriented store, compatible with CouchDB.
 
@@ -691,6 +714,7 @@ You can use a existing Cloudant service or create an instance of the service Clo
 
 
 # Step 10 - Create a LoopBack application
+**This section has not been upated yet because we want to show the new advanced security features included in 2018**
 
 API Connect comes with a developer toolkit. This toolkit provides an offline graphical user interface named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs, and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
 
@@ -866,45 +890,8 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 2. Click the All Models link to return to the main API Designer page.
 
 
-# Step 12 - Test your API
 
-1. Let's test the API in the Designer. First, start the server by clicking the play button in bottom left corner. Once the server is started, you should see the endpoint of the Local Micro Gateway.
-
-![APIC Screenshot](./images/apic-server.gif)
-
-1. On the server is started, Click on **Explore** in the top right corner.
-
-1. Select the operation POST /Customers. Click on *Generate* hyperlink before the button **Call operation** in the right panel.
-
-  ```
-  {
-  "name": "YOUR NAME",
-  "id": -30239449.275000483
-  }
-  ```
-![APIC Test](./images/apic-test.gif)
-
-1. The first time you will most likely get a CORS error as follows:
-
-  ```
-  No response received. Causes include a lack of CORS support on the target server, the server being unavailable, or an untrusted certificate being encountered.
-  Clicking the link below will open the server in a new tab. If the browser displays a certificate issue, you may choose to accept it and return here to test again.
-  https://$(catalog.host)/api/Customers
-  ```
-
-1. Open the url below in a new tab of your browser:
-
-  https://localhost:4002/api/Customers
-
-1. Click on Advanced. Accept the exception.
-
-1. Go back to the Explore view in API Designer and click **Call operation** again. You should get a successful response code 200 OK.
-
-1. If you have kept the Cloudant DB dahsboard open, you can select the database **test** and view the newly created record.
-
-1. Congratulations you successfully tested your API.
-
-# Step 13 - Using OAuth to protect your API
+# Step 12 - Using OAuth to protect your API
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
 
 > **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question, and there are different ways to get user information like having the back end performing a call back with the OAuth token to get information.
@@ -962,7 +949,3 @@ For additional resources pay close attention to the following:
 
 [bmx_dashboard_url]:  https://console.eu-gb.bluemix.net/
 [bmx_catalog_uk_url]: https://console.eu-gb.bluemix.net/catalog/
-
-
-FAQ
-Doe
