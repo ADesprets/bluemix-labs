@@ -4,8 +4,8 @@
 This article is the updated version for V2018. The original version was addressing V5, and can be found [here](./ReadMe.V5.md). This article is made of two parts. In the first section, we explain what is the purpose of API connect and the concepts behind IBM API Connect. Then in the second section, we will practice labs in order to get hands-on with IBM API Connect. Throughout the lab, you’ll get a chance to use the `apic` command line interface for creating LoopBack applications, the intuitive Web-based user interface, and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
 
 > **Note**:
-This is an onPremise version installed as part of IBM Cloud Pak for Integration (ICP4I). This cloud pak contains API Connect 2018.4.1.7fp3. It will be updated as much as possible to follow the new versions of API Connect. When relevant to show new features introduced by version V2018.1.4.8fix1, we will also show some new screen and will precisely indicate that this is the latest version.
-The version 2018.x is out since 30th March 2018, and the LTS has been released on 15th November 2018. Due to the significant changes brought by APIC V2018 and also because IBM Cloud (former Bluemix) is using API Connect v5 as of today (19th November 2019), this lab will use the onPremise version, and an updated version of the lab will be made when the IBM Cloud infrastructure is updated. The SaaS version of API connect should be released very soon.
+This is a Kuberntes installationwith IBM API COnnect 2018.4.1.7fp10. It will be updated as much as possible to follow the new versions of API Connect.
+The version 2018.x is out since 30th March 2018, and the LTS has been released on 15th November 2018. Due to the significant changes brought by APIC V2018 and also because IBM Cloud (former Bluemix) is using API Connect v5 as of today (19th March 2020), this lab will use the onPremise version, and an updated version of the lab will be made when the IBM Cloud infrastructure is updated. The SaaS version of API connect should be released very soon.
 
 >For any comments, please send an email to arnauld_desprets@fr.ibm.com (Arnauld Desprets).
 
@@ -306,7 +306,7 @@ Let's use the  -v option.
 
 ![Trouble shoot 2](./images/troubleshoot-wrong-uri-2.png)
 
-Now we see that there was a 500 error. This is better. We do not see any root cause, there is no  problem with the plan (still 92 calls possible). It is not clear that the back end URI is wrong. So let's see the logs from the Gateway itself. We know that we are running DataPower as a docker container. So let's get the container id by issuing `sudo docker ps`, then now we can check the logs of the gateway using the `sudo docker logs -f <gateway-container-id>`. It becomes very clear that the error is the URL...
+Now we see that there was a 500 error. This is better. We do not see any root cause, there is no  problem with the plan (still 92 calls possible). It is not clear that the back end URI is wrong. So let's see the logs from the Gateway itself. We know that we are running DataPower as a docker container. So let's get the container id by issuing `sudo docker ps`, then now we can check the logs of the gateway using the `sudo docker logs -f <gateway-container-id>`. (To get the gateway container id, issue the command sudo docker ps). It becomes very clear that the error is the URL...
 
 ![Trouble shoot 3](./images/troubleshoot-wrong-uri-3.png)
 
@@ -459,7 +459,7 @@ X-Request-Id: 68312d45ecdaa0a9cbf972f5dd8a49c5
 {}
 ```
 
-First let's make sure with in the right directory (where the swaggers are created), in my case, `cd apic-dev`, then let's login to the remote manager with apic. `apic login -s manager.159.8.70.38.xip.io -u org1owner -p ********* -r provider/default-idp-2` then we are ready to publish the product into the Staging environment for example. We issue the command: `apic products publish -s manager.159.8.70.38.xip.io -o org1 -c integration  quote-management-product_1.0.0.yaml`
+First let's make sure with in the right directory (where the swaggers are created), in my case, `cd apic-dev`, then let's login to the remote manager with apic. `apic login -s manager.159.8.70.38.xip.io -u org1owner -p ********* -r provider/default-idp-2` then we are ready to publish the product into the Integration environment for example. We issue the command: `apic products publish -s manager.159.8.70.38.xip.io -o org1 -c integration  quote-management-product_1.0.0.yaml`
 ![Publish a product using CLI](./images/cli_publish.png)
 
 
