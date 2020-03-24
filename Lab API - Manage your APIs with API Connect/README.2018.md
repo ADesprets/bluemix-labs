@@ -898,9 +898,11 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 ## Introduction
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
 
- ## Preparing the environment - Fake Authentication URL APIC
+ ## Preparing the environment - Fake Authentication URL API
 
- ## Protecting an API with BA
+ ## Protecting an API with Basic Authentication
+ Notice first that using Basic Authentication is not the best and most secured approach! Thereason we have this test, is because it is simple way to check that Fake Authentication URL API is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
+
 
  ## Protecting an API with OAuth - Resource Owner Password Credentials grant
 The Resource Owner Password Credentials grant type is specified in [RFC 6749 - OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749 "The OAuth 2.0 Authorization Framework Specification").
@@ -933,7 +935,7 @@ For the title enter *Banking Mgt OAuth Provider* for example, and change the ver
 
 ## Protecting an API with OAuth - External Provider
 
-## Using an OIDC egistry to protect the Platform
+## Using an OIDC Registry to protect the platform
 
 # Step 13 - Testing the quality of your API
 In this step we are going to see quickly how to use IBM API Connect Test and Monitor
