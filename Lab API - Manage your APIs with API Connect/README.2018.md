@@ -4,7 +4,7 @@
 This article is the updated version for V2018. The original version was addressing V5, and can be found [here](./ReadMe.V5.md). This article is made of two parts. In the first section, we explain what is the purpose of API connect and the concepts behind IBM API Connect. Then in the second section, we will practice labs in order to get hands-on with IBM API Connect. Throughout the lab, you’ll get a chance to use the `apic` command line interface for creating LoopBack applications, the intuitive Web-based user interface, and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
 
 > **Note**:
-This is a Kuberntes installationwith IBM API COnnect 2018.4.1.7fp10. It will be updated as much as possible to follow the new versions of API Connect.
+This is a Kubernetes installation with IBM API COnnect 2018.4.1.10. It will be updated as much as possible to follow the new versions of API Connect.
 The version 2018.x is out since 30th March 2018, and the LTS has been released on 15th November 2018. Due to the significant changes brought by APIC V2018 and also because IBM Cloud (former Bluemix) is using API Connect v5 as of today (19th March 2020), this lab will use the onPremise version, and an updated version of the lab will be made when the IBM Cloud infrastructure is updated. The SaaS version of API connect should be released very soon.
 
 >For any comments, please send an email to arnauld_desprets@fr.ibm.com (Arnauld Desprets).
@@ -923,12 +923,14 @@ The API provided contains a few more paths (operations) than what we describe he
 
 ![Fake Authentication URL Assembly](./images/API-FakeURLUserRegistry-Assembly.png)
 
-Below the processing perfomed in the gateway Javascript:
+Below the processing perfomed in the "BA authc logic" gateway Javascript:
 <BR>Line 1: Get the Basic Authorization header, and split it based on space
 <BR>Line 2: Takes the uid:password base 64 and decode it. Then separate uid and password, separator :.
 <BR>Line 7: Create a response Header called *api-authenticated-credential* with the the CN od the user with an hard coded email domain name.
 <BR>Line 10: Provide the body of the response following the expected body as defined in the documentation.
 <BR>Line 12: If username is different from password then returns UNAUTHENTICATED.
+
+
 
 ```
 1 var reqauth =  context.get('request.headers.authorization').split(' ');
@@ -961,14 +963,81 @@ You need to publish the API, let's say in our Integration catalog. I'm going to 
 apic login -s <manager endpoint> -u <uid> -p <pwd> -r provider/default-idp-2
 apic products:publish -c integration -o org1 -s <manager endpoint> --scope catalog fakeauthenticationproduct_1.0.0.yaml
 ```
-Sample invocation: `curl -H "Accept: application/json" -H "Authorization: Basic: dG90bzp0b3Rv" https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth`
+Sample invocation: `curl -k -H "Accept: application/json" -H "Authorization: Basic: Zm9vOmZvbw" https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth`
+
+Here is a sample response (formated):
+```
+{
+  "username" : "foo",
+  "email" : "foo@fr.ibm.com",
+  "first_name" : "foo",
+  "last_name" : "foo"
+}
+```
 
 At this stage, we have configured the Fake Authentication URL API that we will use in the next chapters. Of course, in real life that would be more of a user registry or OIDC provider that should be used.
 
- ## Protecting an API with Basic Authentication
- Notice first that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
+## Protecting an API with Basic Authentication
+First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
 
- ## Protecting an API with OAuth - Resource Owner Password Credentials grant
+There is an important design decision regarding what is the scope of the resoure we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should tey apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations, and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.
+
+The list of Steps are the following:
+* In the Cloud Management console, define the User Registry based on the *Fake Authentication URL API*
+* In the Manager console, associate the user registry with the Catalogs
+* Configure the API security to use Basic Authentication and publish it into the catalog
+* Test and validate that everything is working
+
+To add the User Registry, go in Cloud Management Console, click on Resourceson the navigation panel, click on Create button.
+
+![Create User Registry](./images/cmc-create-user-registry.png)
+
+Select Authentication URL User Registry, enter the following Information:
+>Title: SampleAuthURL
+<BR>Summary: Created by OAuth Provider configuration as a sample. Make sure to update the OAuth Providers using this sample with a valid User Registry.
+<BR>URL: https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth
+<BR>TLS Client Profile: Select Default TLS Client Profile
+
+![User Registry definitions](./images/cmc-user-registry-definition.png)
+
+To associate the user registry with the Catalog, go in the Manager console, click on Manage, select the Integration catalog, then on Settings, and API User Registries
+
+![User Registry definitions in the Catalog](./images/manager-user-registry-edit.png)
+
+Select the and click Save button.
+
+![Select the User Registry](./images/manager-user-registry-select.png)
+
+Now, let's take configure the security for the API. In the Manager, click on Develop menu, import the fakemagento API. This is the  initial API to wrok with an is available in the materials folder. It is version 1.0. Now, we can edit the Security Definitions section, and Add the Basic Authentication, click on Add.
+Enter
+>Name: BA
+<BR>Type: Select Basic
+<BR>Select SampleAuthURL for the *Authenticate using USer Registry*
+
+![Basic authentication Security Definition](./images/manager-BA-Security-definition.png)
+
+In the Security security section, select BA.
+
+![Basic authentication Security section](./images/manager-BA-Security-section.png)
+
+Create a product and publish it to the Integration Catalog, then subscribe to it. (Not explained here, see previous steps).
+
+We can now test the API. The credetials are located in the Authorization header.
+curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 421223e773f237c5231842102660896e" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://gw.159.8.70.38.xip.io/org1/integration/fakemagento/v1/order"
+You should obtain a response:
+```
+{"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}
+```
+Here, I'm introducing the POSTMAN collection.
+In the POSTMAN, there is a numner of requests that you can adapt for your environment.
+The collection is called: API Education. The environment that you need to adjust for your environment is called: API_Education.
+
+To test the API with Basic Authentication security. You can use the *FakeMagentoOrderBA V1* API.
+![Postman Basic Authentication test](./images/postman-ba-test.png)
+
+Clicking on Send button will give you the expected result.
+
+## Protecting an API with OAuth - Resource Owner Password Credentials grant
 The Resource Owner Password Credentials grant type is specified in [RFC 6749 - OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749 "The OAuth 2.0 Authorization Framework Specification").
 
 > **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question, and there are different ways to get user information like having the back end performing a call back with the OAuth token to get information.
