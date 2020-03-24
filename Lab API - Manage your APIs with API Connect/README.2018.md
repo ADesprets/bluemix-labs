@@ -162,6 +162,7 @@ This provides a mix of JAX RS, JAX WS, and NodeJS (with Loopback Application) fo
 1. [Create a LoopBack application](#step-10---create-a-loopback-application)
 1. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
 1. [Using OAuth to protect your API](#step-12---using-oauth-to-protect-your-api)
+1. [Testing the quality of your API](#step-13---testing-the-quality-of-your-api)
 
 # Step 1 - Check the development environment
 For this lab, we are going to use the Designer instead of using the manager. We also use the Local Test Environment to perform basic testing. We will then deploy the API into the sandbox catalog from the designer.
@@ -890,13 +891,33 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 2. Click the All Models link to return to the main API Designer page.
 
 
-
 # Step 12 - Using OAuth to protect your API
+**WARNING: The following section is under construction, but I want to show you what is coming soon**
+
+
+## Introduction
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
+
+ ## Preparing the environment - Fake Authentication URL APIC
+
+ ## Protecting an API with BA
+
+ ## Protecting an API with OAuth - Resource Owner Password Credentials grant
+The Resource Owner Password Credentials grant type is specified in [RFC 6749 - OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749 "The OAuth 2.0 Authorization Framework Specification").
 
 > **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question, and there are different ways to get user information like having the back end performing a call back with the OAuth token to get information.
 
 In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorization to extract identity, the user will be authenticated against an LDAP Server. We do use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider.
+
+## Protecting an API with OAuth - Resource Owner Password Credentials grant
+OIDC specification is based on the use of the idtoken which is a JSON Web Token - JWT specified at [RFC 7519](https://tools.ietf.org/html/rfc7519 "RFC 7519 Specification").
+
+## Protecting an API with OAuth - Authorization Code grant
+JSON Web Key (JWK) is specified at [RFC 7517](https://tools.ietf.org/html/rfc7517 "RFC 7517 Specification").
+A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key.
+I'm using a Simple JSON Web Key generator: [mkjwk](https://mkjwk.org/ "Simple JSON Web Key generator ").
+
+## Protecting an API with OAuth - Adding OIDC
 
 This configuration requires two steps:
 1. Creating an OAuth API
@@ -910,22 +931,12 @@ From the API page, click on Create OAuth 2.0 Provider API.
 For the title enter *Banking Mgt OAuth Provider* for example, and change the version to add a version number which is a good practice, for example /banking-mgt-oauth-provider/v1.
 ![Create OAuth API Title](./images/createOAuthAPITitle.png)
 
+## Protecting an API with OAuth - External Provider
 
- Enter the following information:
+## Using an OIDC egistry to protect the Platform
 
-| Field name               | Value           |
-|:-------------------------|:---------------:|
-| Client type              | Confidential    |
-| Scope name               | calculate_loans |
-| Grants                   | Password        |
-| Identity extraction      | Basic           |
-| Authentication           | User registry   |
-| User registry            | MyLDAP          |
-| Authorization            | Default form    |
-
-Only one scope, so you can remove the other ones.
-
-For now, unselect Enable refresh tokens, Enable revocation, and Enable token introspection. We will play with those options later.
+# Step 13 - Testing the quality of your API
+In this step we are going to see quickly how to use IBM API Connect Test and Monitor
 
 
 TO BE COMPLETED
