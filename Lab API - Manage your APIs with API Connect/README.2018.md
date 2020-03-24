@@ -897,8 +897,21 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 ## Introduction
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
 
+In the materials, you also find a POSTMAN collection (along side the environment definitions). You may have to change the env file in order to have it working for your environment.
+
+In order to perform all the scenarios below, we are going to use the same API that will be versionned, each version will have a different security scheme.
+
+| Version | Security scheme                            |
+|---------|--------------------------------------------|
+| V1      | API Key + Basic Authentication             |
+| V2      | Resource Owner Password Credentials Grant  |
+| V3      | Authorization Code grant + OIDC            |
+| V4      | Client Credentials grant                   |
+| V5      | External OAuth Provider                    |
+| V6      | Custom JWT Generate and Validate           |
+
  ## Preparing the environment - Fake Authentication URL API
- To perform some more advanced scenarii with security, we need a use registry where all the users are defined. They are several types of user registry for user authentication supported in API Connect:
+ To perform some more advanced scenarii with security, we need a user registry where all the users are defined. There are several types of user registry for user authentication supported in API Connect:
 * Authentication URL User Registry - Based on an authentication URL (Following a simple HTTP/S based invocation)
 * LDAP User Registry - Based on a LDAP server (Standard LDAP integration)
 * Local User Registry - Based on API Connect Local User Registry (Internal reigstry of the solution)
@@ -933,7 +946,7 @@ Below the processing perfomed in the gateway Javascript:
 13 }
 ```
 
-Here some characteristics of this API:
+Here are some characteristics of this API:
 >Base path:  /fakeauth/v1
 <BR>No security, not even an API Key.
 <BR>Four paths: /basic-auth (GET), /authenticate	(POST), /authenticate/{uid}/{pwd}	GET, /ping (GET)
@@ -941,17 +954,19 @@ Here some characteristics of this API:
 * UserCredential	object	Object containing the credentials in order to perform authentication (uid and password)
 * AuthenticatedUser	object	Object returned when a user is authenticated
 
-Sample invocation: `curl -H "Accept: application/json" -H "Authorization: Basic: dG90bzp0b3Rv" https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth`
-
 Here are the YAML definitions: [Fake Authentication API Open API Document](./materials/step12/fakeauthenticationurl_1.0.0.yaml "FakeAuthenticationURL-1.0.0 API") and [Fake Authentication Product Open API Document](./materials/step12/fakeauthenticationproduct_1.0.0.yaml "FakeAuthenticationProduct-1.0.0 Product").
 
 You need to publish the API, let's say in our Integration catalog. I'm going to use the CLI to do that.
-apic login
+```
+apic login -s <manager endpoint> -u <uid> -p <pwd> -r provider/default-idp-2
+apic products:publish -c integration -o org1 -s <manager endpoint> --scope catalog fakeauthenticationproduct_1.0.0.yaml
+```
+Sample invocation: `curl -H "Accept: application/json" -H "Authorization: Basic: dG90bzp0b3Rv" https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth`
 
+At this stage, we have configured the Fake Authentication URL API that we will use in the next chapters. Of course, in real life that would be more of a user registry or OIDC provider that should be used.
 
  ## Protecting an API with Basic Authentication
- Notice first that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is simple way to check that Fake Authentication URL API is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
-
+ Notice first that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
 
  ## Protecting an API with OAuth - Resource Owner Password Credentials grant
 The Resource Owner Password Credentials grant type is specified in [RFC 6749 - OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749 "The OAuth 2.0 Authorization Framework Specification").
@@ -960,18 +975,16 @@ The Resource Owner Password Credentials grant type is specified in [RFC 6749 - O
 
 In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorization to extract identity, the user will be authenticated against an LDAP Server. We do use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider.
 
-## Protecting an API with OAuth - Resource Owner Password Credentials grant
-OIDC specification is based on the use of the idtoken which is a JSON Web Token - JWT specified at [RFC 7519](https://tools.ietf.org/html/rfc7519 "RFC 7519 Specification").
-
 ## Protecting an API with OAuth - Authorization Code grant
 JSON Web Key (JWK) is specified at [RFC 7517](https://tools.ietf.org/html/rfc7517 "RFC 7517 Specification").
 A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key.
 I'm using a Simple JSON Web Key generator: [mkjwk](https://mkjwk.org/ "Simple JSON Web Key generator ").
 
+## Protecting an API with OAuth - Adding the OIDC token generation
+OIDC specification is based on the use of the idtoken which is a JSON Web Token - JWT specified at [RFC 7519](https://tools.ietf.org/html/rfc7519 "RFC 7519 Specification").
+
 
 ## Protecting an API with OAuth - Client Credentials grant
-
-## Protecting an API with OAuth - Adding OIDC
 
 This configuration requires two steps:
 1. Creating an OAuth API
