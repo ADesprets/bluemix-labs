@@ -894,14 +894,63 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 # Step 12 - Using OAuth to protect your API
 **WARNING: The following section is under construction, but I want to show you what is coming soon**
 
-
 ## Introduction
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitations was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
 
  ## Preparing the environment - Fake Authentication URL API
+ To perform some more advanced scenarii with security, we need a use registry where all the users are defined. They are several types of user registry for user authentication supported in API Connect:
+* Authentication URL User Registry - Based on an authentication URL (Following a simple HTTP/S based invocation)
+* LDAP User Registry - Based on a LDAP server (Standard LDAP integration)
+* Local User Registry - Based on API Connect Local User Registry (Internal reigstry of the solution)
+* OpenID Connect (OIDC) - Configure user authentication using JSON Web Tokens (External OIDC provider)
+
+Because we do not want to spend too much time to install an LDAP server, for simplicty of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in Unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in production environment.**. But this is perfect for educational purpose and it is also a sample of using API Connect with some gateway script samples.
+
+The API provided contains a few more paths (operations) than what we describe here. We only describe the /basic-auth path. Below a screen capture of the  API assembly.
+
+![Fake Authentication URL Assembly](./images/API-FakeURLUserRegistry-Assembly.png)
+
+Below the processing perfomed in the gateway Javascript:
+<BR>Line 1: Get the Basic Authorization header, and split it based on space
+<BR>Line 2: Takes the uid:password base 64 and decode it. Then separate uid and password, separator :.
+<BR>Line 7: Create a response Header called *api-authenticated-credential* with the the CN od the user with an hard coded email domain name.
+<BR>Line 10: Provide the body of the response following the expected body as defined in the documentation.
+<BR>Line 12: If username is different from password then returns UNAUTHENTICATED.
+
+```
+1 var reqauth =  context.get('request.headers.authorization').split(' ');
+2 var splitval = new Buffer((reqauth[1] || ''), 'base64').toString('utf8').split(':');
+3 var username = splitval[0] || '';
+4 var password = splitval[1] || '';
+5 console.error('>>> User credentials: [' + username + ':' + password + ']');
+6 if (username ===  password ) {
+7 	context.set('message.headers.api-authenticated-credential', 'cn=' + username + ',email=' + username + '@fr.ibm.com');
+8 	context.set('message.status.code', 200);
+9 	context.set('message.headers.content-type', 'application/json');
+10     context.message.body.write({username: username, email: username + '@fr.ibm.com', first_name: username, last_name: username});
+11 } else {
+12 	context.set('message.status.code', 401);
+13 }
+```
+
+Here some characteristics of this API:
+>Base path:  /fakeauth/v1
+<BR>No security, not even an API Key.
+<BR>Four paths: /basic-auth (GET), /authenticate	(POST), /authenticate/{uid}/{pwd}	GET, /ping (GET)
+<BR>Two definitions:
+* UserCredential	object	Object containing the credentials in order to perform authentication (uid and password)
+* AuthenticatedUser	object	Object returned when a user is authenticated
+
+Sample invocation: `curl -H "Accept: application/json" -H "Authorization: Basic: dG90bzp0b3Rv" https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth`
+
+Here are the YAML definitions: [Fake Authentication API Open API Document](./materials/step12/fakeauthenticationurl_1.0.0.yaml "FakeAuthenticationURL-1.0.0 API") and [Fake Authentication Product Open API Document](./materials/step12/fakeauthenticationproduct_1.0.0.yaml "FakeAuthenticationProduct-1.0.0 Product").
+
+You need to publish the API, let's say in our Integration catalog. I'm going to use the CLI to do that.
+apic login
+
 
  ## Protecting an API with Basic Authentication
- Notice first that using Basic Authentication is not the best and most secured approach! Thereason we have this test, is because it is simple way to check that Fake Authentication URL API is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
+ Notice first that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is simple way to check that Fake Authentication URL API is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
 
 
  ## Protecting an API with OAuth - Resource Owner Password Credentials grant
@@ -918,6 +967,9 @@ OIDC specification is based on the use of the idtoken which is a JSON Web Token 
 JSON Web Key (JWK) is specified at [RFC 7517](https://tools.ietf.org/html/rfc7517 "RFC 7517 Specification").
 A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key.
 I'm using a Simple JSON Web Key generator: [mkjwk](https://mkjwk.org/ "Simple JSON Web Key generator ").
+
+
+## Protecting an API with OAuth - Client Credentials grant
 
 ## Protecting an API with OAuth - Adding OIDC
 

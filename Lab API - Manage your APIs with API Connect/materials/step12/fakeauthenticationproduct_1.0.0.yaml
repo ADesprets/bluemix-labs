@@ -1,0 +1,32 @@
+info:
+  version: 1.0.0
+  title: FakeAuthenticationProduct
+  name: fakeauthenticationproduct
+  description: >-
+    It contains the fake authentication API to be used with OAuth and URL
+    authentication User Registry
+gateways:
+  - datapower-api-gateway
+plans:
+  default-plan:
+    rate-limits:
+      default:
+        value: 100/1hour
+    title: Default Plan
+    description: Default Plan
+    approval: false
+apis:
+  fakeauthenticationurl1.0.0:
+    $ref: ./fakeauthenticationurl_1.0.0.yaml
+visibility:
+  view:
+    type: public
+    orgs: []
+    tags: []
+    enabled: true
+  subscribe:
+    type: authenticated
+    orgs: []
+    tags: []
+    enabled: true
+product: 1.0.0
