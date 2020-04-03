@@ -980,7 +980,7 @@ At this stage, we have configured the Fake Authentication URL API that we will u
 ## Protecting an API with Basic Authentication
 First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
 
-There is an important design decision regarding what is the scope of the resource we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should tey apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations, and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.
+There is an important design decision regarding what is the scope of the resource we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should they apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations, and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.
 
 The list of Steps are the following:
 * In the Cloud Management console, define the User Registry based on the *Fake Authentication URL API*
@@ -1054,7 +1054,7 @@ In this lab, we start with a very simple case, but still very useful: the use of
 
 > **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question, and there are different ways to get user information like having the back end performing a callback with the OAuth token to get information. We are not explaining the generationg of OIDC token. As of today, this is not a mandatory scenario required by OpenID and we are still in discussions to decide to implement it.
 
-### Create the Oauth Provider
+### Create the OAuth Provider
 So let's start! First let's create the native OAuth provider. As discussed earlier, we use the Cloud Management console, but it was a design decision, and we could use the API Manager console and manage OAuth resources, if we wanted.
 
 Login to the Cloud Manager console, and select Resources (or Manage Resources from home). Select OAuth Providers and click on Add and select Native OAuth Provider button.
@@ -1109,7 +1109,7 @@ Click on Finish button.
 
 We are going to add a few features to the OAuth Provider, such as OIDC and use of other endpoints such as introspection.
 Edit the NativeProvider:
-* Look at the Scopes panel, you will see other settings available, but we are not going to change them at this stage.
+* In the Scopes panel, add openid as a scope for the support of OIDC.
 
 ![Native OAuth provider scopes configuration](./images/native-edit-scopes.png)
 
@@ -1144,11 +1144,11 @@ Now, We need to make this OAuth Provider accessible in the various catalogs wher
 We have now an OAuth provider definition. We leave the Cloud Manager console and go to the Manager Console.
 Click on Manage, and select Sandbox, then Settings, and OAuth Providers. Click on Edit button on the top left.
 
-![OAuth provider association to Catalog Edit](./images/OAuth-native-manager-associate.png)
+![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associate.png)
 
 Click on the checkbox close to the NativeProvider
 
-![OAuth provider association to Catalog](./images/OAuth-native-manager-associate-edit.png)
+![OAuth provider association to Catalog](./images/oauth-native-manager-associate-edit.png)
 
 Repeat the same operation with the Integration Catalog.
 It is not yet accessible because we are not using it in any API.
@@ -1203,8 +1203,6 @@ I'm going to test it in different ways: using Postman, curl and using the develo
 ![Test Access API](./images/test-ropc-15.png)
 
 #### Using curl
-**Warning : tested from Windows**
-
 
 1) Get token
 Request
@@ -1367,29 +1365,75 @@ Date: Fri, 03 Apr 2020 12:48:01 GMT
 ```
 
 ### Using the Developer portal
+We do not explain all th steps because it has been done in previous chapters.
+We connect to the developer Portal, then select the FakeMagento V2.0.0 API, and click on Tri it.
+In the first step, we get the token.
+We select the MyMobile App application, then enter the client_secret, enter the username and password and click on the Get Token button.
+It returns the Access Token.
+
+![Test Get Access Token](./images/test-ropc-21.png)
+
+In the second step, we click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
+This invokes the FakeMagento API using the access Token as a Bearer.
+
+![Test Get Access Token](./images/test-ropc-22.png)
+
+## Protecting an API with OAuth - Authorization Code grant and OIDC
+
+### Protect the API with OAuth - Authorization
+Now let's protect, the FakeMagento version 3.0.0 API. Click on Develop, and select the FakeMagento-3.0.0 API.
+Click on Security Definitions, and click on Add button.
+Enter:
+> Name: Native Authorization
+<BR>Description: Using the native OAuth provider for Authorization grant
+<BR>Select OAuth2
+<BR>Select NativeProvider for the OAuth Provider
+<BR>Select Access code for the FLow
+<BR>Select details and openid for the scopes
+
+![OAuth Access Code API protection Security Definition](./images/access-secure-API-sec-def.png)
+
+Click Save button.
+
+![OAuth Access Code API protection Security](./images/access-secure-API-sec.png)
+
+### Tests
+Not explained in details here, but we publish the product (or use versionning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan, and approve the subscription. The API is published and ready to use.
+
+#### Using POSTMAN
+We are using one nice feature of Postman to directly get the access token.
+Using the "1 -Access Token Authorization V3" request
+Click on the Authorization link, then click on Get New Access Token
+
+![Postman Test Access Token](./images/test-access-11.png)
+
+![Postman Test Access Token](./images/test-access-12.png)
+
+![Postman Test Access Token](./images/test-access-13.png)
+
+![Postman Test Access Token](./images/test-access-14.png)
+
+![Postman Test Access Token](./images/test-access-15.png)
 
 
-## Protecting an API with OAuth - Authorization Code grant
+#### Using curl
+
+
+### Using the Developer portal
+You get the Acccess Token directly using curl or Postman. In my case, I use Postman to get the Access Token.
+We select the MyMobile App application, then enter the client_secret,and the Access Token. We click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
+This invokes the FakeMagento API using the access Token as a Bearer.
+
+![Test Using the Access Token](./images/test-access-21.png)
+
+
 JSON Web Key (JWK) is specified at [RFC 7517](https://tools.ietf.org/html/rfc7517 "RFC 7517 Specification").
 A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key.
 I'm using a Simple JSON Web Key generator: [mkjwk](https://mkjwk.org/ "Simple JSON Web Key generator ").
-
-## Protecting an API with OAuth - Adding the OIDC token generation
 OIDC specification is based on the use of the idtoken which is a JSON Web Token - JWT specified at [RFC 7519](https://tools.ietf.org/html/rfc7519 "RFC 7519 Specification").
 
 ## Protecting an API with OAuth - Client Credentials grant
 
-This configuration requires two steps:
-1. Creating an OAuth API
-1. Configuring the API to be protected to use this OAuth API
-
-
-* Creation of the OAuth API
-From the API page, click on Create OAuth 2.0 Provider API.
-![Create OAuth API menu](./images/createOAuthAPIMenu.png)
-
-For the title enter *Banking Mgt OAuth Provider* for example and change the version to add a version number which is a good practice, for example /banking-mgt-OAuth-provider/v1.
-![Create OAuth API Title](./images/createOAuthAPITitle.png)
 
 ## Protecting an API with OAuth - External Provider
 %apic2018% -o org1 -c integration --consumer-org orgdev1 -a mymobileapp credentials:list --format json
