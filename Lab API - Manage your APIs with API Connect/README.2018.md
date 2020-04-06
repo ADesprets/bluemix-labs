@@ -1137,11 +1137,12 @@ Edit the NativeProvider:
 
 ![Native OAuth provider Assembly Panle](./images/native-edit-assembly.png)
 
+We have an OAuth provider definition.
+
 ### Make the OAuth provider usable in the catalogs
 
-Now, We need to make this OAuth Provider accessible in the various catalogs where we want to use it.
-
-We have now an OAuth provider definition. We leave the Cloud Manager console and go to the Manager Console.
+We need to make this OAuth Provider accessible in the various catalogs where we want to use it.
+We leave the Cloud Manager console and go to the Manager Console.
 Click on Manage, and select Sandbox, then Settings, and OAuth Providers. Click on Edit button on the top left.
 
 ![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associate.png)
@@ -1366,7 +1367,7 @@ Date: Fri, 03 Apr 2020 12:48:01 GMT
 
 ### Using the Developer portal
 We do not explain all th steps because it has been done in previous chapters.
-We connect to the developer Portal, then select the FakeMagento V2.0.0 API, and click on Tri it.
+We sign in to the developer Portal, then select the FakeMagento V2.0.0 API, and click on Try it.
 In the first step, we get the token.
 We select the MyMobile App application, then enter the client_secret, enter the username and password and click on the Get Token button.
 It returns the Access Token.
@@ -1394,6 +1395,7 @@ Enter:
 ![OAuth Access Code API protection Security Definition](./images/access-secure-API-sec-def.png)
 
 Click Save button.
+In the Security section, select Native Authorization, and the two scope details and openid, then click Save button.
 
 ![OAuth Access Code API protection Security](./images/access-secure-API-sec.png)
 
@@ -1569,11 +1571,121 @@ Content-Type: application/json
 ```
 
 ### Using the Developer portal
+We do not explain all the steps because it has been done in previous chapters.
+We sign in to the developer Portal, then select the FakeMagento V4.0.0 API, and click on Try it.
+In the first step, we get the token.
+We select the MyMobile App application, then enter the client_secret, enter the username and password and click on the Get Token button.
+It returns the Access Token.
 
+![Test Get Access Token](./images/test-application-21.png)
+
+In the second step, we click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
+This invokes the FakeMagento API using the access Token as a Bearer.
+
+![Test Get Access Token](./images/test-application-22.png)
 
 ## Protecting an API with OAuth - External Provider
-%apic2018% -o org1 -c integration --consumer-org orgdev1 -a mymobileapp credentials:list --format json
-%apic2018% -o org1 -c integration --consumer-org orgdev1 -a mymobileapp credentials:create C:\temp\appidcredentialSet.json
+
+In this scenario, we already have an OAuth Provider available. The intergation with API Connect is very simple, the application first synchronise the API keys with the applications defined in the OAuth Provider. It can be done in two manners, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the Ouath Provider and they are added to th eapplication in API Connect. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
+At runtime, the application, first get the token from the OAuth povider directly, not going through API Connect (this is a more secured approach since the credentials do not flow in API Connect), then the application invoke the API with the Access Token in an Authorization header as a Bearer. API COnnect then invokes the Oauth Provider with an Introspect call, if the calls return a 200 (or active=true), then the Access Token is valid and API Connect can proceed.
+
+![Third party OAuth Provider flow](./images/oauth-third-concepts.png)
+
+### Create the OAuth Provider
+We again have decided to create the OAuth Provider in Console Manager.
+
+As previously, click on Resources, then OAuth Providers. Click Add button selecting Third Party OAuth Provider on top left.
+Enter:
+>Title: AppId
+<BR>Keep Access code selected and select Application
+<BR>Select DataPower API Gateway
+
+![Third party OAuth Provider config](./images/oauth-third-config.png)
+
+Click Next button
+In the endpoint panel, enter:
+>Authorization URL: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorize
+<BR>Token URL: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token
+<BR>Introspect URL: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/introspect
+<BR>TLS profile (optional): Default TLS client profile:1.0.0
+<BR>Basic authentication username (optional): e838aebf-f2e6-4941-9a7f-828d6ebccbfe
+<BR>Basic authentication password (optional): <password>
+<BR>Select Connected for Token validation
+Click Next button
+
+The only used endpoint is the Introspect URL. The Authorization and Token URL are used in the documentation only and publish along side the API.
+
+![Thrd party OAuth Provider endpoints](./images/oauth-third-endpoints.png)
+
+For the scope enter:
+>details for elevated access
+<BR>openid for OIDC support
+<BR>and then click Save button
+
+![Third party OAuth Provider config](./images/oauth-third-scopes.png)
+
+We are done with the configuration of the OAuth provider. We can now leave the Cloud Manager console.
+
+### Associate the OAuth Provider with the different catalogs
+We need to make this OAuth Provider accessible in the various catalogs where we want to use it.
+In the Manager Console, click on Manage, and select Sandbox, then Settings, and OAuth Providers. Click on Edit button on the top left.
+
+![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associate.png)
+
+Click on the checkbox close to AppId
+
+![OAuth provider association to Catalog](./images/third-oauth-sandbox-associate-edit.png)
+
+Repeat the same operation with the Integration Catalog.
+It is not yet accessible because we are not using it in any API.
+
+### Protect the API with OAuth - Third Party
+Let's protect, the FakeMagento version 5.0.0 API. Click on Develop, and select the FakeMagento-5.0.0 API.
+Click on Security Definitions, and click on Add button.
+Enter:
+> Name: AppId Third Party Authorization
+<BR>Description: Using App ID third party OAuth provider for Authorization grant
+<BR>Select OAuth2
+<BR>Select AppID for the OAuth Provider
+<BR>Select Access code for the FLow
+
+![OAuth Access Code API protection Security Definition](./images/third-party-access-secure-API-sec-def.png)
+
+Click Save button.
+
+In the Security section, select AppId Third Party Authorization, and the two scope details and openid, then click Save button.
+
+![OAuth Access Code API protection Security](./images/third-party-access-secure-API-sec.png)
+
+### Synchronize the client credentials from AppId into API Connect Application definition
+What we do here is get the API keys defined in App ID for the application and then use the CLI to add this set of credentials to the MyMobileApplcation. The only way to do this is using the CLI or the REST API. As said previously, an alternative would have beenn to update the credentials from API Connect to AppId with the AppId API.
+
+* Log to the manager
+```
+apic.exe login -s <manager-endpoint> -u <user> -p <password> -r provider/default-idp-2
+```
+
+**Note:** From now on, I'm going to use a short cut/alias in order to simplify what I type. And notice that I'm using Windows so you may have to slightly modify those command if on Linux.
+```
+set  apic2018=<path-to-apic> -s <manager-endpoint> -o <organisation>
+```
+
+Typing `%apic2018%` provides an extensive help.
+To update the application credentials, we need to find the name of the consumer org in the integration catalog, and the name of the application.
+
+* Get the name of the consumer organisation
+```
+%apic2018% consumer-orgs:list -c integration
+orgdev1    [state: enabled]   https://manager.159.8.70.38.xip.io/api/consumer-orgs/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda
+```
+
+* Get the name of the application
+```
+%apic2018% apps:list -c integration --scope catalog
+mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a
+```
+
+* We need to specify the credentials information in a json file. Create a file called appidcredentialSet.json for example.
 ```
 {
 	"type": "credential",
@@ -1582,15 +1694,77 @@ Content-Type: application/json
 	"title": "AppID Credentials for MyMobileApp",
 	"summary": "AppID Credentials for MyMobileApp",
 	"client_id": "9ce0b78a-289c-4d2b-8968-165b5f9c726d",
-	"client_secret_hashed": "",
+	"client_secret": "NzNiMGJmYmUtMjNiYi00YmExLWIwY2UtZDg5MDAxZjFjZDI3"
+}
+```
+* We can now update API connect:
+```
+%apic2018% -c integration --consumer-org orgdev1 -a mymobileapp credentials:create C:\temp\appidcredentialSet.json
+```
+
+* Let's check that the credentials have been correctly updated
+```
+%apic2018% -c integration --consumer-org orgdev1 -a mymobileapp credentials:list --format json
+
+{
+    "total_results": 2,
+    "results": [
+        {
+            "type": "credential",
+            "api_version": "2.0.0",
+            "id": "43a84659-28e4-4bb9-8dbe-998cd478c6c0",
+            "name": "appid-credentials",
+            "title": "AppID Credentials for MyMobileApp",
+            "summary": "AppID Credentials for MyMobileApp",
+            "client_id": "9ce0b78a-289c-4d2b-8968-165b5f9c726d",
+            "client_secret_hashed": "uSCwG4YW8Fg+PRf1U0UXYDkgQw5BLMDn4G5vOL+RERI=",
+            "created_at": "2020-04-01T14:05:43.592Z",
+            "updated_at": "2020-04-01T14:05:43.592Z",
+            "org_url": "https://manager.159.8.70.38.xip.io/api/orgs/3f015cc4-9cb5-4d72-a202-008473d14a11",
+            "catalog_url": "https://manager.159.8.70.38.xip.io/api/catalogs/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026",
+            "consumer_org_url": "https://manager.159.8.70.38.xip.io/api/consumer-orgs/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda",
+            "app_url": "https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a",
+            "url": "https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a/credentials/43a84659-28e4-4bb9-8dbe-998cd478c6c0"
+        },
+        {
+            "type": "credential",
+            "api_version": "2.0.0",
+            "id": "d8d6b731-5a46-41dc-a27f-a073c76c72dc",
+            "name": "credential-for-mymobileapp",
+            "title": "Credential for MyMobileApp",
+            "summary": "Credential for MyMobileApp",
+            "client_id": "421223e773f237c5231842102660896e",
+            "client_secret_hashed": "91IcbIJ+mL/oC0EnPrroU7mzRGMrwROoja8KhT8s4RQ=",
+            "created_at": "2020-03-05T13:28:03.994Z",
+            "updated_at": "2020-03-05T13:28:03.994Z",
+            "org_url": "https://manager.159.8.70.38.xip.io/api/orgs/3f015cc4-9cb5-4d72-a202-008473d14a11",
+            "catalog_url": "https://manager.159.8.70.38.xip.io/api/catalogs/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026",
+            "consumer_org_url": "https://manager.159.8.70.38.xip.io/api/consumer-orgs/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda",
+            "app_url": "https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a",
+            "url": "https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a/credentials/d8d6b731-5a46-41dc-a27f-a073c76c72dc"
+        }
+    ]
 }
 ```
 
-C:\IBM\APIM\2018\toolkit\apic.exe login -s manager.159.8.70.38.xip.io -u org1owner -p Passw0rd! -r provider/default-idp-2
-set apic2018=C:\IBM\APIM\2018\toolkit\apic.exe -s manager.159.8.70.38.xip.io -o org1
+**Hint:** using the --debug on apic gives the equivalent curl requests. The it is possible to directly invoke object with REST API. You can get the url of each object using the web-dev-tools in your browser. In the command below, you can get the Access Token, client_id and client_secret using the --debug option on the login call.
 
-%apic2018% -c integration --consumer-org orgdev1 -a mymobileapp credentials:list --format json
-%apic2018% -c integration --consumer-org orgdev1 -a mymobileapp credentials:create "D:\CurrentProjects\APIMgt\POT\GitRepository\bluemix-labs\Lab API - Manage your APIs with API Connect\materials\step12\appidcredentialSet.json"
+curl -k -H "accept: application/json" -H "Authorization: Bearer <AT>" -H "X-Ibm-Client-Id: <client_id>" -H "X-Ibm-Client-Secret: <client_secret>" "https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a/credentials"
+
+![Postman Test Access Token](./images/web-dev-tools.png)
+
+TO BE COMPLETED
+
+### Tests
+Not explained in details here, but we publish the product (or use versionning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan, and approve the subscription. The API is published and ready to use.
+
+#### Using POSTMAN
+As f or the Authorization grant with the native Oauth Provider we use Postman to directly get the access token.
+
+Using the "1 -Access Token Authorization V5" request.
+Click on the Authorization link, then click on Get New Access Token
+
+#### Using curl
 
 
 ## Using an OIDC Registry to protect the platform
@@ -1598,8 +1772,6 @@ set apic2018=C:\IBM\APIM\2018\toolkit\apic.exe -s manager.159.8.70.38.xip.io -o 
 # Step 13 - Testing the quality of your API
 In this step we are going to see quickly how to use IBM API Connect Test and Monitor
 
-
-TO BE COMPLETED
 
 Congratulations. You have completed this Lab!
 
