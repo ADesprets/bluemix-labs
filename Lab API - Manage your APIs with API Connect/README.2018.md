@@ -1,11 +1,11 @@
 <p align="center"><img src="./images/apic_banner-mini.png"</p>
 
 # Introduction
-This article is the updated version for V2018. The original version was addressing V5, and can be found [here](./ReadMe.V5.md). This article is made of two parts. In the first section, we explain what is the purpose of API connect and the concepts behind IBM API Connect. Then in the second section, we will practice labs in order to get hands-on with IBM API Connect. Throughout the lab, you’ll get a chance to use the `apic` command line interface for creating LoopBack applications, the intuitive Web-based user interface, and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
+This article is the updated version for V2018. The original version was addressing V5 and can be found [here](./ReadMe.V5.md). This article is made of two parts. In the first section, we explain what is the purpose of API connect and the concepts behind IBM API Connect. Then in the second section, we will practice labs in order to get hands-on with IBM API Connect. Throughout the lab, you’ll get a chance to use the `apic` command line interface for creating LoopBack applications, the intuitive Web-based user interface and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
 
 > **Note**:
 This is a Kubernetes installation with IBM API Connect 2018.4.1.10. It will be updated as much as possible to follow the new versions of API Connect.
-The version 2018.x is out since 30th March 2018, and the LTS has been released on 15th November 2018. Due to the significant changes brought by APIC V2018 and also because IBM Cloud (former Bluemix) is using API Connect v5 as of today (19th March 2020), this lab will use the onPremise version, and an updated version of the lab will be made when the IBM Cloud infrastructure is updated. The SaaS version of API connect should be released very soon.
+The version 2018.x is out since 30th March 2018 and the LTS has been released on 15th November 2018. Due to the significant changes brought by APIC V2018 and also because IBM Cloud (former Bluemix) is using API Connect v5 as of today (19th March 2020), this lab will use the on-premise version and an updated version of the lab will be made when the IBM Cloud infrastructure is updated. The SaaS version of API connect should be released very soon.
 
 >For any comments, please send an email to arnauld_desprets@fr.ibm.com (Arnauld Desprets).
 
@@ -54,13 +54,13 @@ Here is the result of Forrester study, performed in February 2017.
 ![Forrester Study](./images/ForresterStudy.png)
 <br>*Fig. 1: Forrester use cases study*</br>
 
-As you can see a lot of projects are using API internally, and the very visible part, the public projects represents 35%.
+As you can see a lot of projects are using API internally and the very visible part, the public projects represents 35%.
 
 Read the full study: The Total Economic Impact™ of an API Management Solution http://ibm.biz/APICTEIstudy
 
 
 # Architecture and terminology
-## API Connect architecture onPremise
+## API Connect architecture on-premise
 
 ### Components in IBM API Connect 2018
 The main components composing API Connect are:
@@ -72,7 +72,7 @@ The main components composing API Connect are:
 + The **Designer**, it offers the same web experience as the manager to manage APIs and allow development on the developer's machine.
 + The apic toolkit, really the CLI for APIC. APIC is developed in a simple manner and accessible through REST/JSON API. So the Web UI, the apic CLI are just based on those REST API. This is also a new benefit of the V2018, where we have now a complete set of supported REST API, in order to configure initially the product (APIC Cloud), the Manager and the portal.
 
-From an architecture point of view and it is important to consider that for HA the notion of quorum arise, and I would advise to have a good understanding of what are the implications. Finally, APIC V2018 is a complete rewrite and redesigned version based on the use of Docker and Kubernetes. If you do not have a Kubernetes platform available, it is possible to use OVA that are encapsulating the Kubernetes environments. apic CLI encapsulate the kubectl/docker hiding the complexity of this platform. I would argue that even with OVA, it will be an advantage to understand Kubernetes and Docker principle.
+From an architecture point of view and it is important to consider that for HA the notion of quorum arise and I would advise to have a good understanding of what are the implications. Finally, APIC V2018 is a complete rewrite and redesigned version based on the use of Docker and Kubernetes. If you do not have a Kubernetes platform available, it is possible to use OVA that are encapsulating the Kubernetes environments. apic CLI encapsulate the kubectl/docker hiding the complexity of this platform. I would argue that even with OVA, it will be an advantage to understand Kubernetes and Docker principle.
 
 >Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
 
@@ -88,10 +88,10 @@ In more details some of the communications between each component in an OVA depl
 Nowadays a lot of systems containing data are distributed. This increases availability but at the same time data consistency between the various instances is highly required. There are several strategies to support this requirement, active-passive, active-active where it becomes a little bit more difficult. One approach to solve this is to use the notion of quorum, where using a simple mathematical decision (N-1)/2 a decision can be taken to identify whether the system should be shut down in order to avoid data corruption or to keep the system available but alert that data corruption has occurred and some reconciliation work may have to happen. Many components in API Connect or related to API Connect are based on distributed databases. Kubernetes etcd, Elastic Stack, Cassandra, Redis, etc ... When you design your topology, I would really advise that you understand what you want, what can be done and what may happen if losing quorum, how the individual component will behave. You should also perform some disaster testing according what you try to achieve. There are a lot of literature on this topic available. One final word, for fun, remember that ∀ n ∈ ℕ (n-1)/2 < n/2 , that means that if you lose half of your instances you are in trouble and you need to start worrying about what is happening!
 
 ## Terminology
-+ An **Organization**: It is the highest logical level of separation, it may provide multitenancy if required. An organization has its own catalog, members, resources, etc ... It is managed from the cloud console (not the manager).
++ An **Organization**: It is the highest logical level of separation; it may provide multitenancy if required. An organization has its own catalog, members, resources, etc ... It is managed from the cloud console (not the manager).
 + An **API**: Can be SOAP or REpresentational State Transfer - REST API defined with an Open API definition (Swagger) as a YAML file. One API = one yaml file though WSDLs and Schema are separated in a zip file for a SOAP API.
 + A **Plan**: this is where we specify the quotas and if an approval is needed to subscribe to a Product/API.
-+ A **Product**: this is an aggregation of APIs, and one or many plans associated to those APIs. This is what is published to a catalog. One Product = one yaml file.
++ A **Product**: this is an aggregation of APIs and one or many plans associated to those APIs. This is what is published to a catalog. One Product = one yaml file.
 + A **Catalog**: it's relates to a cluster of gateways and a portal. It sounds like an environment, but it also contains a business dimension. For example, good names for a catalog are Sandbox, Dev, Production, CRM (for my CRM APIs exposed to a specific population), etc ...
 + An API Connect **Cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and loopback applications runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organization and needs to separate the infrastructures.
 + **Assembly panel**: this is where we specify the policies to be executed in the gateway for each transactions.
@@ -102,7 +102,7 @@ Below the concepts related to the overall product. There are many ways to choose
 The questions to ask:
 1. How many APIC clouds? (usually between 1 and 3, driver: production separated or not from non-production and other environments)
 1. How many clusters of gateways? (separate instances, driver: usually security zones (DMZ or not and other zones))
-1. How many gateway services? (drivers: the number of clusters of gateways above, and isolation)
+1. How many gateway services? (drivers: the number of clusters of gateways above and isolation)
 1. How many instances for each component? (how many instances of managers (usually 2 per APIC Cloud), instances of gateways (usually at least 2 depending on the traffic and high availability desired), instances of portals (usually 3 per APIC Cloud))
 
 ![APIC Concepts](./images/v2018.apic-ConceptsMap.png)
@@ -144,9 +144,9 @@ The goal of this lab is to build the following APIs:
 
 This provides a mix of REST and SOAP APIs, with or without mapping, using or not a Loopback Application.
 
-The corresponding back end runtimes are as follow:
+The corresponding back-end runtimes are as follow:
 ![RuntimesAndBackEnd](./images/RuntimesAndBackEnd.png)
-This provides a mix of JAX RS, JAX WS, and NodeJS (with Loopback Application) for pure cloud APIs. The use of Secure Gateway in relation with a local deployment would demonstrate hybrid APIs.
+This provides a mix of JAX RS, JAX WS and NodeJS (with Loopback Application) for pure cloud APIs. The use of Secure Gateway in relation with a local deployment would demonstrate hybrid APIs.
 
 # Steps for the lab
 
@@ -166,16 +166,16 @@ This provides a mix of JAX RS, JAX WS, and NodeJS (with Loopback Application) fo
 
 # Step 1 - Check the development environment
 For this lab, we are going to use the Designer instead of using the manager. We also use the Local Test Environment to perform basic testing. We will then deploy the API into the sandbox catalog from the designer.
->**Note**: Using the toolkit/designer (locally) or using manager directly (remote server) is a pretty important decision. Using the toolkit has the benefit to use a Source Control Management System and perform micro versioning as well as backup of the various yaml (and wsdls). It also provides a local experience with usually a lower response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches, especially considering a devOps approach. I'm using a Linux environment, you may have to adjust the commands with your specific environment being Windows or MacOS.
+>**Note**: Using the toolkit/designer (locally) or using manager directly (remote server) is a pretty important decision. Using the toolkit has the benefit to use a Source Control Management System and perform micro versioning as well as backup of the various yaml (and WSDLs). It also provides a local experience with usually a lower response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches, especially considering a devOps approach. I'm using a Linux environment, you may have to adjust the commands with your specific environment being Windows or MacOS.
 
 Let's check that development environment is ok.
 We first prepare the docker environment to start the local test environment. `sudo docker load < apic-lte-images-2018.4.1.8-ifix2.0.tar.gz`.
 The information on the local test environment can be found under the title *Testing an API with the Local Test Environment* in the IBM Knowledge Center.
-To start the lte, in my case, `cd ~/apic-lte/linux`, then `sudo ./apic-lte start`.
+To start the  LTE, in my case, `cd ~/apic-lte/linux`, then `sudo ./apic-lte start`.
 
 ![Start LTE](./images/start-lte.png)
 
-Take a note of the Platform API url, and the user/pwd to be used. we will need them when we start the Designer.
+Take a note of the Platform API URL and the user/pwd to be used. we will need them when we start the Designer.
 > **Hint:** To check that the LTE is correctly started: `apic login --server localhost:2000 --username shavon --password 7iron-hide --realm provider/default-idp-2`
 
 You should get the following message: Logged into localhost:2000 successfully
@@ -188,7 +188,7 @@ Click on Open a folder and specify the directory where you work.
 
 ![Designer specify working directory folder](./images/designer-specify-work-dir-spec.png)
 
-The specify the manager you want to work with, in our case, we will have two locations, the local test environment, and the manager of a remote instance. First let's use the LTE. We enter the information for the local test environment, in our case https://localhost:2000.
+The specify the manager you want to work with, in our case, we will have two locations, the local test environment and the manager of a remote instance. First let's use the LTE. We enter the information for the local test environment, in our case https://localhost:2000.
 
 ![Designer specify working directory folder](./images/designer-new-connection.png)
 
@@ -218,7 +218,7 @@ info:
 ```
 If this is not the case, then download it again or copy it in a file.
 
-1. It  is a good idea to check that the back end API is running before exposing it. In this case, we are going to use the GET verb on the quote operation. Type the following:  `curl -H "Accept: application/json" "http://SampleJAXRS20-aw.eu-gb.mybluemix.net/loanmgt/resources/loans/v1/quote?loanAmount=10000&annualInterestRate=1.1&termInMonths=36"`
+1. It  is a good idea to check that the back-end API is running before exposing it. In this case, we are going to use the GET verb on the quote operation. Type the following:  `curl -H "Accept: application/json" "http://SampleJAXRS20-aw.eu-gb.mybluemix.net/loanmgt/resources/loans/v1/quote?loanAmount=10000&annualInterestRate=1.1&termInMonths=36"`
 You should obtain the following results: {"loanAmount":10000,"annualInterestRate":1.1,"termInMonths":36,"monthlyPaymentAmount":282.51360281363674}.
 
 > This API is not exposed, is not protected, is not monitored, is not governed. Let's use API Connect to fix this.
@@ -237,10 +237,10 @@ Select the file downloaded previously and click *Next* button.
 
 Change the following details
 * Base path: /loans/v1
-* Description: Supports Loan quote operation and also provide a simple way to add a delay in the back end response time and get variable length messages from back end.
+* Description: Supports Loan quote operation and also provide a simple way to add a delay in the back-end response time and get variable length messages from back-end.
 Then click *Next* button.
 
-> Hint: The base path has been chosen carefully to avoid URI rewriting and simplify this first example. You always have to be careful with the exposed URI and back end URI and adopt strategy to avoid URI rewriting or if not possible to reduce the work required to do this mapping. The worst case is to have a specific URI for each combinations VERB + PATH.
+> Hint: The base path has been chosen carefully to avoid URI rewriting and simplify this first example. You always have to be careful with the exposed URI and back-end URI and adopt strategy to avoid URI rewriting or if not possible to reduce the work required to do this mapping. The worst case is to have a specific URI for each combinations VERB + PATH.
 
 ![Designer Specify quote api](./images/designer-specify-quote-api.png)
 
@@ -269,7 +269,7 @@ Properties is a very important concept. It allows the definition of any variable
 
 ![Designer Quote api properties](./images/designer-quote-api-properties.png)
 
-Before testing we have one small adjustment to perform. The back end URL invoked, and we are going to use the target-url just set.
+Before testing we have one small adjustment to perform. The back-end URL invoked and we are going to use the target-url just set.
 
 We go in the Assembly Panel and click on the Invocation policy. The panel with the properties is displayed on the right.
 > Hint: For compatibility of the gateway aspects, here delete the invoke policy and add it again. The choice here is based on which gateway type do we use. In our case, we use the new one, referred as DataPower API Gateway.
@@ -297,7 +297,7 @@ Using the wrong client-id:
 This is situation is pretty clear. Get an unauthorized message.
 One way to get a little bit more information is to use the -v option with curl. This will show you the headers sent and received, the TLS session information, etc ...
 
-Now let's use a wrong host or URI for the back end.
+Now let's use a wrong host or URI for the back-end.
 
 ![Trouble shoot 1](./images/troubleshoot-wrong-uri-1.png)
 
@@ -307,7 +307,7 @@ Let's use the -v option.
 
 ![Trouble shoot 2](./images/troubleshoot-wrong-uri-2.png)
 
-Now we see that there was a 500 error. This is better. We do not see any root cause, there is no problem with the plan (still 92 calls possible). It is not clear that the back end URI is wrong. So, let's see the logs from the Gateway itself. We know that we are running DataPower as a docker container. So, let's get the container id by issuing `sudo docker ps`, then now we can check the logs of the gateway using the `sudo docker logs -f <gateway-container-id>`. (To get the gateway container id, issue the command sudo docker ps). It becomes very clear that the error is the URL...
+Now we see that there was a 500 error. This is better. We do not see any root cause, there is no problem with the plan (still 92 calls possible). It is not clear that the back-end URI is wrong. So, let's see the logs from the Gateway itself. We know that we are running DataPower as a docker container. So, let's get the container id by issuing `sudo docker ps`, then now we can check the logs of the gateway using the `sudo docker logs -f <gateway-container-id>`. (To get the gateway container id, issue the command sudo docker ps). It becomes very clear that the error is the URL...
 
 ![Trouble shoot 3](./images/troubleshoot-wrong-uri-3.png)
 
@@ -329,7 +329,7 @@ To create a product, click on the Develop icon on the navigation panel (left). T
 
 ![Designer Add product](./images/design-add-product.png)
 
-Select *New product* button, and *Next* button.
+Select *New product* button and *Next* button.
 
 ![Designer New product](./images/designer-new-product.png)
 
@@ -472,7 +472,7 @@ First let's make sure with in the right directory (where the swaggers are create
 You can get the URL of the portal associated to a catalog in the settings of this catalog.
 
  1. Go to the API Manager screen, in my case, https://manager.159.8.70.38.xip.io.
- 2. Click on Manage, and click on the Integration Catalog tile (created previously and we assume that the Portal was instantiated for this catalog here)
+ 2. Click on Manage and click on the Integration Catalog tile (created previously and we assume that the Portal was instantiated for this catalog here)
  3. Choose the Settings tab, followed by the Portal option.
  4. Click on the Portal URL link to launch the Developer Portal
 
@@ -545,7 +545,7 @@ In this section, we will use the developer portal to test Quote Management API R
 
 1. Scroll down, click on the three *Generate* link to populate the values and click the Send button
 2. Scroll down below the Call operation button. You should see a 200 OK and a response body as shown below.
-You get the response from the back end.
+You get the response from the back-end.
 ![Test app](./images/portal-testsend.png)
 
 # Step 5 - Invoke the API
@@ -589,7 +589,7 @@ If all is OK, you should see the result of the quote in JSON format. (Below slig
 
 ![Analytic icon app](./images/manager-analytic-defaultdb.png)
 
-5. You can also look at all the events, click on Discover link, and then on All events link
+5. You can also look at all the events, click on Discover link and then on All events link
 
 ![Analytic icon app](./images/manager-analytics-events.png)
 
@@ -600,7 +600,7 @@ You can create your own dashboards and events lists with predefined filters.
 ![Analytic icon app](./images/manager-analytics-dashboards.png)
 
 # Step 7 - Create a SOAP API
-This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. Before starting, it is important to understand what we try to achieve. In the designer (or the Manager), you find two different possibilities regarding the integration of an existing SOAP API from the WSDL defining this service. The first one is a SOAP proxy which means that we create an API (An Open API document) that exposes SOAP and accesses the SOAP service back end, the second one is a REST proxy which means that we create an API (An Open API document) that exposes REST/JSON and accesses the SOAP service back end. This is a very different scenario, we will discuss the difference of implementation in the next Step.
+This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. Before starting, it is important to understand what we try to achieve. In the designer (or the Manager), you find two different possibilities regarding the integration of an existing SOAP API from the WSDL defining this service. The first one is a SOAP proxy which means that we create an API (An Open API document) that exposes SOAP and accesses the SOAP service back-end, the second one is a REST proxy which means that we create an API (An Open API document) that exposes REST/JSON and accesses the SOAP service back-end. This is a very different scenario, we will discuss the difference of implementation in the next Step.
 
 1. Download the WSDL for the Branch SOAP Service, you can find it
  [here](./materials/step7/BranchSOAP.wsdl).
@@ -633,7 +633,7 @@ For example, add SOAP API to get Branches information for the description field,
 
 ![SOAP API Load end](./images/designer-soap-edit-load.png)
 
-You can see what has been generated under the cover. As expected, the consume content type is text/xml and produce content type is application/xml in the assembly panel. In the assembly panrel we see only one Invoke action, the invoke URL is the one extracted from the WSDL.
+You can see what has been generated under the cover. As expected, the consume content type is text/xml and produce content type is application/xml in the assembly panel. In the assembly panel we see only one Invoke action, the invoke URL is the one extracted from the WSDL.
 
 ![SOAP Proxy Assembly](./images/designer-soap-proxy-assembly.png)
 
@@ -645,20 +645,20 @@ We are going to test it. Go to the Assembly panel. Click on the Test icon and th
 We did not publish the service in the integration catalog on the remote Manager, since this is exactly the same procedure as for a REST Service.
 
 # Step 8 - Create a SOAP to REST API
->With the 2018 version, this step has been greatly simplified. Similarly to the previous step, we use the designer but instead of using SOAP proxy, we use a REST proxy. We will see that API Connect generates a lot of configurations automatically. Notice that SOAP to REST in this context means that we have a SOAP back end and we expose it in REST JSON, hence SOAP to REST. We could have had another view and call it REST to SOAP :-). We are not documenting all the steps to add the API because it is very similar to the previous step, the only difference being the selection af REST proxy at the very beginning.
+>With the 2018 version, this step has been greatly simplified. Similarly to the previous step, we use the designer but instead of using SOAP proxy, we use a REST proxy. We will see that API Connect generates a lot of configurations automatically. Notice that SOAP to REST in this context means that we have a SOAP back-end and we expose it in REST JSON, hence SOAP to REST. We could have had another view and call it REST to SOAP :-). We are not documenting all the steps to add the API because it is very similar to the previous step, the only difference being the selection of REST proxy at the very beginning.
 
-1. Click on Add, and select New API
+1. Click on Add and select New API
 
 ![SOAP API REST Create](./images/designer-soap-rest-create.png)
 
 The next steps are as before. For the Info panel, I used:
 >Title: BranchesREST
 
->Description: REST exposure for the back end SOAP service
+>Description: REST exposure for the back-end SOAP service
 
 At the end click on the Edit API button.
 
-Let's see two seconds the definition, unlike the previous step, the consume and produce contet-types are now application/json. The definitions have been auto generated. And we can see for the XSD elements corresponding JSON elements. This is a great feature and nice enhancement from the V5 version.
+Let's see two seconds the definition, unlike the previous step, the consume and produce content-types are now application/json. The definitions have been auto generated. And we can see for the XSD elements corresponding JSON elements. This is a great feature and nice enhancement from the V5 version.
 
 ![SOAP API REST Create](./images/designer-soap-rest-definitions.png)
 
@@ -668,9 +668,9 @@ We can see that in the Assembly, it is quite different than before.
 
 You can see that for each operation, there are two REST operations created a GET and a POST.
 For each operation, you can see two mapping actions, REST to SOAP (for the request) and SOAP to REST (for the response).
-You can also see that for each operation there are one or two parse actions. This is a very important concept to understand and understand when to use it or not. By default, the with new API Gateway gateway (Native Gateway) messages and using the streaming capabilities of the gateway and messages are not buffered. This is a very efficient way to serve messages, since the messages can be sent directly to the back end even if the message was not received completely. This is a very common approaches when dealing with video streaming. Now, when you want to manipulate the message, you cannot do that, let's say you want to remove some pieces especially at the beginning, so you have to ge the full message and in order to manipulate you need to get the message and parse it (in other words deserialize it). This is what the parse action does in those flows. Notice that this applies to JSON or XML since you may need to deserialize both types of messages. Of course, parsing a message has a cost in terms of resources and latency, and the price will vary a lot depending on the size and complexity of the message.
+You can also see that for each operation there are one or two parse actions. This is a very important concept to understand and also when to use it or not. By default, with the new API Gateway (Native Gateway) messages are streamed and messages are not buffered. This is a very efficient way to serve messages, since the messages can be sent directly to the back-end even if the message was not received completely. This is a very common approaches when dealing with video streaming. Now, when you want to manipulate the message, you cannot do that, let's say you want to remove some pieces especially at the beginning, so you have to get the full message and in order to manipulate you need to get the message and parse it (in other words deserialize it). This is what the parse action does in those flows. Notice that this applies to JSON or XML since you may need to deserialize both types of messages. Of course, parsing a message has a cost in terms of resources and latency and the price will vary a lot depending on the size and complexity of the message.
 
-Looking at the mapping actions, we see that it is a very simple one, and you have also the opportunity to make more complex ones. As you can see in the following sample, the response of the XML/SOAP message is simply copied to the response to the JSON response.
+Looking at the mapping actions, we see that it is a very simple one and you have also the opportunity to make more complex ones. As you can see in the following sample, the response of the XML/SOAP message is simply copied to the response to the JSON response.
 
 ![SOAP API REST Create](./images/designer-soap-rest-map.png)
 
@@ -680,7 +680,7 @@ Let's test it, as usual we use the Test feature within the Assembly panel. We ha
 
 
 # Step 9 - Create a Cloudant service
-**This section has not been upated yet because we want to show the new advanced security features included in 2018**
+**This section has not been updated yet because we want to show the new advanced security features included in 2018**
 
 In order to store our data used by our API, we will need a persistent storage. To do so, we will use a Cloudant NoSQL database, a JSON document-oriented store, compatible with CouchDB.
 
@@ -694,7 +694,7 @@ You can use a existing Cloudant service or create an instance of the service Clo
 
 2. Give it a name such as **cloudant-db**.
 
-3. Launch the Cloudand Dashboard. A new tab should open automatically with the list of databases.
+3. Launch the Cloudant Dashboard. A new tab should open automatically with the list of databases.
 
 4. Create a new database with the button on top right corner. Call this database : **test**. Make sure to use this name as this is expected by the persistence layer of API Connect.
 
@@ -711,13 +711,13 @@ You can use a existing Cloudant service or create an instance of the service Clo
 }
 }
 ```
-1. Copy the url, username and password from the credentials into the your preferred editor. we will use these values later.
+1. Copy the url, username and password from the credentials into your preferred text editor. we will use these values later.
 
 
 # Step 10 - Create a LoopBack application
 **This section has not been updated yet because we want to show the new advanced security features included in 2018**
 
-API Connect comes with a developer toolkit. This toolkit provides an offline graphical user interface named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs, and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
+API Connect comes with a developer toolkit. This toolkit provides an offline graphical user interface named API Designer for creating APIs, the LoopBack framework for developing REST applications, a local unit test environment that includes a Micro Gateway for testing APIs and a set of command line tools for augmenting the development toolset and assisting devops engineers with continuous integration and delivery.
 
 1. Get help on the **apic** command set:
   ```
@@ -728,14 +728,14 @@ The developer toolkit provides an integrated development environment for develop
 
 To create a new LoopBack project, use the command apic loopback; then use the apic edit command to edit the project in the API Designer.
 
->**Note**: When working with the toolkit always be careful of where you are located on your file system. The working directory from where the apic command are started will be considered as the root of the loopback projects and products/APIs you are working at some point. Cautious must be taken on how you organize the directories. It also must take in considerations that at some point you will want to source control some of the generated files (such as the yaml files for example) in a Source Control Management system such as github.
+>**Note**: When working with the toolkit always be careful of where you are located on your file system. The working directory from where the apic command are started will be considered as the root of the loopback projects and products/APIs you are working at some point. Cautious must be taken on how you organize the directories. It also must take in considerations that at some point you will want to source control some of the generated files (such as the yaml files for example) in a Source Control Management system such as GitHub.
 
 
 1. Create an API Connect LoopBack application.
 
   ```
-  $ mkdir -p <your-favorite-working-dir>/apic/myfirstproject
-  $ cd <your-favorite-working-dir>/apic/myfirstproject
+  $ mkdir -p <your-favourite-working-dir>/apic/myfirstproject
+  $ cd <your-favourite-working-dir>/apic/myfirstproject
   $ apic loopback
   ```
 
@@ -752,7 +752,7 @@ To create a new LoopBack project, use the command apic loopback; then use the ap
 1. Next you will be asked to select the type of application. Use the arrow keys to select the **empty-server** option and press the ***Enter*** or ***Return*** key.
 
 ```
-❯ empty-server (An empty LoopBack API, without any configured models or datasources)
+❯ empty-server (An empty LoopBack API, without any configured models or data sources)
 ```
 
 1. At this point, the project builder will install the core dependencies for our Node.js application.
@@ -761,7 +761,7 @@ To create a new LoopBack project, use the command apic loopback; then use the ap
   ? Please review the license for API Connect available in /usr/local/lib/node_modules/apiconnect/LICENSE.txt and select yes to accept. yes arrow keys)
   ? What's the name of your application? Customer
   ? Enter name of the directory to contain the project: Customer
-  ? What kind of application do you have in mind? empty-server (An empty LoopBack API, without any configured models or datasources)
+  ? What kind of application do you have in mind? empty-server (An empty LoopBack API, without any configured models or data sources)
   ```
 
 1. Change directory to your application directory
@@ -799,7 +799,7 @@ Option name         | Values
 --------------------|------------------
 ? Enter the data-source name :      | **db**
 ? Select the connector for db :     | **IBM Cloudant DB**
-? Connection String url to override other settings       | **YOUR Connection URL https://username:password@host**
+? Connection String URL to override other settings       | **YOUR Connection URL https://username:password@host**
 ? database :      | **test**
 ? username :      |          
 ? password :      |
@@ -812,7 +812,7 @@ Example :
 ? Enter the data-source name: db
 ? Select the connector for db: IBM Cloudant DB (supported by StrongLoop)
 Connector-specific configuration:
-? Connection String url to override other settings (eg: https://username:password@host): https:
+? Connection String URL to override other settings (e.g.: https://username:password@host): https:
 //a836946d-92b5-41cc-b730-442b4235aae8-bluemix:7911bb5592e65f126903c59f6fa3d7f3b5bd4a1141951e31
 938b6c6cb2efa852@a836946d-92b5-41cc-b730-442b4235aae8-bluemix.cloudant.com
 ? database: test
@@ -833,7 +833,7 @@ By typing Y (Yes) to the question Install loopback-connector-cloudant, the Cloud
 >For more information on the LoopBack Connector for Cloudant, see: https://www.npmjs.com/package/loopback-connector-cloudant
 
 
->Note : You can create an api directly from an existing web service from the wsdl. Create a SOAP API definition from a WSDL definition file, or a .zip file that contains the WSDL definition files for a service with the following command: ```apic create --type api --wsdl filename```
+>Note : You can create an api directly from an existing web service from the WSDL. Create a SOAP API definition from a WSDL definition file, or a .zip file that contains the WSDL definition files for a service with the following command: ```apic create --type api --wsdl filename```
 
 >Note: You can create an API or Product from an Open API (Swagger 2.0) template file by using the '--template template-name' option.
 
@@ -899,7 +899,7 @@ OAuth - Open Authorization is a great and modern security mechanism. It is used 
 
 In the materials, you also find a POSTMAN collection (alongside the environment definitions). You may have to change the env file in order to have it working for your environment.
 
-In order to perform all the scenarios below, we are going to use the same API that will be versionned, each version will have a different security scheme, and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
+In order to perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
 
 | Version | Security scheme                            | Referred as     |
 |---------|--------------------------------------------|-----------------|
@@ -917,14 +917,14 @@ In order to perform all the scenarios below, we are going to use the same API th
 * Local User Registry - Based on API Connect Local User Registry (Internal registry of the solution)
 * OpenID Connect (OIDC) - Configure user authentication using JSON Web Tokens (External OIDC provider)
 
-Because we do not want to spend too much time to install an LDAP server, for simplicty of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in Unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in production environment.**. But this is perfect for educational purpose and it is also a sample of using API Connect with some gateway script samples.
+Because we do not want to spend too much time to install an LDAP server, for simplicity of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in Unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in production environment.**. But this is perfect for educational purpose and it is also a sample of using API Connect with some gateway script samples.
 
 The API provided contains a few more paths (operations) than what we describe here. We only describe the /basic-auth path. Below a screen capture of the  API assembly.
 
 ![Fake Authentication URL Assembly](./images/API-FakeURLUserRegistry-Assembly.png)
 
-Below the processing perfomed in the "BA authc logic" gateway Javascript:
-<BR>Line 1: Get the Basic Authorization header, and split it based on space
+Below the processing performed in the "BA authc logic" gateway Javascript:
+<BR>Line 1: Get the Basic Authorization header and split it based on space
 <BR>Line 2: Takes the uid:password base 64 and decode it. Then separate uid and password, separator :.
 <BR>Line 7: Create a response Header called *api-authenticated-credential* with the the CN od the user with an hard coded email domain name.
 <BR>Line 10: Provide the body of the response following the expected body as defined in the documentation.
@@ -965,7 +965,7 @@ apic products:publish -c integration -o org1 -s <manager endpoint> --scope catal
 ```
 Sample invocation: `curl -k -H "Accept: application/json" -H "Authorization: Basic: Zm9vOmZvbw" https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth`
 
-Here is a sample response (formated):
+Here is a sample response (formatted):
 ```
 {
   "username" : "foo",
@@ -980,7 +980,7 @@ At this stage, we have configured the Fake Authentication URL API that we will u
 ## Protecting an API with Basic Authentication
 First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
 
-There is an important design decision regarding what is the scope of the resource we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should they apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations, and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.
+There is an important design decision regarding what is the scope of the resource we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should they apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.
 
 The list of Steps are the following:
 * In the Cloud Management console, define the User Registry based on the *Fake Authentication URL API*
@@ -1000,7 +1000,7 @@ Select Authentication URL User Registry, enter the following Information:
 
 ![User Registry definitions](./images/cmc-user-registry-definition.png)
 
-To associate the user registry with the Catalog, go in the Manager console, click on Manage, select the Integration catalog, then on Settings, and API User Registries
+To associate the user registry with the Catalog, go in the Manager console, click on Manage, select the Integration catalog, then on Settings and API User Registries
 
 ![User Registry definitions in the Catalog](./images/manager-user-registry-edit.png)
 
@@ -1008,11 +1008,11 @@ Click on the checkbox for the SampleAuthURL and click Save button.
 
 ![Select the User Registry](./images/manager-user-registry-select.png)
 
-Now, let's take configure the security for the API. In the Manager, click on Develop menu, import the fakemagento API. This is the initial API to work with an is available in the materials folder. It is version 1.0. Now, we can edit the Security Definitions section, and Add the Basic Authentication, click on Add.
+Now, let's take configure the security for the API. In the Manager, click on Develop menu, import the fakemagento API. This is the initial API to work with an is available in the materials folder. It is version 1.0. Now, we can edit the Security Definitions section and Add the Basic Authentication, click on Add.
 Enter
 >Name: BA
 <BR>Type: Select Basic
-<BR>Select SampleAuthURL for the *Authenticate using USer Registry*
+<BR>Select SampleAuthURL for the *Authenticate using User Registry*
 
 ![Basic authentication Security Definition](./images/manager-BA-Security-definition.png)
 
@@ -1047,17 +1047,17 @@ returns
 ```
 
 ## Protecting an API with OAuth - Resource Owner Password Credentials grant
-The first test was not based on OAuth, all the following one are. We will use two OAuth providers only. One for native support, API Connect acting as an OAuth/OIDC proiver, and one for third party integration, using IBM AppID, one of IBM's cloud solution for OAuth/OIDC support.
+The first test was not based on OAuth, all the following one are. We will use two OAuth providers only. One for native support, API Connect acting as an OAuth/OIDC provider and one for third party integration, using IBM  AppId, one of IBM's cloud solution for OAuth/OIDC support.
 The Resource Owner Password Credentials grant type is specified in [RFC 6749 - OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749 "The OAuth 2.0 Authorization Framework Specification"), likewise the other grants used in this article.
 
 In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorization to extract identity, the user will be authenticated against the User Registry. We use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider, we will see it later. This grant type is used when there is a high trust between the client and the application. Some people may find it less secure than using the Authorization grant, but it does not mean that it cannot be used when the conditions of trust are met. The client authenticates directly to the native OAuth provider specified in API Connect with its uid/pwd along the application credentials (client-id/cliend-secret) and gets an Access Token. Then the application accesses API Connect.
 
-> **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question, and there are different ways to get user information like having the back end performing a callback with the OAuth token to get information. We are not explaining the generationg of OIDC token. As of today, this is not a mandatory scenario required by OpenID and we are still in discussions to decide to implement it.
+> **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question and there are different ways to get user information like having the back-end performing a callback with the OAuth token to get information. We are not explaining the generation of OIDC token. As of today, this is not a mandatory scenario required by OpenID and we are still in discussions to decide to implement it.
 
 ### Create the OAuth Provider
-So let's start! First let's create the native OAuth provider. As discussed earlier, we use the Cloud Management console, but it was a design decision, and we could use the API Manager console and manage OAuth resources, if we wanted.
+So let's start! First let's create the native OAuth provider. As discussed earlier, we use the Cloud Management console, but it was a design decision and we could use the API Manager console and manage OAuth resources, if we wanted.
 
-Login to the Cloud Manager console, and select Resources (or Manage Resources from home). Select OAuth Providers and click on Add and select Native OAuth Provider button.
+Login to the Cloud Manager console and select Resources (or Manage Resources from home). Select OAuth Providers and click on Add and select Native OAuth Provider button.
 
 ![Native OAuth provider creation](./images/OAuth-native-create.png)
 
@@ -1071,19 +1071,19 @@ Click Next button
 
 ![Native OAuth provider creation base information](./images/OAuth-native-baseinfo.png)
 
-Select the grant types you want to support, in our case we are going to use : Application, Access code and Resource owner - Password. We also select the Public client type, as well as Confidential by defaulkt selected. We kkep the default valus for the endpoints.
+Select the grant types you want to support, in our case we are going to use : Application, Access code and Resource owner - Password. We also select the Public client type, as well as Confidential by default selected. We keep the default values for the endpoints.
 
 ![Native OAuth provider creation base information](./images/OAuth-native-grants.png)
 
 Click Next button
 
-Sepecify the scopes you want to support, in our case we will use only one scope *details*. To provide detailed access.
+Specify the scopes you want to support, in our case we will use only one scope *details*. To provide detailed access.
 
 ![Native OAuth provider creation scopes](./images/OAuth-native-scopes.png)
 
 Click Next button
 
-The following settings are very important, and there are many ways to configure OAuth, API Connect is very flexible and extensible on this part.
+The following settings are very important and there are many ways to configure OAuth, API Connect is very flexible and extensible on this part.
 The processing has been described in the specific steps happening during the token(s) creation procedure. It is similar in the way the AAA framework in DataPower is separating clearly each step. I do not want to explain all the combinations below, but provide the different values for each step.
 
 | Identity Extraction  | Authentication       | Authorization     |
@@ -1095,7 +1095,7 @@ The processing has been described in the specific steps happening during the tok
 | Redirect             |                      |                   |
 
 There are many possible combinations, but you can have even further possibilities to add more processing as we will see later, especially in how the consents are managed, meta data are added, scopes are managed, etc ...
-In our case, it is simple, and we are keeping all the default values, so nothing to do!
+In our case, it is simple and we are keeping all the default values, so nothing to do!
 
 ![Native OAuth provider creation processing](./images/OAuth-native-auth.png)
 
@@ -1121,7 +1121,7 @@ Edit the NativeProvider:
 
 ![Native OAuth provider token manamgement configuration ](./images/native-edit-token-mgmt.png)
 
-* In the Instropection panel, click on the Introspection checkbox, and then click on the Save button
+* In the Introspection panel, click on the Introspection checkbox and then click on the Save button
 
 ![Native OAuth provider introspection configuration](./images/native-edit-introspection.png)
 
@@ -1143,7 +1143,7 @@ We have an OAuth provider definition.
 
 We need to make this OAuth Provider accessible in the various catalogs where we want to use it.
 We leave the Cloud Manager console and go to the Manager Console.
-Click on Manage, and select Sandbox, then Settings, and OAuth Providers. Click on Edit button on the top left.
+Click on Manage and select Sandbox, then Settings and OAuth Providers. Click on Edit button on the top left.
 
 ![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associate.png)
 
@@ -1156,11 +1156,11 @@ It is not yet accessible because we are not using it in any API.
 
 ### Protect the API with OAuth
 Now let's protect, the FakeMagento version 2.0.0 API.
-Click on Develop, and select the FakeMagento-2.0.0 API.
+Click on Develop and select the FakeMagento-2.0.0 API.
 
 ![OAuth Resource Owner Password Credentials API protection](./images/ropc-secure-API.png)
 
-Click on Security Definitions, and click on Add button.
+Click on Security Definitions and click on Add button.
 
 enter:
 > Name: Native ROPC OAuth
@@ -1178,7 +1178,7 @@ In the Security selection, select Native ROPC OAuth and the details scope.
 ![OAuth Resource Owner Password Credentials API security Definition](./images/ropc-secure-API-sec.png)
 
 ### Tests
-Not explained in details here, but we publish the product (or use versionning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan, and approve the subscription. The API is published and ready to use.
+Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
 
 I'm going to test it in different ways: using Postman, curl and using the developer portal.
 
@@ -1366,10 +1366,10 @@ Date: Fri, 03 Apr 2020 12:48:01 GMT
 ```
 
 ### Using the Developer portal
-We do not explain all th steps because it has been done in previous chapters.
-We sign in to the developer Portal, then select the FakeMagento V2.0.0 API, and click on Try it.
+We do not explain all the steps because it has been done in previous chapters.
+We sign into the developer Portal, then select the FakeMagento V2.0.0 API and click on Try it.
 In the first step, we get the token.
-We select the MyMobile App application, then enter the client_secret, enter the username and password and click on the Get Token button.
+We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button.
 It returns the Access Token.
 
 ![Test Get Access Token](./images/test-ropc-21.png)
@@ -1382,25 +1382,25 @@ This invokes the FakeMagento API using the access Token as a Bearer.
 ## Protecting an API with OAuth - Authorization Code grant and OIDC
 
 ### Protect the API with OAuth - Authorization
-Let's protect, the FakeMagento version 3.0.0 API. Click on Develop, and select the FakeMagento-3.0.0 API.
-Click on Security Definitions, and click on Add button.
+Let's protect, the FakeMagento version 3.0.0 API. Click on Develop and select the FakeMagento-3.0.0 API.
+Click on Security Definitions and click on Add button.
 Enter:
 > Name: Native Authorization
 <BR>Description: Using the native OAuth provider for Authorization grant
 <BR>Select OAuth2
 <BR>Select NativeProvider for the OAuth Provider
-<BR>Select Access code for the FLow
+<BR>Select Access code for the Flow
 <BR>Select details and openid for the scopes
 
 ![OAuth Access Code API protection Security Definition](./images/access-secure-API-sec-def.png)
 
 Click Save button.
-In the Security section, select Native Authorization, and the two scope details and openid, then click Save button.
+In the Security section, select Native Authorization and the two scope details and openid, then click Save button.
 
 ![OAuth Access Code API protection Security](./images/access-secure-API-sec.png)
 
 ### Tests
-Not explained in details here, but we publish the product (or use versionning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan, and approve the subscription. The API is published and ready to use.
+Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
 
 #### Using POSTMAN
 We are using one nice feature of Postman to directly get the access token. It hides a little bit the use of the Access Code. I have provided the request in Postman to exchange the Access Code for the Access Token.
@@ -1433,7 +1433,7 @@ Use the Access Token to access the FakeMagento V3 API.
 
 ![Postman Test Access Token - Get Access Code](./images/test-access-31.png)
 
-2) Enter the user credentials, and click on Login button.
+2) Enter the user credentials and click on Login button.
 In the Browser URL, you get the Access Code
 ```
 https://app.getpostman.com/oauth2/callback?code=AAIANrOjEOMYqicDr7MkV3khttTEMasEphtiBZz3ieiYXj2qmFToG6mH6MtUvmnceAlbNhFtlHEBsgSrV8Z3otBRXMOXuGg7V-F_DCy13V1dbg
@@ -1468,8 +1468,8 @@ Content-Type: application/json
 ```
 
 ### Using the Developer portal
-You get the Acccess Token directly using curl or Postman. In my case, I use Postman to get the Access Token.
-We select the MyMobile App application, then enter the client_secret,and the Access Token. We click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
+You get the Access Token directly using curl or Postman. In my case, I use Postman to get the Access Token.
+We select the MyMobileApp application, then enter the client_secret,and the Access Token. We click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
 This invokes the FakeMagento API using the access Token as a Bearer.
 
 ![Test Using the Access Token](./images/test-access-21.png)
@@ -1483,14 +1483,14 @@ OIDC specification is based on the use of the idtoken which is a JSON Web Token 
 ## Protecting an API with OAuth - Client Credentials grant
 
 ### Protect the API with OAuth - Application
-Let's protect, the FakeMagento version 4.0.0 API. Click on Develop, and select the FakeMagento-4.0.0 API.
-Click on Security Definitions, and click on Add button.
+Let's protect, the FakeMagento version 4.0.0 API. Click on Develop and select the FakeMagento-4.0.0 API.
+Click on Security Definitions and click on Add button.
 Enter:
 > Name: Native Application
 <BR>Description: Using the native OAuth provider for Application grant
 <BR>Select OAuth2
 <BR>Select NativeProvider for the OAuth Provider
-<BR>Select Application for the FLow
+<BR>Select Application for the Flow
 <BR>Select details for the scopes
 
 Click Save button
@@ -1503,7 +1503,7 @@ Click Save button.
 ![OAuth Application API Security](./images/application-secure-API-sec.png)
 
 ### Tests
-Not explained in details here, but we publish the product (or use versionning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan, and approve the subscription. The API is published and ready to use.
+Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
 
 #### Using POSTMAN
 1) Get token using the "1 -Client Credentials V4" request
@@ -1572,9 +1572,9 @@ Content-Type: application/json
 
 ### Using the Developer portal
 We do not explain all the steps because it has been done in previous chapters.
-We sign in to the developer Portal, then select the FakeMagento V4.0.0 API, and click on Try it.
+We sign in to the developer Portal, then select the FakeMagento V4.0.0 API and click on Try it.
 In the first step, we get the token.
-We select the MyMobile App application, then enter the client_secret, enter the username and password and click on the Get Token button.
+We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button.
 It returns the Access Token.
 
 ![Test Get Access Token](./images/test-application-21.png)
@@ -1586,8 +1586,8 @@ This invokes the FakeMagento API using the access Token as a Bearer.
 
 ## Protecting an API with OAuth - External Provider
 
-In this scenario, we already have an OAuth Provider available. The intergation with API Connect is very simple, the application first synchronise the API keys with the applications defined in the OAuth Provider. It can be done in two manners, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the Ouath Provider and they are added to th eapplication in API Connect. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
-At runtime, the application, first get the token from the OAuth povider directly, not going through API Connect (this is a more secured approach since the credentials do not flow in API Connect), then the application invoke the API with the Access Token in an Authorization header as a Bearer. API COnnect then invokes the Oauth Provider with an Introspect call, if the calls return a 200 (or active=true), then the Access Token is valid and API Connect can proceed.
+In this scenario, we already have an OAuth Provider available. The integration with API Connect is very simple, the application first synchronise the API keys with the applications defined in the OAuth Provider. It can be done in two manners, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
+At runtime, the application, first get the token from the OAuth provider directly, not going through API Connect (this is a more secured approach since the credentials do not flow in API Connect), then the application invoke the API with the Access Token in an Authorization header as a Bearer. API Connect then invokes the OAuth Provider with an Introspect call, if the calls return a 200 (or active=true), then the Access Token is valid and API Connect can proceed.
 
 ![Third party OAuth Provider flow](./images/oauth-third-concepts.png)
 
@@ -1603,7 +1603,7 @@ Enter:
 ![Third party OAuth Provider config](./images/oauth-third-config.png)
 
 Click Next button
-In the endpoint panel, enter:
+In the Endpoints panel, enter:
 >Authorization URL: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorize
 <BR>Token URL: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token
 <BR>Introspect URL: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/introspect
@@ -1628,7 +1628,7 @@ We are done with the configuration of the OAuth provider. We can now leave the C
 
 ### Associate the OAuth Provider with the different catalogs
 We need to make this OAuth Provider accessible in the various catalogs where we want to use it.
-In the Manager Console, click on Manage, and select Sandbox, then Settings, and OAuth Providers. Click on Edit button on the top left.
+In the Manager Console, click on Manage and select Sandbox, then Settings and OAuth Providers. Click on Edit button on the top left.
 
 ![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associate.png)
 
@@ -1640,25 +1640,25 @@ Repeat the same operation with the Integration Catalog.
 It is not yet accessible because we are not using it in any API.
 
 ### Protect the API with OAuth - Third Party
-Let's protect, the FakeMagento version 5.0.0 API. Click on Develop, and select the FakeMagento-5.0.0 API.
-Click on Security Definitions, and click on Add button.
+Let's protect, the FakeMagento version 5.0.0 API. Click on Develop and select the FakeMagento-5.0.0 API.
+Click on Security Definitions and click on Add button.
 Enter:
 > Name: AppId Third Party Authorization
 <BR>Description: Using App ID third party OAuth provider for Authorization grant
 <BR>Select OAuth2
-<BR>Select AppID for the OAuth Provider
-<BR>Select Access code for the FLow
+<BR>Select  AppId for the OAuth Provider
+<BR>Select Access code for the Flow
 
 ![OAuth Access Code API protection Security Definition](./images/third-party-access-secure-API-sec-def.png)
 
 Click Save button.
 
-In the Security section, select AppId Third Party Authorization, and the two scope details and openid, then click Save button.
+In the Security section, select AppId Third Party Authorization and the two scope details and openid, then click Save button.
 
 ![OAuth Access Code API protection Security](./images/third-party-access-secure-API-sec.png)
 
 ### Synchronize the client credentials from AppId into API Connect Application definition
-What we do here is get the API keys defined in App ID for the application and then use the CLI to add this set of credentials to the MyMobileApplcation. The only way to do this is using the CLI or the REST API. As said previously, an alternative would have beenn to update the credentials from API Connect to AppId with the AppId API.
+What we do here is get the API keys defined in App ID for the application and then use the CLI to add this set of credentials to the MyMobileApp application. The only way to do this is using the CLI or the REST API. As said previously, an alternative would have been to update the credentials from API Connect to AppId with the AppId API.
 
 * Log to the manager
 ```
@@ -1671,7 +1671,7 @@ set  apic2018=<path-to-apic> -s <manager-endpoint> -o <organisation>
 ```
 
 Typing `%apic2018%` provides an extensive help.
-To update the application credentials, we need to find the name of the consumer org in the integration catalog, and the name of the application.
+To update the application credentials, we need to find the name of the consumer org in the integration catalog and the name of the application.
 
 * Get the name of the consumer organisation
 ```
@@ -1691,8 +1691,8 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
 	"type": "credential",
 	"api_version": "2.0.0",
 	"name": "appid-credentials",
-	"title": "AppID Credentials for MyMobileApp",
-	"summary": "AppID Credentials for MyMobileApp",
+	"title": " AppId Credentials for MyMobileApp",
+	"summary": " AppId Credentials for MyMobileApp",
 	"client_id": "9ce0b78a-289c-4d2b-8968-165b5f9c726d",
 	"client_secret": "NzNiMGJmYmUtMjNiYi00YmExLWIwY2UtZDg5MDAxZjFjZDI3"
 }
@@ -1714,8 +1714,8 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
             "api_version": "2.0.0",
             "id": "43a84659-28e4-4bb9-8dbe-998cd478c6c0",
             "name": "appid-credentials",
-            "title": "AppID Credentials for MyMobileApp",
-            "summary": "AppID Credentials for MyMobileApp",
+            "title": " AppId Credentials for MyMobileApp",
+            "summary": " AppId Credentials for MyMobileApp",
             "client_id": "9ce0b78a-289c-4d2b-8968-165b5f9c726d",
             "client_secret_hashed": "uSCwG4YW8Fg+PRf1U0UXYDkgQw5BLMDn4G5vOL+RERI=",
             "created_at": "2020-04-01T14:05:43.592Z",
@@ -1747,7 +1747,7 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
 }
 ```
 
-**Hint:** using the --debug on apic gives the equivalent curl requests. The it is possible to directly invoke object with REST API. You can get the url of each object using the web-dev-tools in your browser. In the command below, you can get the Access Token, client_id and client_secret using the --debug option on the login call.
+**Hint:** using the --debug on apic gives the equivalent curl requests. The it is possible to directly invoke object with REST API. You can get the URL of each object using the web-dev-tools in your browser. In the command below, you can get the Access Token, client_id and client_secret using the --debug option on the login call.
 
 curl -k -H "accept: application/json" -H "Authorization: Bearer <AT>" -H "X-Ibm-Client-Id: <client_id>" -H "X-Ibm-Client-Secret: <client_secret>" "https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a/credentials"
 
@@ -1756,10 +1756,10 @@ curl -k -H "accept: application/json" -H "Authorization: Bearer <AT>" -H "X-Ibm-
 TO BE COMPLETED
 
 ### Tests
-Not explained in details here, but we publish the product (or use versionning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan, and approve the subscription. The API is published and ready to use.
+Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
 
 #### Using POSTMAN
-As f or the Authorization grant with the native Oauth Provider we use Postman to directly get the access token.
+As f or the Authorization grant with the native OAuth Provider we use Postman to directly get the access token.
 
 Using the "1 -Access Token Authorization V5" request.
 Click on the Authorization link, then click on Get New Access Token
@@ -1770,25 +1770,21 @@ Click on the Authorization link, then click on Get New Access Token
 ## Using an OIDC Registry to protect the platform
 
 # Step 13 - Testing the quality of your API
-In this step we are going to see quickly how to use IBM API Connect Test and Monitor
-
+In this step we are going to see quickly how to use IBM API Connect Test and Monitor. The documentation associated with IBM API Connect Test and Monitor is available at https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted.
+This tool addresses in a no code approach testing the API with a fine granularity in the test and either on demand or with scheduled testing.
+This provides
 
 Congratulations. You have completed this Lab!
 
 # Additional Resources
 
-For additional resources pay close attention to the following:
-
-- [API Connect v5 Getting Started: Toolkit Command Line Interface](https://github.com/ibm-apiconnect/cli)
-- [API Connect v5 Getting Started: API Products](https://github.com/ibm-apiconnect/product)
+For additional resources please look at the to the following:
 - [API Connect Developer Center](https://developer.ibm.com/apiconnect)
-- [API Connect v5 Knowledge Center](http://www.ibm.com/support/knowledgecenter/SSMNED_5.0.0/mapfiles/ic_home.html)
+- [API Connect v2018 Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.overview.doc/api_management_overview.html)
 - [Follow us @ibmapiconnect](https://twitter.com/ibmapiconnect)
-- [POT API Connect](https://ibm-apiconnect.github.io/pot/)
 - [POT API Connect Customization](https://ibm-apiconnect.github.io/faststart/)
-- [PSA Sample of customized portal](https://developer.psa-peugeot-citroen.com/)
 - [Royal mail portal](https://developer.royalmail.net/node/2757)
 
 
-[bmx_dashboard_url]:  https://console.eu-gb.bluemix.net/
-[bmx_catalog_uk_url]: https://console.eu-gb.bluemix.net/catalog/
+[IBM Cloud]:  https://cloud.ibm.com
+[IBM Cloud Catalog]: https://cloud.ibm.com/catalog
