@@ -1703,6 +1703,7 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
 ```
 
 * Let's check that the credentials have been correctly updated
+
 ```
 %apic2018% -c integration --consumer-org orgdev1 -a mymobileapp credentials:list --format json
 
@@ -1747,6 +1748,7 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
 }
 ```
 
+
 **Hint:** using the --debug on apic gives the equivalent curl requests. The it is possible to directly invoke object with REST API. You can get the URL of each object using the web-dev-tools in your browser. In the command below, you can get the Access Token, client_id and client_secret using the --debug option on the login call.
 
 curl -k -H "accept: application/json" -H "Authorization: Bearer <AT>" -H "X-Ibm-Client-Id: <client_id>" -H "X-Ibm-Client-Secret: <client_secret>" "https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a/credentials"
@@ -1768,6 +1770,78 @@ Click on the Authorization link, then click on Get New Access Token
 
 
 ## Using an OIDC Registry to protect the platform
+### Gather the various information needed
+
+So far, we have looked mostly as the API Security, now let's see the protection of the platform (Cloud Manager et API Manager).
+The most common and simple way to protect the platform is to use one or more LDAP servers. A very simple way is also to use the Local User Registry, but if it is ok to include the user in it fore the CLoud Manager, because we may say that the number of users may be small (the platform administrators), it is probably not suitable for large number of users for the organizations and for the Portal. The concern here being the management side and thefact that it is not integrated with the entreprise IAM solution. With the adoption of OIDC, API Connect offers the possibility to also use an OIDC provider to rotect the platform (Cloud Manager/API Manager and Portal). As seen previously, you can combine the various authentication mechanisms as well and have a different ways of authenticating for two organizations andalso various ways for two portals.
+
+In this first section, we are going to configure an OIDC provider to protect a portal.
+
+We need to find some information from the OIDC provider, in our case AppId? This information will be used to complete the definitions in API Connect.
+The first things is to get the various endpoints, there is a very easy to get them. Go to the Service Credentials sections in AppId. Copy the discoveryEndpoint URL. For me, this is https://eu-gb.appid.cloud.ibm.com/oauth/v4/tenant_id_value/.well-known/openid-configuration (where tenant_id_value is my tenant id).
+
+![AppId Credentials](./images/appid-service-credentials.png)
+
+Then in a browser, past it, it gives you all the endpoints.
+
+![AppId Discovery](./images/appid-service-discovery.png)
+
+You also need to get the client_id and client_secret to access AppId from API Connect. In my case, I use the application called my_apic.
+
+![AppId Discovery](./images/appid-application.png)
+
+We need to update one aspect of the configuration, the redirect URL. So far, we used a dummy values for this values in the previous test. This time we need to use the proper value. The value is <consumer_endpoint>/consumer-api/oauth2/redirect, in my case: https://consumer.159.8.70.38.xip.io/consumer-api/oauth2/redirect
+In AppId, click on Managage Authentication, then Authentication Settings, then enter the web redirect URL, select the + sign.
+
+![Create User registry](./images/appid-redirect-url.png)
+
+### Create the OIDC User Registry
+
+We are ready to configure API Connect. In the API Manager, click on Resources, then User Registries and click on the Create button
+
+![Create User registry](./images/oidc-ur-button.png)
+
+Select OpenID Connect (OIDC)
+
+![OIDC User Registry](./images/oidc-ur-choice.png)
+
+Enter the following:
+> Title: AppId
+<BR>Summary: AppId as an OIDC provider
+<BR>Authorization Endpoint: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorization
+<BR>Token Endpoint: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token
+<BR>UserInfo Endpoint: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/userinfo
+<BR>JWKS Endpoint: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/publickeys
+<BR>Client_id: client_id
+<BR>Client_secret: client_secret
+
+![OIDC User Registry creation](./images/oidc-ur-create.png)
+
+### Associate the OIDC User Registry with a Catalog
+We are going to associate it with the Integration Catalog.
+Click on Manage, then on Integration Catalog, then on Settings, then on Onboarding.
+
+![OIDC User Registry association to a Catalog](./images/oidc-catalog-onboarding-link.png)
+
+Click on the Edit button, close to Catalog User Registries, and select AppId.
+
+![OIDC User Registry association to a Catalog](./images/oidc-ur-portal-onboarding.png)
+
+Set as default user registry, click on the three vertical dots, closed to AppId and select Set default.
+
+![Set the User Registry as the default user registry](./images/oidc-ur-portal-set-default.png)
+
+We are ready to test the configuration
+
+### Test the new configuration
+Let's go to the Integration Developer Portal. In a browser enter the URL of your portal, in my case,  https://portal.159.8.70.38.xip.io/org1/integration/user/login. The look and feel has changed, you can now see the a new button to authenticate to AppId.
+
+![OIDC Developer Portal Sign in](./images/oidc-portal-signin.png)
+
+oidc-portal-signin-appid-signin.png
+
+OIDCConsOrg1
+oidc-portal-consumer-org-creation.png
 
 # Step 13 - Testing the quality of your API
 In this step we are going to see quickly how to use IBM API Connect Test and Monitor. The documentation associated with IBM API Connect Test and Monitor is available at https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted.
