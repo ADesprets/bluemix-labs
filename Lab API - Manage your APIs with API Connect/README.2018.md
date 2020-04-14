@@ -112,7 +112,7 @@ Below the concepts related to the subscription of an App to a Plan within a prod
 <br>![APIC Subscription](./images/subscription.png)</br>
 
 Below the concepts related to the organisation of the user registries.
-<br>![APIC User Registries](./images/apic-registries.png)</br>
+<br>![APIC User Registries](./images/apic-registries2018.png)</br>
 
 Below the available policies in API Connect 2018.4.1.8fp1
 <br>![C2018.4.1.8 Policies](./images/v2018.policies.png)</br>
