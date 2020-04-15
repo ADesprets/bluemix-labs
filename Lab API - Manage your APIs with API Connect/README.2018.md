@@ -1847,14 +1847,25 @@ Enter OIDCConsOrg1 for example.
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-consumer-org-creation.png)
 
-Below a sequence diagram explaining the various interactions including the several redirection that have happened under the cover.
+Below a sequence diagram explaining the various interactions including the several redirection that have happened under the cover. The OIDC implementation isq based on [Hybrid Flow as definied in OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html#HybridFlowAuth)
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-seq-diag.png)
 
 # Step 13 - Testing the quality of your API
 In this step we are going to see quickly how to use IBM API Connect Test and Monitor. The documentation associated with IBM API Connect Test and Monitor is available at https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted.
 This tool addresses in a no code approach testing the API with a fine granularity in the test and either on demand or with scheduled testing.
-This provides
+This provides capbilities to create tests that are very fined grained, in the sense that you are able to validate API (or group of API) either onDemand or on a regular schedule. This then allows to display functional and performance dashboards in order to better understand how the API are behaving. This is not for performance testing but quality testing. If an error occur you can receive an email, and deep dive to understand why it failed. It is also a mechanism to validate that all your API are sill working if a change was performed to the platform, API, etc ...
+
+## Creating a test
+There are several ways to ceate a test using: a call, a Postman collection, from scratch.
+
+
+## Running a test
+
+## Scheduling a test
+
+## Using the dashboards
+
 
 Congratulations. You have completed this Lab!
 
