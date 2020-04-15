@@ -1834,14 +1834,22 @@ Set as default user registry, click on the three vertical dots, closed to AppId 
 We are ready to test the configuration
 
 ### Test the new configuration
-Let's go to the Integration Developer Portal. In a browser enter the URL of your portal, in my case,  https://portal.159.8.70.38.xip.io/org1/integration/user/login. The look and feel has changed, you can now see the a new button to authenticate to AppId.
+Let's go to the Integration Developer Portal. In a browser enter the URL of your portal, in my case,  https://portal.159.8.70.38.xip.io/org1/integration/user/login. The page has changed, you can now see the a new button to authenticate to AppId. Click on the AppId button.
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-signin.png)
 
-oidc-portal-signin-appid-signin.png
+You are redicted to the login page of the OIDC Provider. Notice that in my case, it is configured to also provide additional ways of authentication.
 
-OIDCConsOrg1
-oidc-portal-consumer-org-creation.png
+![OIDC Developer Portal Sign in](./images/oidc-portal-signin-appid-signin.png)
+
+The user is logged in. Because the user has never logged in to the Portal, it needs to create the consumer organization.
+Enter OIDCConsOrg1 for example.
+
+![OIDC Developer Portal Sign in](./images/oidc-portal-consumer-org-creation.png)
+
+Below a sequence diagram explaining the various interactions including the several redirection that have happened under the cover.
+
+![OIDC Developer Portal Sign in](./images/oidc-portal-seq-diag.png)
 
 # Step 13 - Testing the quality of your API
 In this step we are going to see quickly how to use IBM API Connect Test and Monitor. The documentation associated with IBM API Connect Test and Monitor is available at https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted.
