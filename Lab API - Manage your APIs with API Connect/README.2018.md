@@ -1851,6 +1851,11 @@ Below a sequence diagram explaining the various interactions including the sever
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-seq-diag.png)
 
+## OIDC Proivder for an organisation
+In this chapter, we dont detail everything because it is very similar to the protection of the Portal with an OIDC provider.
+We need to add a redirect URI for the Organisation to come back from the OIDC Provider to API Connect
+![OIDC For an organisation Redirect URL in the OIDC Provider](./images/oidc-mgr-redirect.png)
+
 # Step 13 - Testing the quality of your API
 In this step we are going to see quickly how to use IBM API Connect Test and Monitor. The documentation associated with IBM API Connect Test and Monitor is available at https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted.
 This tool addresses in a no code approach testing the API with a fine granularity in the test and either on demand or with scheduled testing.
