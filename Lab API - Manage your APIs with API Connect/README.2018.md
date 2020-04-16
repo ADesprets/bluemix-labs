@@ -79,6 +79,16 @@ From an architecture point of view and it is important to consider that for HA t
 ![V2018 APIC Architecture](./images/v2018.apic-archi-on-prem.png)
 <br>*Fig. 2: V2018 Architecture*</br>
 
+### A word on themes
+There are four WEB interfaces with a colored theme. You see in the table below, a small screen capture of the top left corner of the consoles.
+
+| Component     | Runs on         | Color  | Image                                          |
+|---------------|-----------------|--------|------------------------------------------------|
+| Cloud Manager | Manager         | Green  | ![Theme Cloud Manager](./images/theme-cmc.png) |
+| API Manager   | Manager         | Blue   | ![Theme API Manager](./images/theme-mgr.png)   |
+| API Designer  | LTE             | Blue   | ![Theme API Designer](./images/theme-des.png)  |
+| Dev Portal    | Portal (Drupal) | Purple | ![Theme Dev Portal](./images/theme-dev.png)    |
+
 In more details some of the communications between each component in an OVA deployment non-HA. For more information, see the Required Ports between zones [here](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.install.doc/overview_apimgmt_portreqs_vmware.html) for OVA deployments or [here](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.install.doc/overview_apimgmt_portreqs.html) for Kubernetes deployments.
 
 ![V2018 APIC communications](./images/V2018OVADeploymentCommunications.png)
