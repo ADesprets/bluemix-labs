@@ -1873,6 +1873,7 @@ This provides capbilities to create tests that are very fined grained, in the se
 
 ## Creating a test
 There are several ways to ceate a test using: a call, a Postman collection, from scratch.
+Using a compose feature
 
 
 ## Running a test
