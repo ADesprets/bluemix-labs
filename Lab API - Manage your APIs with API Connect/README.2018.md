@@ -10,7 +10,7 @@ The version 2018.x is out since 30th March 2018 and the LTS has been released on
 >For any comments, please send an email to arnauld_desprets@fr.ibm.com (Arnauld Desprets).
 
 
-# Objective
+# Objectives
 
 In the following lab, you will learn:
 
@@ -921,13 +921,13 @@ In order to perform all the scenarios below, we are going to use the same API th
 | V6      | Custom JWT Generate and Validate           |                 |
 
  ## Preparing the environment - Fake Authentication URL API
- To perform some more advanced scenarii with security, we need a user registry where all the users are defined. There are several types of user registry for user authentication supported in API Connect:
+ To perform some more advanced scenarii with security, we need a user registry where all the users are defined. There are several types of user registries for user authentication supported in API Connect:
 * Authentication URL User Registry - Based on an authentication URL (Following a simple HTTP/S based invocation)
 * LDAP User Registry - Based on a LDAP server (Standard LDAP integration)
 * Local User Registry - Based on API Connect Local User Registry (Internal registry of the solution)
 * OpenID Connect (OIDC) - Configure user authentication using JSON Web Tokens (External OIDC provider)
 
-Because we do not want to spend too much time to install an LDAP server, for simplicity of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in Unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in production environment.**. But this is perfect for educational purpose and it is also a sample of using API Connect with some gateway script samples.
+Because we do not want to spend too much time to install an LDAP server, for simplicity of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in a production environment.**. But this is perfect for educational purpose and it is also an example of using API Connect with some gateway script samples.
 
 The API provided contains a few more paths (operations) than what we describe here. We only describe the /basic-auth path. Below a screen capture of the  API assembly.
 
@@ -936,7 +936,7 @@ The API provided contains a few more paths (operations) than what we describe he
 Below the processing performed in the "BA authc logic" gateway Javascript:
 <BR>Line 1: Get the Basic Authorization header and split it based on space
 <BR>Line 2: Takes the uid:password base 64 and decode it. Then separate uid and password, separator :.
-<BR>Line 7: Create a response Header called *api-authenticated-credential* with the the CN od the user with an hard coded email domain name.
+<BR>Line 7: Create a response header called *api-authenticated-credential* with the the CN of the user with a hard coded email domain name.
 <BR>Line 10: Provide the body of the response following the expected body as defined in the documentation.
 <BR>Line 12: If username is different from password then returns UNAUTHENTICATED.
 
@@ -988,7 +988,7 @@ Here is a sample response (formatted):
 At this stage, we have configured the Fake Authentication URL API that we will use in the next chapters. Of course, in real life that would be more of a user registry or OIDC provider that should be used.
 
 ## Protecting an API with Basic Authentication
-First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with Web application, using Basic Authentication is as secured as using it for a web application. A 401 challenge compared to a Form based authentication will imply that every request will contain the uid/pwd, not very secured indeed.
+First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with a Web application, using Basic Authentication is as secured as using it for a Web application. A 401 challenge compared to a form-based authentication will imply that every request contains the uid/pwd, not very secured indeed.
 
 There is an important design decision regarding what is the scope of the resource we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should they apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.
 
@@ -1018,7 +1018,7 @@ Click on the checkbox for the SampleAuthURL and click Save button.
 
 ![Select the User Registry](./images/manager-user-registry-select.png)
 
-Now, let's take configure the security for the API. In the Manager, click on Develop menu, import the fakemagento API. This is the initial API to work with an is available in the materials folder. It is version 1.0. Now, we can edit the Security Definitions section and Add the Basic Authentication, click on Add.
+Now, let's configure the security for the API. In the Manager, click on the Develop menu, import the fakemagento API. This is the initial API to work with and it is available in the materials folder. It is at version 1.0. Now, we can edit the Security Definitions section and Add the Basic Authentication, click on Add.
 Enter
 >Name: BA
 <BR>Type: Select Basic
@@ -1057,12 +1057,12 @@ returns
 ```
 
 ## Protecting an API with OAuth - Resource Owner Password Credentials grant
-The first test was not based on OAuth, all the following one are. We will use two OAuth providers only. One for native support, API Connect acting as an OAuth/OIDC provider and one for third party integration, using IBM  AppId, one of IBM's cloud solution for OAuth/OIDC support.
+The first test was not based on OAuth, all the following ones are. We will use two OAuth providers only. One for native support, API Connect acting as an OAuth/OIDC provider and one for third party integration, using IBM  AppId, one of IBM Cloud solution for OAuth/OIDC support.
 The Resource Owner Password Credentials grant type is specified in [RFC 6749 - OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749 "The OAuth 2.0 Authorization Framework Specification"), likewise the other grants used in this article.
 
-In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorization to extract identity, the user will be authenticated against the User Registry. We use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider, we will see it later. This grant type is used when there is a high trust between the client and the application. Some people may find it less secure than using the Authorization grant, but it does not mean that it cannot be used when the conditions of trust are met. The client authenticates directly to the native OAuth provider specified in API Connect with its uid/pwd along the application credentials (client-id/cliend-secret) and gets an Access Token. Then the application accesses API Connect.
+In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorization to extract identity, the user will be authenticated against the User Registry. We use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider, we will see it later. This grant type is used when there is a high trust between the client and the application. Some people may find it less secure than using the Authorization grant, but it does not mean that it cannot be used when the conditions of trust are met. The client authenticates directly to the native OAuth provider specified in API Connect with its uid/pwd along the application credentials (client-id/client-secret) and gets an Access Token. Then the application accesses API Connect.
 
-> **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question and there are different ways to get user information like having the back-end performing a callback with the OAuth token to get information. We are not explaining the generation of OIDC token. As of today, this is not a mandatory scenario required by OpenID and we are still in discussions to decide to implement it.
+> **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question and there are different ways to get user information like having the back-end performing a callback with the OAuth token to get information. We are not explaining the generation of an OIDC token. As of today, this is not a mandatory scenario required by OpenID and we are still in discussion to decide to implement it.
 
 ### Create the OAuth Provider
 So let's start! First let's create the native OAuth provider. As discussed earlier, we use the Cloud Management console, but it was a design decision and we could use the API Manager console and manage OAuth resources, if we wanted.
@@ -1104,8 +1104,8 @@ The processing has been described in the specific steps happening during the tok
 | Context variable     |                      | Disabled          |
 | Redirect             |                      |                   |
 
-There are many possible combinations, but you can have even further possibilities to add more processing as we will see later, especially in how the consents are managed, meta data are added, scopes are managed, etc ...
-In our case, it is simple and we are keeping all the default values, so nothing to do!
+There are many possible combinations, but you can have even further possibilities to add more processing as we will see later, especially in how the consents are managed, metadata is added, scopes are managed, etc..
+In our case, it is simple and we keep all default values, so nothing to do!
 
 ![Native OAuth provider creation processing](./images/OAuth-native-auth.png)
 
@@ -1143,7 +1143,7 @@ Edit the NativeProvider:
 
 ![Native OAuth provider OIDC configuration](./images/native-edit-oidc.png)
 
-* Look at the API Editor Panel, this is where the code is implemented based on the settings used to configure the OAuth provider. This allows to extend even further more how you want to manage your token, given the possibility to use your own code (Gateway script or XSLT). Click on Back and Save button.
+* Look at the API Editor Panel, this is where the code is implemented based on the settings used to configure the OAuth provider. This allows to extend even more how you want to manage your token, given the possibility to use your own code (Gateway script or XSLT). Click on Back and Save button.
 
 ![Native OAuth provider Assembly Panle](./images/native-edit-assembly.png)
 
@@ -1165,7 +1165,7 @@ Repeat the same operation with the Integration Catalog.
 It is not yet accessible because we are not using it in any API.
 
 ### Protect the API with OAuth
-Now let's protect, the FakeMagento version 2.0.0 API.
+Now let's protect the FakeMagento version 2.0.0 API.
 Click on Develop and select the FakeMagento-2.0.0 API.
 
 ![OAuth Resource Owner Password Credentials API protection](./images/ropc-secure-API.png)
@@ -1209,7 +1209,7 @@ I'm going to test it in different ways: using Postman, curl and using the develo
 
 ![Test Revoke Access Token](./images/test-ropc-14.png)
 
-5) Access API again with revoked token API using the "2 -FakeMagentaOrder NativeOAuth API" request
+5) Access the API again with the revoked token using the "2 -FakeMagentaOrder NativeOAuth API" request
 
 ![Test Access API](./images/test-ropc-15.png)
 
@@ -1596,13 +1596,13 @@ This invokes the FakeMagento API using the access Token as a Bearer.
 
 ## Protecting an API with OAuth - External Provider
 
-In this scenario, we already have an OAuth Provider available. The integration with API Connect is very simple, the application first synchronise the API keys with the applications defined in the OAuth Provider. It can be done in two manners, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
-At runtime, the application, first get the token from the OAuth provider directly, not going through API Connect (this is a more secured approach since the credentials do not flow in API Connect), then the application invoke the API with the Access Token in an Authorization header as a Bearer. API Connect then invokes the OAuth Provider with an Introspect call, if the calls return a 200 (or active=true), then the Access Token is valid and API Connect can proceed.
+In this scenario, we already have an OAuth Provider available. The integration with API Connect is very simple, the application first synchronises the API keys with the applications defined in the OAuth Provider. It can be done in two ways, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
+At runtime, the application first gets the token from the OAuth provider directly, not going through API Connect (this is a more secured approach since the credentials do not flow through API Connect), then the application invokes the API with the Access Token in an Authorization header as a Bearer. API Connect then invokes the OAuth Provider with an Introspect call, if the call returns a 200 (or active=true), then the Access Token is valid and API Connect can proceed.
 
 ![Third party OAuth Provider flow](./images/oauth-third-concepts.png)
 
 ### Create the OAuth Provider
-We again have decided to create the OAuth Provider in Console Manager.
+We again have decided to create the OAuth Provider in the Cloud Manager.
 
 As previously, click on Resources, then OAuth Providers. Click Add button selecting Third Party OAuth Provider on top left.
 Enter:
@@ -1623,7 +1623,7 @@ In the Endpoints panel, enter:
 <BR>Select Connected for Token validation
 Click Next button
 
-The only used endpoint is the Introspect URL. The Authorization and Token URL are used in the documentation only and publish along side the API.
+The only used endpoint is the Introspect URL. The Authorization and Token URLs are used in the documentation only and published with the API.
 
 ![Thrd party OAuth Provider endpoints](./images/oauth-third-endpoints.png)
 
@@ -1642,7 +1642,7 @@ In the Manager Console, click on Manage and select Sandbox, then Settings and OA
 
 ![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associate.png)
 
-Click on the checkbox close to AppId
+Click on the checkbox close to AppId.
 
 ![OAuth provider association to Catalog](./images/third-oauth-sandbox-associate-edit.png)
 
@@ -1771,7 +1771,7 @@ TO BE COMPLETED
 Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
 
 #### Using POSTMAN
-As f or the Authorization grant with the native OAuth Provider we use Postman to directly get the access token.
+As for the Authorization grant with the native OAuth Provider we use Postman to directly get the access token.
 
 Using the "1 -Access Token Authorization V5" request.
 Click on the Authorization link, then click on Get New Access Token
@@ -1782,26 +1782,29 @@ Click on the Authorization link, then click on Get New Access Token
 ## Using an OIDC Registry to protect the platform
 ### Gather the various information needed
 
-So far, we have looked mostly as the API Security, now let's see the protection of the platform (Cloud Manager et API Manager).
-The most common and simple way to protect the platform is to use one or more LDAP servers. A very simple way is also to use the Local User Registry, but if it is ok to include the user in it fore the CLoud Manager, because we may say that the number of users may be small (the platform administrators), it is probably not suitable for large number of users for the organizations and for the Portal. The concern here being the management side and thefact that it is not integrated with the entreprise IAM solution. With the adoption of OIDC, API Connect offers the possibility to also use an OIDC provider to rotect the platform (Cloud Manager/API Manager and Portal). As seen previously, you can combine the various authentication mechanisms as well and have a different ways of authenticating for two organizations andalso various ways for two portals.
+So far, we have looked mostly at API Security, now let's see the protection of the platform (Cloud Manager, API Manager and Portal).
+The most common and simple way to protect the platform is to use one or more LDAP servers. A very simple way is also to use the Local User Registry, but if it is ok to include users in it for the Cloud Manager, because we may say that the number of users should be small (the platform administrators), it is probably not suitable for large number of users in the provider organizations and for the Portal sites.
+The concern here being the management side and the fact that the Local User Registry is not integrated with the entreprise IAM solution. With the adoption of OIDC, API Connect offers the possibility to also use an OIDC provider to protect the platform (Cloud Manager, API Manager and Portal). As seen previously, you can combine the various authentication mechanisms as well and have different ways of authenticating for two organizations and also various ways for portal sites.
 
-In this first section, we are going to configure an OIDC provider to protect a portal.
+In this first section, we are going to configure an OIDC provider to protect a portal site.
 
-We need to find some information from the OIDC provider, in our case AppId? This information will be used to complete the definitions in API Connect.
-The first things is to get the various endpoints, there is a very easy to get them. Go to the Service Credentials sections in AppId. Copy the discoveryEndpoint URL. For me, this is https://eu-gb.appid.cloud.ibm.com/oauth/v4/tenant_id_value/.well-known/openid-configuration (where tenant_id_value is my tenant id).
+We need to find some information from the OIDC provider, in our case AppId. This information will be used to complete the definitions in API Connect.
+
+The first thing is to get the various endpoints, there is a very easy way to get them. Go to the Service Credentials section in AppId. Copy the discoveryEndpoint URL.
+For me, this is https://eu-gb.appid.cloud.ibm.com/oauth/v4/tenant_id_value/.well-known/openid-configuration (where tenant_id_value is my tenant id).
 
 ![AppId Credentials](./images/appid-service-credentials.png)
 
-Then in a browser, past it, it gives you all the endpoints.
+Then in a browser, paste it, it gives you all endpoints.
 
 ![AppId Discovery](./images/appid-service-discovery.png)
 
-You also need to get the client_id and client_secret to access AppId from API Connect. In my case, I use the application called my_apic.
+You also need to get a client_id and client_secret to access AppId from API Connect. In my case, I use the application called my_apic (any application from AppID can be used).
 
 ![AppId Discovery](./images/appid-application.png)
 
-We need to update one aspect of the configuration, the redirect URL. So far, we used a dummy values for this values in the previous test. This time we need to use the proper value. The value is <consumer_endpoint>/consumer-api/oauth2/redirect, in my case: https://consumer.159.8.70.38.xip.io/consumer-api/oauth2/redirect
-In AppId, click on Managage Authentication, then Authentication Settings, then enter the web redirect URL, select the + sign.
+We need to update one aspect of the configuration, the redirect URL. So far, we used a dummy value. This time we need to use a proper value. The value is <consumer_endpoint>/consumer-api/oauth2/redirect, in my case: https://consumer.159.8.70.38.xip.io/consumer-api/oauth2/redirect
+In AppId, click on Manage Authentication, then Authentication Settings, then enter the Web redirect URL, select the + sign.
 
 ![Create User registry](./images/appid-redirect-url.png)
 
@@ -1863,7 +1866,10 @@ Below a sequence diagram explaining the various interactions including the sever
 
 ## OIDC Proivder for an organisation
 In this chapter, we dont detail everything because it is very similar to the protection of the Portal with an OIDC provider.
-We need to add a redirect URI for the Organisation to come back from the OIDC Provider to API Connect
+We need to add a redirect URI for the Organization to come back from the OIDC Provider to API Connect.
+
+The redirect URI must be the one of the platform endpoint in this case (using an OIDC provider as user registry for the Cloud Manager or API Manager).
+
 ![OIDC For an organisation Redirect URL in the OIDC Provider](./images/oidc-mgr-redirect.png)
 
 # Step 13 - Testing the quality of your API
@@ -1884,6 +1890,9 @@ Using a compose feature
 
 
 Congratulations. You have completed this Lab!
+
+## Acknowledgments
+Thanks to my colleague Philippe Curmin who has done a thorough review of this document.
 
 # Additional Resources
 
