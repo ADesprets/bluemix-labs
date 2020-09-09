@@ -90,7 +90,7 @@ From an architecture point of view and it is important to consider that for HA t
 
 >Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
 
-![V2018 APIC Architecture](./images/v2018.apic-archi-on-prem.png)
+![V2018 APIC Architecture](./images/v10.apic-archi-on-prem.png)
 <br>*Fig. 2: V2018 Architecture*</br>
 
 In more details some of the communications between each component in an OVA deployment non-HA. For more information, see the Required Ports between zones [here](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.install.doc/overview_apimgmt_portreqs_vmware.html) for OVA deployments or [here](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.install.doc/overview_apimgmt_portreqs.html) for Kubernetes deployments.
@@ -147,9 +147,8 @@ There are four WEB interfaces with a colored theme. You see in the table below, 
 
 ## Topologies and multitenancy aspects
 
-
 ### Topologies
-Below some illustration of various deployments. This is not an exhaustive list. But we want to illustrate the variety of the possible deployments.
+Below some illustrations of various deployments. This is not an exhaustive list. But we want to illustrate the variety of the possible deployments.
 In the first sample, the manager is deployed on-premise, and instances of the gateway/analytics and portal are installed in various locations, 2 sets on-premise (maybe internal and external API), and other sets in various clouds.
 
 ![Topology: ](./images/Topologie-1.png)
@@ -1933,7 +1932,7 @@ Below a sequence diagram explaining the various interactions including the sever
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-seq-diag.png)
 
-## OIDC Proivder for an organisation
+## OIDC Provider for an organisation
 In this chapter, we dont detail everything because it is very similar to the protection of the Portal with an OIDC provider.
 We need to add a redirect URI for the Organization to come back from the OIDC Provider to API Connect.
 
@@ -1947,7 +1946,7 @@ This tool addresses in a no code approach testing the API with a fine granularit
 This provides capbilities to create tests that are very fined grained, in the sense that you are able to validate API (or group of API) either onDemand or on a regular schedule. This then allows to display functional and performance dashboards in order to better understand how the API are behaving. This is not for performance testing but quality testing. If an error occur you can receive an email, and deep dive to understand why it failed. It is also a mechanism to validate that all your API are sill working if a change was performed to the platform, API, etc ...
 
 ## Creating a test
-There are several ways to ceate a test using: a call, a Postman collection, from scratch.
+There are several ways to create a test using: a call, a Postman collection, from scratch.
 Using a compose feature
 
 
@@ -1957,6 +1956,17 @@ Using a compose feature
 
 ## Using the dashboards
 
+# Step 14 - CI/CD topic
+## Managing the API automatically
+
+## Testing during the build phase
+It is possible to create an API Hook in API Connect Test and Monitor.
+See ![Test and Monitor API Hook](https://www.ibm.com/support/knowledgecenter/SSMNED_v10/com.ibm.apic.atm.doc/Creating-An-API-Hook.html)
+This Hook allows the generation of a report for any tests for example during the build phase.
+For example adding an Execute shell block for a build step within a build in Jenkins. Then you can add a JUnit test result report under a Post-build Actions.
+
+Below a sample, output in Jenkins
+![Test and Monitor Test result in Jenkins](./images/test-and-monitor-ci-cd-jenkins-result.png)
 
 Congratulations. You have completed this Lab!
 
