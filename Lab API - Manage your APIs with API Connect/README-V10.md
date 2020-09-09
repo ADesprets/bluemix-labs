@@ -13,7 +13,7 @@
 1. [Additional Resources](#additional-resources)
 
 # Introduction
-This article is the updated version for V10. The original versions were addressing V5 and V10 and can be found here [V5](./ReadMe.V5.md)/[V2018](./ReadMe.2018.md). V10 has the same base code as V2018. So there is not much disruption and the transition from V2018 to V10 is pretty easy. The V10 focus has been a lot of enhancements regarding performance of the user interfaces. In fact, the development team has adopted new ways of working to address performances aspects from the design phase up to the deployment phase. Changes in the organization, in the build, in the tests, etc...
+This article is the updated version for V10. The original versions were addressing V5 and V2018 and can be found here [V5](./ReadMe.V5.md)/[V2018](./ReadMe.2018.md). V10 has the same base code as V2018. So there is not much disruption and the transition from V2018 to V10 is pretty easy. The V10 focus has been a lot of enhancements regarding performance of the user interfaces. In fact, the development team has adopted new ways of working to address performances aspects from the design phase up to the deployment phase. Changes in the organization, in the build, in the tests, etc...
 In a few words, V10 is addressing user experience improvements adopting a new graphical chart, and new interactions, improved search feature, creation of GraphQL APIs, new tests tab in the assembly for improved debugging, enhancement to Gateway server extensions, dynamic API actions when creating user-defined policies and upgrade to use Loopback V4 in the developer toolkit.
 
 This article is made of two parts:
@@ -288,7 +288,7 @@ Then click *Next* button.
 
 Keep the default value for CORS and using a client id to secure the API, click *Next* button.
 
-![Designer quote api cors settings](./images/designer-quote-api-cors.png)
+![Designer quote api CORS settings](./images/designer-quote-api-cors.png)
 
 Click on the Edit *API button*.
 
@@ -965,10 +965,10 @@ The API provided contains a few more paths (operations) than what we describe he
 
 ![Fake Authentication URL Assembly](./images/API-FakeURLUserRegistry-Assembly.png)
 
-Below the processing performed in the "BA authc logic" gateway Javascript:
+Below the processing performed in the "BA authc logic" gateway JavaScript:
 <BR>Line 1: Get the Basic Authorization header and split it based on space
 <BR>Line 2: Takes the uid:password base 64 and decode it. Then separate uid and password, separator :.
-<BR>Line 7: Create a response header called *api-authenticated-credential* with the the CN of the user with a hard coded email domain name.
+<BR>Line 7: Create a response header called *api-authenticated-credential* with the CN of the user with a hard coded email domain name.
 <BR>Line 10: Provide the body of the response following the expected body as defined in the documentation.
 <BR>Line 12: If username is different from password then returns UNAUTHENTICATED.
 
@@ -1161,7 +1161,7 @@ Edit the NativeProvider:
 
 * In the Token Management panel, click on the Token Management checkbox, Resource owner revocation path checkbox and Client revocation path checkbox and then click Save button. It will ask you if you want to update the Assembly, keep yes and click on the Confirm button.
 
-![Native OAuth provider token manamgement configuration ](./images/native-edit-token-mgmt.png)
+![Native OAuth provider token management configuration ](./images/native-edit-token-mgmt.png)
 
 * In the Introspection panel, click on the Introspection checkbox and then click on the Save button
 
@@ -1177,7 +1177,7 @@ Edit the NativeProvider:
 
 * Look at the API Editor Panel, this is where the code is implemented based on the settings used to configure the OAuth provider. This allows to extend even more how you want to manage your token, given the possibility to use your own code (Gateway script or XSLT). Click on Back and Save button.
 
-![Native OAuth provider Assembly Panle](./images/native-edit-assembly.png)
+![Native OAuth provider Assembly Panel](./images/native-edit-assembly.png)
 
 We have an OAuth provider definition.
 
@@ -1511,7 +1511,7 @@ Content-Type: application/json
 
 ### Using the Developer portal
 You get the Access Token directly using curl or Postman. In my case, I use Postman to get the Access Token.
-We select the MyMobileApp application, then enter the client_secret,and the Access Token. We click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
+We select the MyMobileApp application, then enter the client_secret, and the Access Token. We click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
 This invokes the FakeMagento API using the access Token as a Bearer.
 
 ![Test Using the Access Token](./images/test-access-21.png)
@@ -1657,7 +1657,7 @@ Click Next button
 
 The only used endpoint is the Introspect URL. The Authorization and Token URLs are used in the documentation only and published with the API.
 
-![Thrd party OAuth Provider endpoints](./images/oauth-third-endpoints.png)
+![Third party OAuth Provider endpoints](./images/oauth-third-endpoints.png)
 
 For the scope enter:
 >details for elevated access
@@ -1816,7 +1816,7 @@ Click on the Authorization link, then click on Get New Access Token
 
 So far, we have looked mostly at API Security, now let's see the protection of the platform (Cloud Manager, API Manager and Portal).
 The most common and simple way to protect the platform is to use one or more LDAP servers. A very simple way is also to use the Local User Registry, but if it is ok to include users in it for the Cloud Manager, because we may say that the number of users should be small (the platform administrators), it is probably not suitable for large number of users in the provider organizations and for the Portal sites.
-The concern here being the management side and the fact that the Local User Registry is not integrated with the entreprise IAM solution. With the adoption of OIDC, API Connect offers the possibility to also use an OIDC provider to protect the platform (Cloud Manager, API Manager and Portal). As seen previously, you can combine the various authentication mechanisms as well and have different ways of authenticating for two organizations and also various ways for portal sites.
+The concern here being the management side and the fact that the Local User Registry is not integrated with the enterprise IAM solution. With the adoption of OIDC, API Connect offers the possibility to also use an OIDC provider to protect the platform (Cloud Manager, API Manager and Portal). As seen previously, you can combine the various authentication mechanisms as well and have different ways of authenticating for two organizations and also various ways for portal sites.
 
 In this first section, we are going to configure an OIDC provider to protect a portal site.
 
@@ -1883,7 +1883,7 @@ Let's go to the Integration Developer Portal. In a browser enter the URL of your
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-signin.png)
 
-You are redicted to the login page of the OIDC Provider. Notice that in my case, it is configured to also provide additional ways of authentication.
+You are redirected to the login page of the OIDC Provider. Notice that in my case, it is configured to also provide additional ways of authentication.
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-signin-appid-signin.png)
 
@@ -1929,12 +1929,12 @@ Thanks to my colleague Philippe Curmin who has done a thorough review of this do
 # Additional Resources
 
 For additional resources please look at the to the following:
-- [API Connect Developer Center](https://developer.ibm.com/apiconnect)
-- [API Connect v2018 Knowledge Center](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.overview.doc/api_management_overview.html)
+- [IBM Middleware User Community](https://community.ibm.com/community/user/middleware/communities/cloud-integration-home)
+- [IBM API Connect Version 10 documentation](https://www.ibm.com/support/knowledgecenter/SSMNED_v10/mapfiles/getting_started.html)
 - [Follow us @ibmapiconnect](https://twitter.com/ibmapiconnect)
 - [POT API Connect Customization](https://ibm-apiconnect.github.io/faststart/)
 - [Royal mail portal](https://developer.royalmail.net/node/2757)
-
+- [API Connect Test and Monitor](https://ibm-apiconnect.github.io/test-and-monitor/)
 
 [IBM Cloud]:  https://cloud.ibm.com
 [IBM Cloud Catalog]: https://cloud.ibm.com/catalog
