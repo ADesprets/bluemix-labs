@@ -241,7 +241,7 @@ This provides a mix of JAX RS, JAX WS and NodeJS (with Loopback Application) for
 1. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
 1. [Using OAuth to protect your API](#step-12---using-OAuth-to-protect-your-api)
 1. [Testing the quality of your API](#step-13---testing-the-quality-of-your-api)
-1. [CI/CD integration](#step-14---ci/cd-integration)
+1. [CI/CD integration](#step-14---ci\/cd-integration)
 
 
 # Step 1 - Check the development environment
