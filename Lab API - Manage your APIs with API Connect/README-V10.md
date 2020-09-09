@@ -241,7 +241,7 @@ This provides a mix of JAX RS, JAX WS and NodeJS (with Loopback Application) for
 1. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
 1. [Using OAuth to protect your API](#step-12---using-OAuth-to-protect-your-api)
 1. [Testing the quality of your API](#step-13---testing-the-quality-of-your-api)
-1. [CI/CD integration](#step-14-ci/cd-integration)
+1. [CI/CD integration](#step-14---ci/cd-integration)
 
 
 # Step 1 - Check the development environment
@@ -1935,7 +1935,7 @@ Below a sequence diagram explaining the various interactions including the sever
 ![OIDC Developer Portal Sign in](./images/oidc-portal-seq-diag.png)
 
 ## OIDC Provider for an organisation
-In this chapter, we dont detail everything because it is very similar to the protection of the Portal with an OIDC provider.
+In this chapter, we don't detail everything because it is very similar to the protection of the Portal with an OIDC provider.
 We need to add a redirect URI for the Organization to come back from the OIDC Provider to API Connect.
 
 The redirect URI must be the one of the platform endpoint in this case (using an OIDC provider as user registry for the Cloud Manager or API Manager).
@@ -1945,7 +1945,7 @@ The redirect URI must be the one of the platform endpoint in this case (using an
 # Step 13 - Testing the quality of your API
 In this step we are going to see quickly how to use IBM API Connect Test and Monitor. The documentation associated with IBM API Connect Test and Monitor is available at https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted.
 This tool addresses in a no code approach testing the API with a fine granularity in the test and either on demand or with scheduled testing.
-This provides capbilities to create tests that are very fined grained, in the sense that you are able to validate API (or group of API) either onDemand or on a regular schedule. This then allows to display functional and performance dashboards in order to better understand how the API are behaving. This is not for performance testing but quality testing. If an error occur you can receive an email, and deep dive to understand why it failed. It is also a mechanism to validate that all your API are sill working if a change was performed to the platform, API, etc ...
+This provides capabilities to create tests that are very fined grained, in the sense that you are able to validate API (or group of API) either onDemand or on a regular schedule. This then allows to display functional and performance dashboards in order to better understand how the API are behaving. This is not for performance testing but quality testing. If an error occur you can receive an email, and deep dive to understand why it failed. It is also a mechanism to validate that all your API are sill working if a change was performed to the platform, API, etc ...
 
 ## Creating a test
 There are several ways to create a test using: a call, a Postman collection, from scratch.
