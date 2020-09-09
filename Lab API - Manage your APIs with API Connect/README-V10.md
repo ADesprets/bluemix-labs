@@ -13,7 +13,7 @@
 1. [Additional Resources](#additional-resources)
 
 # Introduction
-This article is the updated version for V10. The original versions were addressing V5 and V2018 and can be found here [V5](./ReadMe.V5.md)/[V2018](./ReadMe.2018.md). V10 has the same base code as V2018. So there is not much disruption and the transition from V2018 to V10 is pretty easy. The V10 focus has been a lot of enhancements regarding performance of the user interfaces. In fact, the development team has adopted new ways of working to address performances aspects from the design phase up to the deployment phase. Changes in the organization, in the build, in the tests, etc...
+This article is the updated version for V10. The original versions were addressing V5 and V2018 and can be found here [V5](./README-V5.md)/[V2018](./README.2018.md). V10 has the same base code as V2018. So there is not much disruption and the transition from V2018 to V10 is pretty easy. The V10 focus has been a lot of enhancements regarding performance of the user interfaces. In fact, the development team has adopted new ways of working to address performances aspects from the design phase up to the deployment phase. Changes in the organization, in the build, in the tests, etc...
 In a few words, V10 is addressing user experience improvements adopting a new graphical chart, and new interactions, improved search feature, creation of GraphQL APIs, new tests tab in the assembly for improved debugging, enhancement to Gateway server extensions, dynamic API actions when creating user-defined policies and upgrade to use Loopback V4 in the developer toolkit.
 
 This article is made of two parts:
