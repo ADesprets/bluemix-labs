@@ -142,7 +142,7 @@ There are four WEB interfaces with a colored theme. You see in the table below, 
 |---------------|-----------------|--------|----------------------------------------------------|
 | Cloud Manager | Manager         | Green  | ![Theme Cloud Manager](./images/v10-theme-cmc.png) |
 | API Manager   | Manager         | Blue   | ![Theme API Manager](./images/v10-theme-mgr.png)   |
-| API Designer  | LTE             | Blue   | ![Theme API Designer](./images/theme-des.png)      |
+| API Designer  | LTE             | Blue   | ![Theme API Designer](./images/v10-theme-des.png)      |
 | Dev Portal    | Portal (Drupal) | Purple | ![Theme Dev Portal](./images/V10-theme-dev.png)        |
 
 ## Topologies and multitenancy aspects
