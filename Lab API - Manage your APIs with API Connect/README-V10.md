@@ -241,6 +241,8 @@ This provides a mix of JAX RS, JAX WS and NodeJS (with Loopback Application) for
 1. [Manage your API in API Designer](#step-11---manage-your-api-in-api-designer)
 1. [Using OAuth to protect your API](#step-12---using-OAuth-to-protect-your-api)
 1. [Testing the quality of your API](#step-13---testing-the-quality-of-your-api)
+1. [CI/CD integration](#step-14-ci/cd-integration)
+
 
 # Step 1 - Check the development environment
 For this lab, we are going to use the Designer instead of using the manager. We also use the Local Test Environment to perform basic testing. We will then deploy the API into the sandbox catalog from the designer.
@@ -1948,16 +1950,20 @@ This provides capbilities to create tests that are very fined grained, in the se
 ## Creating a test
 There are several ways to create a test using: a call, a Postman collection, from scratch.
 Using a compose feature
+See ![Test and Monitor Create a test](./images/test-and-monitor-no-code-generated-test.png)
 
 
 ## Running a test
 
 ## Scheduling a test
+See ![Test and Monitor Create a schedule](./images/test-and-monitor-schedule.png)
 
 ## Using the dashboards
+See ![Test and Monitor Using the Quality dashboard](./images/test-and-monitor-api-quality.png)
 
-# Step 14 - CI/CD topic
+# Step 14 - CI/CD integration
 ## Managing the API automatically
+Since APIC is expose API or CLI to perform anything, it is very simple to perform any automatic tasks.
 
 ## Testing during the build phase
 It is possible to create an API Hook in API Connect Test and Monitor.
