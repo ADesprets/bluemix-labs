@@ -44,12 +44,12 @@ The version V10.0.0.0 is out since 29th May 2020. This lab is based on the on-pr
 # Pre-Requisites
 It is possible in IBM API Connect to either develop locally on a developer machine or develop directly in the Manager. The user experience is very similar in both cases. Developing locally provide the benefits of being able to directly use a source control management system such as Git.
 + Download the Designer
-+ Have an API Connect instance available (in our case the ICP4I instance)
-+ In order to perform some basic local testing we will also use the LTE - Local Test Environment which allows to perform simple testing locally. The LTE is as of today in beta.
++ Have an API Connect instance available (in our case an OpenShift 4.4 with V10.0.0. instance deployed)
++ In order to perform some basic local testing we will also use the LTE - Local Test Environment which allows to perform simple testing locally.
 
 There is no need to install the designer since this is a simple executable. For the Local Test environment, I'm using a Ubuntu desktop because it is simpler to use Docker on it rather than on Windows where there are some incompatibilities between Docker and VMWare. The installation of the LTE is explained here.
 
-**Hint:** to find the various executable for a specific version, you can find all the link in the article called IBM API Connect <specific version> is available. for example, you will find an articled called *IBM API Connect V2018.4.1.8-iFix1.0 is available* [here](https://www.ibm.com/support/pages/ibm-api-connect-v2018418-ifix10-available). In this article, you will find the content of the fix, the link to the various images usually in Fix Central and optionally the link to the LTE.
+**Hint:** to find the various executable for a specific version, you can find all the link in the article called IBM API Connect <specific version> is available. for example, you will find an articled called *IBM API Connect V2018.4.1.13 is available* [here](/https://www.ibm.com/support/pages/ibm-api-connect-v20184113-now-available). In this article, you will find the content of the fix, the link to the various images usually in Fix Central and optionally the link to the LTE.
 
 # Goals of API Connect, main use cases
 This chapter does not intend to describe all the possible use cases of API Connect, but instead provide some simple and concrete common usages of API Connect.
