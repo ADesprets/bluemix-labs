@@ -133,6 +133,7 @@ Below the concepts related to the organisation of the user registries.
 * Multi cloud by nature: One cluster of Managers somewhere, as many cluster of gateways/portals instances/Elastic Stack instances anywhere. Communication based on HTTPS usually on 443. => simplifies installation and deployment. No differences types of gateway in the cloud or on-premise.
 * Open approach: based on Elastic Stack/Drupal/Operators/Open API specifications compliance/OAuth/OIDC support => simplifies developments, customization and maintenance.
 * Secured and robust gateway, using IBM DataPower Gateway a market leading IBM product since 1999 offers unprecedent performance and very high security features.
+* The access to the Cloud Manager, the API Manager and the Portal always allow the use of multiple user registries at the same time. In other words, I can use a LUR - Local User Registry and at the same time an OIDC provider.
 
 ### A word on themes
 There are four WEB interfaces with a colored theme. You see in the table below, a small screen capture of the top left corner of the consoles.
@@ -142,14 +143,50 @@ There are four WEB interfaces with a colored theme. You see in the table below, 
 | Cloud Manager | Manager         | Green  | ![Theme Cloud Manager](./images/v10-theme-cmc.png) |
 | API Manager   | Manager         | Blue   | ![Theme API Manager](./images/v10-theme-mgr.png)   |
 | API Designer  | LTE             | Blue   | ![Theme API Designer](./images/theme-des.png)      |
-| Dev Portal    | Portal (Drupal) | Purple | ![Theme Dev Portal](./images/theme-dev.png)        |
+| Dev Portal    | Portal (Drupal) | Purple | ![Theme Dev Portal](./images/V10-theme-dev.png)        |
 
 ## Topologies and multitenancy aspects
 
-### Topologies
 
+### Topologies
+Below some illustration of various deployments. This is not an exhaustive list. But we want to illustrate the variety of the possible deployments.
+In the first sample, the manager is deployed on-premise, and instances of the gateway/analytics and portal are installed in various locations, 2 sets on-premise (maybe internal and external API), and other sets in various clouds.
+
+![Topology: ](./images/Topologie-1.png)
+
+In this second sample, the manager is deployed on cloud, it can be installed and managed by IBM or not. The instances of the gateway/analytics and portal are installed in various locations, 2 sets on-premise (maybe internal and external API), and other sets in various clouds. The instances in IBM cloud can be deployed and managed by IBM or not.
+
+![Topology: ](./images/Topologie-2.png)
+
+In this third sample, we illustrate the Public SaaS version of API Connect. Deployments and management is assured by IBM. Notice that a freemium version is available. This approach can be used for production or not, can be used to start and get familiar with API Connect.
+
+![Topology: ](./images/Topologie-3.png)
+
+In this fourth sample, we illustrate the deployment of API Connect within the Cloud Pak for Integration. Using the Cloud Pak provides additional integration components such as an ESB (App Connect), messaging support (Event Stream), etc ... It provides additional service such as end to end tracing between those components.
+
+![Topology: ](./images/Topologie-4.png)
 
 ### Governance and multitenancy
+There are many variations around what we refer as multitenancy. With a high level definition, what we want to define is a level of separation and governance of the API. The level of separation may vary significantly when looking at the requirements in a specific situation. From a strong and highly separation required to a lightweight one where for example, we only want to separate the consumptions of the API for different groups of consumers.
+The level of separation may even imply a separation of the deployed instances of the components. In this chapter, we are going to consider only a few cases where we do not consider specific instances of IBP API Connect clouds or cluster of components within an API Connect cloud. In fact, we really consider the "logical" separation in an instance.
+
+* In the first sample, a company has many subsidiaries or brands, referred as entity from now on, maybe in one or more countries. The members of those entities are working pretty much independently, they probably have different marketing strategies, different branding, etc... The need for a common entity to share a common set of API may exist. A variation of this case is where one entity may provide the API for the other entities, but then each entity will manage the API entirely. The one entity may provide a common backends that serves those API.
+
+In this case, we are using the highest level of "logical" separation: the organisation. In that case, they may use their own user registries, they have their own catalogs, the set of developed API are independent, of course the lifecycle are independent, they manage their own set of consumers organisations. To address the requirement of a common set of API, is solved by creating a "common" organisation, where the API that need to be shared are simply copied from the various entities. This can be automated with CI/CD approach. Notice that the use of Organisation to support multitenancy is what IBM is using for the SaaS public version (For Reserved Instance, it is possible to have IBM Managed specific instances).
+
+![Multitenancy organisation level](./images/tenancy1.png)
+
+* In the second sample, a company has many departments, those departments want to expose and control precisely sets of API and they want to control the lifecycle of those API. They are not concerned that they have a common repository for the development of the API. Also they are ways to address this separation with API Connect (Using Catalog' Spaces and/or using a SCM - Source Control Management system). The members who are developing the API may be the same people, but the API owners belongs to different departments. A variation of this case, is a single company, let's call it PA, provides the API, to different business partners or departments, but those departments are separated enough so that they will not have the same sets of API. PA will publish the API in the various catalogs, and the business partners will be able to expose the API with their own branding (since each Portal has their own site that can be configured).
+
+In this case, we have only one organisation, but we use various catalogs for each departments. Each departments may customise the portal as they wish. The lifecycle of the API beyond development is handled within each departments. The management of consumer organisations is also the responsibility of each departments.
+
+![Multitenancy catalog level](./images/tenancy2.png)
+
+* In the third sample, we really want to control the set of API to various API consumers.
+
+In this case, there is one organisation, probably one catalog, one portal, with one branding. But we use the API Visibility to restrict the visibility and the subscriptions to a limited set of consumer organisations.
+
+![Multitenancy Consumer Organisations level](./images/tenancy3.png)
 
 ### A word on quorum
 Nowadays a lot of systems containing data are distributed. This increases availability but at the same time data consistency between the various instances is highly required. There are several strategies to support this requirement, active-passive, active-active where it becomes a little bit more difficult. One approach to solve this is to use the notion of quorum, where using a simple mathematical decision (N-1)/2 a decision can be taken to identify whether the system should be shut down in order to avoid data corruption or to keep the system available but alert that data corruption has occurred and some reconciliation work may have to happen. Many components in API Connect or related to API Connect are based on distributed databases. Kubernetes etcd, Elastic Stack, Cassandra, Redis, etc ... When you design your topology, I would really advise that you understand what you want, what can be done and what may happen if losing quorum, how the individual component will behave. You should also perform some disaster testing according what you try to achieve. There are a lot of literature on this topic available. One final word, for fun, remember that ∀ n ∈ ℕ (n-1)/2 < n/2 , that means that if you lose half of your instances you are in trouble and you need to start worrying about what is happening!
