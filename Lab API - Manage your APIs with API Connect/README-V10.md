@@ -1968,7 +1968,7 @@ Since APIC is expose API or CLI to perform anything, it is very simple to perfor
 
 ## Testing during the build phase
 It is possible to create an API Hook in API Connect Test and Monitor.
-See ![Test and Monitor API Hook](https://www.ibm.com/support/knowledgecenter/SSMNED_v10/com.ibm.apic.atm.doc/Creating-An-API-Hook.html)
+See ![Test and Monitor API Hook](https://www.ibm.com/support/knowledgecenter/SSMNED_v10/com.ibm.apic.atm.doc/Creating-An-API-Hook.html) 
 This Hook allows the generation of a report for any tests for example during the build phase.
 For example adding an Execute shell block for a build step within a build in Jenkins. Then you can add a JUnit test result report under a Post-build Actions.
 
