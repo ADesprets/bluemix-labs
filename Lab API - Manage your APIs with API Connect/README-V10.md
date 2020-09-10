@@ -29,7 +29,7 @@ The version V10.0.0.0 is out since 29th May 2020. This lab is based on the on-pr
 # Objectives
 
 + Goals of API Connect, main use cases (Presentation)
-+ Basics on the architecture of the API Connect v2018 and terminology useful with API Connect (Presentation)
++ Basics on the architecture of the API Connect v10 and terminology useful with API Connect (Presentation)
 + Installation (Presentation)
 + How to create and test a REST API definition (Lab)
 + How to publish an API to Bluemix (Lab)
@@ -76,22 +76,23 @@ Read the full study: The Total Economic Impact™ of an API Management Solution 
 # Architecture and terminology
 ## API Connect architecture
 
-### Components in IBM API Connect 2018
+### Components in IBM API Connect V10
 The main components composing API Connect are:
 + The **Gateway** (IBM DataPower Gateway). The requests from apps are going through the gateway, policies are enforced and API events for the analytics are generated.
-+ The **Analytics** is a full Elastic Stack deployment. This is a new feature of APIC v2018. The analytics are non longer part of the manager, which allows for true multi cloud architecture, where the Gateways can be deployed in another separated environment along the analytics which require some kind of colocalization for performance reasons. Notice that the Elastic Stack is partially optional, in the case, where you do already have your own instance. In the case, where you really do not want to use the internal analytics then it is possible to only install the ingestion part.
++ The **Analytics** is a full Elastic Stack deployment. The analytics are non longer part of the manager, which allows for true multi cloud architecture, where the Gateways can be deployed in another separated environment along the analytics which require some kind of colocalization for performance reasons. Notice that the Elastic Stack is partially optional, in the case, where you do already have your own instance. In the case, where you really do not want to use the internal analytics then it is possible to only install the ingestion part.
 + The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developers), they create Apps and subscribe to API within the portal. Based on Drupal, it is highly customizable. In v2018, Drupal was updated to version 8.
 + The **Loopback runtime** or micro services runtime. This is where the loopback applications are running. This component is originally coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and also a good place to perform composition of APIs, especially if you do not have some ESB capabilities.
 + Associated to the Loopback runtime is the **Kubernetes** that monitors the Loopback runtime and can provide advanced feature such as auto-scaling.
 + The **Designer**, it offers the same web experience as the manager to manage APIs and allow development on the developer's machine.
 + The apic toolkit, really the CLI for APIC. APIC is developed in a simple manner and accessible through REST/JSON API. So the Web UI, the apic CLI are just based on those REST API. This is also a new benefit of the V2018, where we have now a complete set of supported REST API, in order to configure initially the product (APIC Cloud), the Manager and the portal.
++ **API Connect Test and Monitor** can now be installed in a standalone mode, unlike V2018 where there was only a SaaS offering.
 
-From an architecture point of view and it is important to consider that for HA the notion of quorum arise and I would advise to have a good understanding of what are the implications. Finally, APIC V2018 is a complete rewrite and redesigned version based on the use of Docker and Kubernetes. If you do not have a Kubernetes platform available, it is possible to use OVA that are encapsulating the Kubernetes environments. apic CLI encapsulate the kubectl/docker hiding the complexity of this platform. I would argue that even with OVA, it will be an advantage to understand Kubernetes and Docker principle.
+From an architecture point of view and it is important to consider that for HA the notion of quorum arise and I would advise to have a good understanding of what are the implications. If you do not have a Kubernetes platform available, it is possible to use OVA that are encapsulating the Kubernetes environments. apic CLI encapsulate the kubectl/docker hiding the complexity of this platform. I would argue that even with OVA, it will be an advantage to understand Kubernetes and Docker principle.
 
 >Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
 
-![V2018 APIC Architecture](./images/v10.apic-archi-on-prem.png)
-<br>*Fig. 2: V2018 Architecture*</br>
+![V10 APIC Architecture](./images/v10.apic-archi-on-prem.png)
+<br>*Fig. 2: V10 Architecture*</br>
 
 In more details some of the communications between each component in an OVA deployment non-HA. For more information, see the Required Ports between zones [here](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.install.doc/overview_apimgmt_portreqs_vmware.html) for OVA deployments or [here](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/com.ibm.apic.install.doc/overview_apimgmt_portreqs.html) for Kubernetes deployments.
 
@@ -130,7 +131,7 @@ Below the concepts related to the organisation of the user registries.
 * 1 Product = 1 YAML file => simplifies the management of the Products (CI/CD)
 * API First, the manager is based on a set of core API that are encapsulated for the CLI, used by the Web UI, and can also be called directly (full documentation) => simplifies the integration with CI/CD tooling. The other components also offers interfaces for example the gateway has REST/SOAP/SNMP/CLI interfaces, Drupal has its own API.
 * Microservices architecture based on Docker/Kubernetes => simplifies deployments in any cloud. We also encapsulate the Kubernetes clusters of each component in OVA if needed (OVA = VMWare Open Virtual Appliance)
-* Multi cloud by nature: One cluster of Managers somewhere, as many cluster of gateways/portals instances/Elastic Stack instances anywhere. Communication based on HTTPS usually on 443. => simplifies installation and deployment. No differences types of gateway in the cloud or on-premise.
+* Multi cloud and hybrid by nature: One cluster of Managers somewhere, as many clusters of gateways/portals instances/Elastic Stack instances anywhere. Communication based on HTTPS usually on 443. => simplifies installation and deployment. No differences types of gateway in the cloud or on-premise.
 * Open approach: based on Elastic Stack/Drupal/Operators/Open API specifications compliance/OAuth/OIDC support => simplifies developments, customization and maintenance.
 * Secured and robust gateway, using IBM DataPower Gateway a market leading IBM product since 1999 offers unprecedent performance and very high security features.
 * The access to the Cloud Manager, the API Manager and the Portal always allow the use of multiple user registries at the same time. In other words, I can use a LUR - Local User Registry and at the same time an OIDC provider.
@@ -192,7 +193,7 @@ Nowadays a lot of systems containing data are distributed. This increases availa
 
 ### Policies
 Below the available policies in API Connect V10.0.0.0
-<br>![C2018.4.1.8 Policies](./images/V10-policies.png)</br>
+<br>![V10 Policies](./images/V10-policies.png)</br>
 
 
 
@@ -1747,21 +1748,21 @@ apic.exe login -s <manager-endpoint> -u <user> -p <password> -r provider/default
 
 **Note:** From now on, I'm going to use a short cut/alias in order to simplify what I type. And notice that I'm using Windows so you may have to slightly modify those command if on Linux.
 ```
-set  apic2018=<path-to-apic> -s <manager-endpoint> -o <organisation>
+set  apic10=<path-to-apic> -s <manager-endpoint> -o <organisation>
 ```
 
-Typing `%apic2018%` provides an extensive help.
+Typing `%apic10%` provides an extensive help.
 To update the application credentials, we need to find the name of the consumer org in the integration catalog and the name of the application.
 
 * Get the name of the consumer organisation
 ```
-%apic2018% consumer-orgs:list -c integration
+%apic10% consumer-orgs:list -c integration
 orgdev1    [state: enabled]   https://manager.159.8.70.38.xip.io/api/consumer-orgs/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda
 ```
 
 * Get the name of the application
 ```
-%apic2018% apps:list -c integration --scope catalog
+%apic10% apps:list -c integration --scope catalog
 mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a
 ```
 
@@ -1779,13 +1780,13 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
 ```
 * We can now update API connect:
 ```
-%apic2018% -c integration --consumer-org orgdev1 -a mymobileapp credentials:create C:\temp\appidcredentialSet.json
+%apic10% -c integration --consumer-org orgdev1 -a mymobileapp credentials:create C:\temp\appidcredentialSet.json
 ```
 
 * Let's check that the credentials have been correctly updated
 
 ```
-%apic2018% -c integration --consumer-org orgdev1 -a mymobileapp credentials:list --format json
+%apic10% -c integration --consumer-org orgdev1 -a mymobileapp credentials:list --format json
 
 {
     "total_results": 2,
