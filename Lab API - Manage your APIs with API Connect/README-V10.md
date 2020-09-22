@@ -72,22 +72,26 @@ As you can see a lot of projects are using API internally and the very visible p
 
 Read the full study: The Total Economic Impact™ of an API Management Solution http://ibm.biz/APICTEIstudy
 
+The deployment of API Connect are usually as follow:
+- One non production *API Connect Cloud* use to test the product, the API, perform update of new version of API Connect before going to Production. Use of several catalogs for several purpose (Development, tests, QA, ...). Those instance are used to test API Connect, the API, perform update of new versions of API Connect before going to Production. Use of several catalogs for several purpose (Development, tests, QA, ...)
+- One production *API Connect Cloud* for on-premise with a set of internal gateways and a set for external gateways.
+- Optionally,  
 
 # Architecture and terminology
 ## API Connect architecture
 
 ### Components in IBM API Connect V10
 The main components composing API Connect are:
-+ The **Gateway** (IBM DataPower Gateway). The requests from apps are going through the gateway, policies are enforced and API events for the analytics are generated.
-+ The **Analytics** is a full Elastic Stack deployment. The analytics are non longer part of the manager, which allows for true multi cloud architecture, where the Gateways can be deployed in another separated environment along the analytics which require some kind of colocalization for performance reasons. Notice that the Elastic Stack is partially optional, in the case, where you do already have your own instance. In the case, where you really do not want to use the internal analytics then it is possible to only install the ingestion part.
++ The **Gateway** (IBM DataPower Gateway). The requests from apps are going through the gateway, security and policies are enforced and API events for the analytics are generated.
++ The **Analytics** is a full Elastic Stack deployment. The analytics are closed to the clusters of gateways, they can be deployed in another separated environment along the gateways which requires some kind of colocalization for performance reasons. Notice that the Elastic Stack is partially optional, in the case, where you do already have your own instance of monitoring. In the case, where you really do not want to use the internal analytics then it is possible to only install the ingestion part.
 + The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developers), they create Apps and subscribe to API within the portal. Based on Drupal, it is highly customizable. In v2018, Drupal was updated to version 8.
 + The **Loopback runtime** or micro services runtime. This is where the loopback applications are running. This component is originally coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and also a good place to perform composition of APIs, especially if you do not have some ESB capabilities.
 + Associated to the Loopback runtime is the **Kubernetes** that monitors the Loopback runtime and can provide advanced feature such as auto-scaling.
 + The **Designer**, it offers the same web experience as the manager to manage APIs and allow development on the developer's machine.
-+ The apic toolkit, really the CLI for APIC. APIC is developed in a simple manner and accessible through REST/JSON API. So the Web UI, the apic CLI are just based on those REST API. This is also a new benefit of the V2018, where we have now a complete set of supported REST API, in order to configure initially the product (APIC Cloud), the Manager and the portal.
-+ **API Connect Test and Monitor** can now be installed in a standalone mode, unlike V2018 where there was only a SaaS offering.
++ The apic toolkit, really the CLI for APIC. API Connect is developed in a simple manner and accessible through REST/JSON API. So the Web UI, the apic CLI are just using those REST API. From 2018, we have now a complete set of supported REST API, in order to configure initially the product (APIC Cloud), the Manager and the portal.
++ **API Connect Test and Monitor** can now be installed in a standalone mode, unlike V2018 where there was only a SaaS offering. It provides a no code solution to test the API with fined grained assertions.
 
-From an architecture point of view and it is important to consider that for HA the notion of quorum arise and I would advise to have a good understanding of what are the implications. If you do not have a Kubernetes platform available, it is possible to use OVA that are encapsulating the Kubernetes environments. apic CLI encapsulate the kubectl/docker hiding the complexity of this platform. I would argue that even with OVA, it will be an advantage to understand Kubernetes and Docker principle.
+From an architecture point of view and it is important to consider that for HA the notion of quorum arise and I would advise to have a good understanding of what are the implications. If you do not have a Kubernetes platform available, it is possible to use OVA that are encapsulating the Kubernetes environments. apic CLI encapsulate the kubectl command hiding the complexity of this platform. I would argue that even with OVA, it will be an advantage to understand Kubernetes and Docker principle. In V10 the product is enhanced to allow some configurations where only 2 members of API Connect components are necessary.
 
 >Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
 
@@ -147,16 +151,22 @@ There are four WEB interfaces with a colored theme. You see in the table below, 
 | Dev Portal    | Portal (Drupal) | Purple | ![Theme Dev Portal](./images/V10-theme-dev.png)        |
 
 ## Topologies and multitenancy aspects
+### Topologies - Generic
 
-### Topologies
+Below high level a typical hybrid deployment. In this diagram, there is no focus on analytics and portal components.
+
+![Topology: ](./images/topology-generic.png)
+
+
+### Topologies - API Connect focus
 Below some illustrations of various deployments. This is not an exhaustive list. But we want to illustrate the variety of the possible deployments.
 In the first sample, the manager is deployed on-premise, and instances of the gateway/analytics and portal are installed in various locations, 2 sets on-premise (maybe internal and external API), and other sets in various clouds.
 
-![Topology: ](./images/Topologie-1.png)
+![Topology 1: ](./images/Topologie-1.png)
 
 In this second sample, the manager is deployed on cloud, it can be installed and managed by IBM or not. The instances of the gateway/analytics and portal are installed in various locations, 2 sets on-premise (maybe internal and external API), and other sets in various clouds. The instances in IBM cloud can be deployed and managed by IBM or not.
 
-![Topology: ](./images/Topologie-2.png)
+![Topology 2: ](./images/Topologie-2.png)
 
 In this third sample, we illustrate the Public SaaS version of API Connect. Deployments and management is assured by IBM. Notice that a freemium version is available. This approach can be used for production or not, can be used to start and get familiar with API Connect.
 
@@ -1968,7 +1978,7 @@ Since APIC is expose API or CLI to perform anything, it is very simple to perfor
 
 ## Testing during the build phase
 It is possible to create an API Hook in API Connect Test and Monitor.
-See ![Test and Monitor API Hook](https://www.ibm.com/support/knowledgecenter/SSMNED_v10/com.ibm.apic.atm.doc/Creating-An-API-Hook.html) 
+See ![Test and Monitor API Hook](https://www.ibm.com/support/knowledgecenter/SSMNED_v10/com.ibm.apic.atm.doc/Creating-An-API-Hook.html)
 This Hook allows the generation of a report for any tests for example during the build phase.
 For example adding an Execute shell block for a build step within a build in Jenkins. Then you can add a JUnit test result report under a Post-build Actions.
 
@@ -1989,6 +1999,7 @@ For additional resources please look at the to the following:
 - [POT API Connect Customization](https://ibm-apiconnect.github.io/faststart/)
 - [Royal mail portal](https://developer.royalmail.net/node/2757)
 - [API Connect Test and Monitor](https://ibm-apiconnect.github.io/test-and-monitor/)
+- [API reference architecture](https://www.ibm.com/cloud/architecture/architectures/apiArchitecture/reference-architecture)
 
 [IBM Cloud]:  https://cloud.ibm.com
 [IBM Cloud Catalog]: https://cloud.ibm.com/catalog
