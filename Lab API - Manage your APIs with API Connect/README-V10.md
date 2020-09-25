@@ -71,6 +71,7 @@ Here is the result of Forrester study, performed in February 2017.
 As you can see a lot of projects are using API internally and the very visible part, the public projects represents 35%.
 
 Read the full study: The Total Economic Impact™ of an API Management Solution http://ibm.biz/APICTEIstudy
+The Forrester Wave™: API Management Solutions, Q3 2020: https://www.forrester.com/report/The+Forrester+Wave+API+Management+Solutions+Q3+2020/-/E-RES159081?objectid=RES159081#
 
 The deployment of API Connect are usually as follow:
 - One non production *API Connect Cloud* use to test the product, the API, perform update of new version of API Connect before going to Production. Use of several catalogs for several purpose (Development, tests, QA, ...). Those instance are used to test API Connect, the API, perform update of new versions of API Connect before going to Production. Use of several catalogs for several purpose (Development, tests, QA, ...)
