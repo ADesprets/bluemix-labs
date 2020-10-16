@@ -121,6 +121,7 @@ The questions to ask:
 1. How many clusters of gateways? (separate instances, driver: usually security zones (DMZ or not and other zones))
 1. How many gateway services? (drivers: the number of clusters of gateways above and isolation)
 1. How many instances for each component? (how many instances of managers (usually 2 per APIC Cloud), instances of gateways (usually at least 2 depending on the traffic and high availability desired), instances of portals (usually 3 per APIC Cloud))
+1. How many organisations? (Drivers: Multi-tenancy and organisation of the company, segregation, governance)
 
 ![APIC Concepts](./images/v2018.apic-ConceptsMap.png)
 
