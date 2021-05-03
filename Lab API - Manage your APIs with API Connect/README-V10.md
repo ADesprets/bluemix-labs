@@ -1014,7 +1014,7 @@ Because we do not want to spend too much time to install an LDAP server, for sim
 
 The API provided contains a few more paths (operations) than what we describe here. We only describe the /basic-auth path. Below a screen capture of the  API assembly.
 
-![Fake Authentication URL Assembly](./images/API-FakeURLUserRegistry-Assembly.png)
+![Fake Authentication URL Assembly](./images/V10_API-FakeURLUserRegistry-Assembly.png)
 
 Below the processing performed in the "BA authc logic" gateway JavaScript:
 <BR>Line 1: Get the Basic Authorization header and split it based on space
@@ -1083,35 +1083,45 @@ The list of Steps are the following:
 
 To add the User Registry, go in Cloud Management Console, click on Resources on the navigation panel, click on Create button.
 
-![Create User Registry](./images/cmc-create-user-registry.png)
+![Create User Registry](./images/V10_cmc-create-user-registry.png)
 
-Select Authentication URL User Registry, enter the following Information:
+Select Authentication URL User Registry
+
+![User Registry definitions start](./images/V10_cmc-user-registry-definition.png)
+
+Enter the following Information:
 >Title: SampleAuthURL
 <BR>Summary: Created by OAuth Provider configuration as a sample. Make sure to update the OAuth Providers using this sample with a valid User Registry.
-<BR>URL: https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth
+<BR>URL: https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0001.par01.containers.appdomain.cloud/org1/production/fakeauth/v1/basic-auth
 <BR>TLS Client Profile: Select Default TLS Client Profile
 
-![User Registry definitions](./images/cmc-user-registry-definition.png)
+![User Registry definitions](./images/V10_cmc-user-registry-definition-values.png)
 
-To associate the user registry with the Catalog, go in the Manager console, click on Manage, select the Integration catalog, then on Settings and API User Registries
+Click on Save. You have now defined a User registry at the platform level. It can be reused by the different organizations.
 
-![User Registry definitions in the Catalog](./images/manager-user-registry-edit.png)
+To associate the user registry with the Catalog, go in the Manager console, click on Manage, select the catalog where you want to use the user registry just created
+
+![User Registry definitions in the Catalog start](./images/V10_manager-user-registry-edit.png)
+
+Click on User Registries, then on Catalog Settings
+
+![User Registry definitions in the Catalog start](./images/V10_cmc-user-registry-definition-catalog-settings.png)
 
 Click on the checkbox for the SampleAuthURL and click Save button.
 
-![Select the User Registry](./images/manager-user-registry-select.png)
+![User Registry definitions in the Catalog](./images/V10_manager-user-registry-select.png)
 
 Now, let's configure the security for the API. In the Manager, click on the Develop menu, import the fakemagento API. This is the initial API to work with and it is available in the materials folder. It is at version 1.0. Now, we can edit the Security Definitions section and Add the Basic Authentication, click on Add.
 Enter
->Name: BA
+>Name: BA Protection
 <BR>Type: Select Basic
 <BR>Select SampleAuthURL for the *Authenticate using User Registry*
 
-![Basic authentication Security Definition](./images/manager-BA-Security-definition.png)
+![Basic authentication Security Definition](./images/V10_manager-BA-Security-definition.png)
 
-In the Security section, select BA.
+In the Security section, select BA Protection.
 
-![Basic authentication Security section](./images/manager-BA-Security-section.png)
+![Basic authentication Security section](./images/V10_manager-BA-Security-section.png)
 
 Create a product and publish it to the Integration Catalog, then subscribe to it. (Not explained here, see previous steps).
 
