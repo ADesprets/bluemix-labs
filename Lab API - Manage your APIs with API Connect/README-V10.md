@@ -258,24 +258,25 @@ This provides a mix of JAX RS, JAX WS and NodeJS (with Loopback Application) for
 
 
 # Step 1 - Check the development environment
-For this lab, we are going to use the Designer instead of using the manager. We also use the Local Test Environment to perform basic testing. We will then deploy the API into the sandbox catalog from the designer.
->**Note**: Using the toolkit/designer (locally) or using manager directly (remote server) is a pretty important decision. Using the toolkit has the benefit to use a Source Control Management System and perform micro versioning as well as backup of the various yaml (and WSDLs). It also provides a local experience with usually a lower response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches, especially considering a devOps approach. I'm using a Linux environment, you may have to adjust the commands with your specific environment being Windows or MacOS.
+For this lab, we are going to use the Designer and the LTE - Local Test Environment  instead of using the manager (central). We will then deploy the API into the sandbox catalog from the designer.
+>**Note**: Using the toolkit/designer (locally) or using manager directly (remote server) is a pretty important decision. The toolkit has the benefit to allow the use of a Source Control Management System to perform micro versioning as well as backup of the various yaml (and WSDLs). It also provides a local experience with usually a lower response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches, especially considering a devOps approach. I'm using a Linux environment, you may have to adjust the commands with your specific environment being Windows or MacOS.
 
 Let's check that development environment is ok.
-We first prepare the docker environment to start the local test environment. `sudo docker load < apic-lte-images-2018.4.1.8-ifix2.0.tar.gz`.
+We first prepare the docker environment to start the local test environment. `sudo docker load < apic-lte-images_10.0.1.2-ifix2.tar.gz`.
 The information on the local test environment can be found under the title *Testing an API with the Local Test Environment* in the IBM Knowledge Center.
 To start the  LTE, in my case, `cd ~/apic-lte/linux`, then `sudo ./apic-lte start`.
 
 ![Start LTE](./images/start-lte.png)
 
 Take a note of the Platform API URL and the user/pwd to be used. we will need them when we start the Designer.
-> **Hint:** To check that the LTE is correctly started: `apic login --server localhost:2000 --username shavon --password 7iron-hide --realm provider/default-idp-2`
+> **Hint:** To check that the LTE is correctly started: `apic login --server localhost:2000 --username shavon --password 7iron-hide --realm provider/default-idp-2` or `./apic-lte status`.
+If you get Unauthorized you may have to clear the credentials with the following command: `apic client-creds:clear`
 
 You should get the following message: Logged into localhost:2000 successfully
 
 To start the designer, just execute the ./api_designer-linux. I assume here you downloaded the version of the Designer from the IBM support site, the version must be similar to the API connect installation.
 It does start a window, the first information to specify is the working directory, where the artefacts (yaml) will be created.
-![Designer specify working directory](./images/designer-specify-work-dir.png).
+![Designer specify working directory](./images/designer-specify-work-dirv10.png).
 
 Click on Open a folder and specify the directory where you work.
 
@@ -283,15 +284,15 @@ Click on Open a folder and specify the directory where you work.
 
 The specify the manager you want to work with, in our case, we will have two locations, the local test environment and the manager of a remote instance. First let's use the LTE. We enter the information for the local test environment, in our case https://localhost:2000.
 
-![Designer specify working directory folder](./images/designer-new-connection.png)
+![Designer specify working directory folder](./images/designer-new-connectionV10.png)
 
 The login screen appears, we enter the credentials that were indicated when starting the LTE, in our case shavon/7iron-hide.
 
-![Designer specify working directory folder](./images/designer-connect-manager.png)
+![Designer specify working directory folder](./images/designer-connect-managerV10.png)
 
 The first screen appears, we are ready to create our first API.
 
-![Designer specify working directory folder](./images/designer-first-screen.png)
+![Designer specify working directory folder](./images/designer-first-screenv10.png)
 
 # Step 2 - Expose an existing REST API
 In this first step, we assume that a developer of an API is providing you the Swagger associated with that API. The developer is using WAS Liberty as the runtime and he also uses JAX-RS annotations along apidiscovery feature. This allows him to get a Swagger easily consumed by API Connect. Download the Swagger [here](./materials/step2/QuoteManagementAPI_AW_S.yaml) on your file system, for example under ~/apic-dev assuming that you have created such directory.
@@ -318,15 +319,15 @@ You should obtain the following results: {"loanAmount":10000,"annualInterestRate
 
 1. We are using the designer that we opened earlier. Click on *Develop APIs and Products* button. Then click on *Add* and select *API* button on the top right of the screen.
 
-![Designer add API](./images/designer-add-API.png)
+![Designer add API](./images/designer-add-APIV10.png)
 
 Select the *From existing OpenAPI service* and click *Next* button.
 
-![Designer Select from existing Open API](./images/designer-select-from-existing.png)
+![Designer Select from existing Open API](./images/designer-select-from-existingV10.png)
 
 Select the file downloaded previously and click *Next* button.
 
-![Designer Select OpenAPI file](./images/designer-select-openapi-file.png)
+![Designer Select OpenAPI file](./images/designer-select-openapi-fileV10.png)
 
 Change the following details
 * Base path: /loans/v1
@@ -339,11 +340,11 @@ Then click *Next* button.
 
 Keep the default value for CORS and using a client id to secure the API, click *Next* button.
 
-![Designer quote api CORS settings](./images/designer-quote-api-cors.png)
+![Designer quote api CORS settings](./images/designer-quote-api-corsV10.png)
 
 Click on the Edit *API button*.
 
-![Designer edit api ](./images/designer-edit-api.png)
+![Designer edit api ](./images/designer-edit-apiV10.png)
 
 Before testing it, in the development environment, let's review what has been created under the cover. The Designer can be considered in certain ways a Swagger (Open API) editor.
 
@@ -360,7 +361,7 @@ We see that there are 2 paths, /extquote (one verb, GET) and /quote (2 verbs GET
 Now let's see the Properties section, there is a property called target-url.
 Properties is a very important concept. It allows the definition of any variable for each catalog. The target-url is by convention a variable to indicate the back-end url. In our case, we are going to adjust it to http://SampleJAXRS20-aw.eu-gb.mybluemix.net/loanmgt/resources. For now, we just use the default value, because we do not care of other catalogs than Sandbox. Click *Save* button.
 
-![Designer Quote api properties](./images/designer-quote-api-properties.png)
+![Designer Quote api properties](./images/designer-quote-api-propertiesV10.png)
 
 Before testing we have one small adjustment to perform. The back-end URL invoked and we are going to use the target-url just set.
 
@@ -369,7 +370,8 @@ We go in the Assembly Panel and click on the Invocation policy. The panel with t
 
 We change the value to $(target-url)$(request.path)$(request.search) and click *Save* button.
 
-![Designer Quote api invoke](./images/designer-quote-api-invoke.png)
+
+![Designer Quote api invoke](./images/designer-quote-api-invokeV10.png)
 
 We can test the API which is available in the local Sandbox catalog with a generated auto product. We ensure that the API is running. If it stopped start it, so it goes in the running state.
 
@@ -410,7 +412,7 @@ Now we see that there was a 500 error. This is better. We do not see any root ca
 
 You can then access the console at https://localhost:9091/, the default uid/pwd is admin/admin.
 
-![Trouble shoot 5](./images/troubleshoot-wrong-uri-5.png)
+![Trouble shoot 5](./images/troubleshoot-wrong-uri-5.V10.png)
 
 Let's fix the URI before publishing the API to the remote manager since we are happy now that the API is correctly working.
 
