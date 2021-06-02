@@ -996,16 +996,17 @@ In the materials, you also find a POSTMAN collection (alongside the environment 
 
 In order to perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
 
-| Version | Security scheme                            | Referred as     |
-|---------|--------------------------------------------|-----------------|
-| V1      | API Key + Basic Authentication             |                 |
-| V2      | Resource Owner Password Credentials Grant  | Resource owner  |
-| V3      | Authorization Code grant + OIDC            | Access code     |
-| V4      | Client Credentials grant                   | Application     |
-| V5      | External OAuth Provider                    |                 |
-| V6      | Custom JWT Generate and Validate           |                 |
+| Version | Security scheme                            | Referred as     |Link                                                                              |
+|---------|--------------------------------------------|-----------------|----------------------------------------------------------------------------------|
+| V1      | API Key + Basic Authentication             |                 |[here](#protecting-an-api-with-basic-authentication)                              |
+| V2      | Resource Owner Password Credentials Grant  | Resource owner  |[here](#protecting-an-api-with-oauth---resource-owner-password-credentials-grant) |
+| V3      | Authorization Code grant + OIDC            | Access code     |[here](#protecting-an-api-with-oauth---authorization-code-grant-and-oidc)         |
+| V4      | Client Credentials grant                   | Application     |[here](#protecting-an-api-with-oauth---client-credentials-grant)                  |
+| V5      | External OAuth Provider                    |                 |[here](#protecting-an-api-with-oauth---external-provider)                         |
+| V6      | Custom JWT Generate and Validate           |                 |                                                                                  |
 
- ## Preparing the environment - Fake Authentication URL API
+
+## Preparing the environment - Fake Authentication URL API
  To perform some more advanced scenarii with security, we need a user registry where all the users are defined. There are several types of user registries for user authentication supported in API Connect:
 * Authentication URL User Registry - Based on an authentication URL (Following a simple HTTP/S based invocation)
 * LDAP User Registry - Based on a LDAP server (Standard LDAP integration)
@@ -1705,7 +1706,7 @@ Enter:
 <BR>Keep Access code selected and select Application
 <BR>Select DataPower API Gateway
 
-![Third party OAuth Provider config](./images/oauth-third-config.png)
+![Third party OAuth Provider config](./images/oauth-third-configV10.png)
 
 Click Next button
 In the Endpoints panel, enter:
@@ -1720,14 +1721,14 @@ Click Next button
 
 The only used endpoint is the Introspect URL. The Authorization and Token URLs are used in the documentation only and published with the API.
 
-![Third party OAuth Provider endpoints](./images/oauth-third-endpoints.png)
+![Third party OAuth Provider endpoints](./images/oauth-third-endpointsV10.png)
 
 For the scope enter:
 >details for elevated access
 <BR>openid for OIDC support
 <BR>and then click Save button
 
-![Third party OAuth Provider config](./images/oauth-third-scopes.png)
+![Third party OAuth Provider config](./images/oauth-third-scopesV10.png)
 
 We are done with the configuration of the OAuth provider. We can now leave the Cloud Manager console.
 
@@ -1735,11 +1736,11 @@ We are done with the configuration of the OAuth provider. We can now leave the C
 We need to make this OAuth Provider accessible in the various catalogs where we want to use it.
 In the Manager Console, click on Manage and select Sandbox, then Settings and OAuth Providers. Click on Edit button on the top left.
 
-![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associate.png)
+![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associateV10.png)
 
 Click on the checkbox close to AppId.
 
-![OAuth provider association to Catalog](./images/third-oauth-sandbox-associate-edit.png)
+![OAuth provider association to Catalog](./images/third-oauth-sandbox-associate-editV10.png)
 
 Repeat the same operation with the Integration Catalog.
 It is not yet accessible because we are not using it in any API.
@@ -1754,7 +1755,7 @@ Enter:
 <BR>Select  AppId for the OAuth Provider
 <BR>Select Access code for the Flow
 
-![OAuth Access Code API protection Security Definition](./images/third-party-access-secure-API-sec-def.png)
+![OAuth Access Code API protection Security Definition](./images/third-party-access-secure-API-sec-defV10.png)
 
 Click Save button.
 
