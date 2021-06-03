@@ -996,14 +996,15 @@ In the materials, you also find a POSTMAN collection (alongside the environment 
 
 In order to perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
 
-| Version | Security scheme                            | Referred as     |Link                                                                              |
-|---------|--------------------------------------------|-----------------|----------------------------------------------------------------------------------|
-| V1      | API Key + Basic Authentication             |                 |[here](#protecting-an-api-with-basic-authentication)                              |
-| V2      | Resource Owner Password Credentials Grant  | Resource owner  |[here](#protecting-an-api-with-oauth---resource-owner-password-credentials-grant) |
-| V3      | Authorization Code grant + OIDC            | Access code     |[here](#protecting-an-api-with-oauth---authorization-code-grant-and-oidc)         |
-| V4      | Client Credentials grant                   | Application     |[here](#protecting-an-api-with-oauth---client-credentials-grant)                  |
-| V5      | External OAuth Provider                    |                 |[here](#protecting-an-api-with-oauth---external-provider)                         |
-| V6      | Custom JWT Generate and Validate           |                 |                                                                                  |
+| Version | Security scheme                                 | Referred as     |Link                                                                              |
+|---------|-------------------------------------------------|-----------------|----------------------------------------------------------------------------------|
+| V1      | API Key + Basic Authentication                  |                 |[here](#protecting-an-api-with-basic-authentication)                              |
+| V2      | Resource Owner Password Credentials Grant       | Resource owner  |[here](#protecting-an-api-with-oauth---resource-owner-password-credentials-grant) |
+| V3      | Authorization Code grant + OIDC                 | Access code     |[here](#protecting-an-api-with-oauth---authorization-code-grant-and-oidc)         |
+| V4      | Client Credentials grant                        | Application     |[here](#protecting-an-api-with-oauth---client-credentials-grant)                  |
+| V5      | External OAuth Provider                         |                 |[here](#protecting-an-api-with-oauth---external-provider)                         |
+| V6      | Custom JWT Generate and Validate                |                 |[here](#custom-jwt-generate-and-validate)                                         |
+| N/A     | Using an OIDC Registry to protect the platform  |                 |[here](#using-an-oidc-registry-to-protect-the-platform)                           |
 
 
 ## Preparing the environment - Fake Authentication URL API
@@ -1861,7 +1862,28 @@ curl -k -H "accept: application/json" -H "Authorization: Bearer <AT>" -H "X-Ibm-
 
 ![Postman Test Access Token](./images/web-dev-tools.png)
 
-TO BE COMPLETED
+
+Below a curl invocation sample (The Access token has been generated using the Resource Owner Grant. The client-id is defined in App-id for the MobileApp Application (App-ID terminology) and also for the MyMobileApp application in API connect (API Connect terminology). The uid/pwd to get the Access Token is a User defined in the Cloud Directory Users (IdP).
+
+
+Request
+```
+curl -v -k --request POST \
+  --url https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0001.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v5/order \
+  --header 'Authorization: Bearer \<Bearer token\>' \
+  --header 'X-IBM-Client-Id: \<client-id\>' \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --header 'APIm-Debug: true' \
+  --data '{"orderDetails":"2 plates","orderDate":"2019-12-25T10:00:00.000Z"}'
+```
+
+Response
+```
+{"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}
+```
+
+![curl Test Access Token](./images/oauth-third-ropsw-test-curl.png)
 
 ### Tests
 Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
@@ -1874,6 +1896,8 @@ Click on the Authorization link, then click on Get New Access Token
 
 #### Using curl
 
+## Custom JWT Generate and Validate
+Not done yet
 
 ## Using an OIDC Registry to protect the platform
 ### Gather the various information needed
@@ -1906,7 +1930,7 @@ In AppId, click on Manage Authentication, then Authentication Settings, then ent
 
 ### Create the OIDC User Registry
 
-We are ready to configure API Connect. In the API Manager, click on Resources, then User Registries and click on the Create button
+We are ready to configure API Connect. In the API Cloud Manager, click on Resources, then User Registries and click on the Create button
 
 ![Create User registry](./images/oidc-ur-button.png)
 
@@ -1921,8 +1945,8 @@ Enter the following:
 <BR>Token Endpoint: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token
 <BR>UserInfo Endpoint: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/userinfo
 <BR>JWKS Endpoint: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/publickeys
-<BR>Client_id: client_id
-<BR>Client_secret: client_secret
+<BR>Client_id: \<client_id\>
+<BR>Client_secret: \<client_secret\>
 
 ![OIDC User Registry creation](./images/oidc-ur-create.png)
 
@@ -1956,7 +1980,7 @@ Enter OIDCConsOrg1 for example.
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-consumer-org-creation.png)
 
-Below a sequence diagram explaining the various interactions including the several redirection that have happened under the cover. The OIDC implementation isq based on [Hybrid Flow as definied in OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html#HybridFlowAuth)
+Below a sequence diagram explaining the various interactions including the several redirection that have happened under the cover. The OIDC implementation is based on [Hybrid Flow as definied in OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html#HybridFlowAuth)
 
 ![OIDC Developer Portal Sign in](./images/oidc-portal-seq-diag.png)
 
