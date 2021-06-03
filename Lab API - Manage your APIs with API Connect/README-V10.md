@@ -1932,11 +1932,11 @@ In AppId, click on Manage Authentication, then Authentication Settings, then ent
 
 We are ready to configure API Connect. In the API Cloud Manager, click on Resources, then User Registries and click on the Create button
 
-![Create User registry](./images/oidc-ur-button.png)
+![Create User registry](./images/oidc-ur-buttonV10.png)
 
 Select OpenID Connect (OIDC)
 
-![OIDC User Registry](./images/oidc-ur-choice.png)
+![OIDC User Registry](./images/oidc-ur-choiceV10.png)
 
 Enter the following:
 > Title: AppId
@@ -1948,7 +1948,62 @@ Enter the following:
 <BR>Client_id: \<client_id\>
 <BR>Client_secret: \<client_secret\>
 
-![OIDC User Registry creation](./images/oidc-ur-create.png)
+I also changed the User mapping and replaced sub (like subject) by name in order to get the right identifier displayed when the user is logged on. You have to make sure that this is possible in your environment and that the subject is unique.
+
+![OIDC User Registry creation](./images/oidc-ur-createV10.png)
+
+### Associate the OIDC User Registry to provide access to an organization
+In this case we use the OIDC provider to provide access to the Manager for all the organizations. Notice that it is possible to restrain the use of the User Registry to one or more Organizations.
+In order to make it working we need to make sure that the redirect URL is registered in the OIDC Provider configuration in our case AppId.
+
+**Hint**: A simple way to get the exact value is to let the authentication fail., and then copy it from the URL.
+
+![OIDC Invalid Redirect URL](./images/oidc-platform-invalid-redirect-url.png ).
+
+Example: redirect_uri=https://api.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0001.par01.containers.appdomain.cloud/api/oauth2/redirect&state=b11df288-2f41-4f91-bdb6-010322b7bb97
+
+Then add it in AppId:
+![AppId add Redirect URL](./images/app-id-add-redirect-url.png)
+
+Now, we can register the user from the OIDC Provider.
+
+**Notice**: In my case, I like the idea that the owner (of the organization) is using the local registry and all the other users are in the OIDC registry. This allows to have a special user who does not depend on the external system. It can be a real user or not. I understand that some security policies will not allow this everywhere so it is not applicable all the the time.
+
+I'm using the owner of the organization (org1owner), this user is defined in the local User registry). Notice, that we now can also login with AppId
+
+![Login with LUR](./images/oidc-lur-login.png)
+
+This user being the owner of the organization is going to invite another member which is defined in the OIDC Registry.
+Click on Member and then Add -> Invite Member
+
+![OIDC User Registry Invite member](./images/oidc-org-invite-member.png)
+
+Specify the email of the user and the roles he will perform.
+
+![OIDC User Registry Invite member](./images/oidc-org-invite-member-fill.png)
+
+The user receives an email, in our case I simply copy the activation link provided 
+
+![OIDC Invite Member Activation link](./images/oidc-org-invite-member-activation-link.png)
+
+The link provides the opportunity to sign up to API Connect.
+It is important to choose the OIDC Provider registry.
+
+![OIDC Org Sign in](./images/oidc-org-sign-choose-ur.png)
+
+the click on Sign up
+
+![OIDC Org Sign up](./images/oidc-org-sign-up-start.png)
+
+You are redirected to the OIDC Provider login page
+
+![OIDC Org Login Page](./images/oidc-login-page.png)
+
+Enter Credentials and click Sign in
+
+You are redirected to API connect and you are now logged in. Notice, that the Account shows the right information because we used name to be mapped to the subject.
+
+![OIDC Org API Connect home page](./images/oidc-org-logged-in.png)
 
 ### Associate the OIDC User Registry with a Catalog
 We are going to associate it with the Integration Catalog.
