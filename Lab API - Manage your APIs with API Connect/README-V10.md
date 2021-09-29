@@ -200,13 +200,12 @@ In this case, there is one organisation, probably one catalog, one portal, with 
 
 ![Multitenancy Consumer Organisations level](./images/tenancy3.png)
 
-### A word on quorum
+## A word on quorum
 Nowadays a lot of systems containing data are distributed. This increases availability but at the same time data consistency between the various instances is highly required. There are several strategies to support this requirement, active-passive, active-active where it becomes a little bit more difficult. One approach to solve this is to use the notion of quorum, where using a simple mathematical decision (N-1)/2 a decision can be taken to identify whether the system should be shut down in order to avoid data corruption or to keep the system available but alert that data corruption has occurred and some reconciliation work may have to happen. Many components in API Connect or related to API Connect are based on distributed databases. Kubernetes etcd, Elastic Stack, Cassandra, Redis, etc ... When you design your topology, I would really advise that you understand what you want, what can be done and what may happen if losing quorum, how the individual component will behave. You should also perform some disaster testing according what you try to achieve. There are a lot of literature on this topic available. One final word, for fun, remember that ∀ n ∈ ℕ (n-1)/2 < n/2 , that means that if you lose half of your instances you are in trouble and you need to start worrying about what is happening!
 
-### Policies
+## Policies
 Below the available policies in API Connect V10.0.0.0
 <br>![V10 Policies](./images/V10-policies.png)</br>
-
 
 
 |Category  | Name             |Description        |-|Category   | Name                 |Description      |
@@ -222,18 +221,42 @@ Below the available policies in API Connect V10.0.0.0
 |Transform |XSLT              |any code           |-|Security   |User Security         |user Security    |
 |Other     |GatewayScript     |any code           |-|Security   |Validate JWT          |validate token   |
 
-# Lifecycle of a Product
+## Lifecycle of a Product
 The lifecycle of a product is as follow:
 
 ![ProductsLifeCycle](./images/diagram_product_lifecycle.jpg)
 
 It is possible to use an approbation control between each transition
 
-### Roles
+## Roles
 Below a high level view of the roles defined in API Connect.
 
 Although it is possible to create custom role, I would argue for the need to do that. There are already a pretty large number of default roles defined.
 ![default roles](./images/default-roles.png)
+
+Cloud level
+* Administrator: Administers the admin organization
+* Member: Minimum role
+* Organization Manager: Manages API provider organizations
+* Owner: Owns and administers the admin organization
+* Topology Administrator: Administers the cloud topology
+* Viewer: Views the admin organization
+
+Organisation level
+* Developer: Authors API and product definitions
+* Administrator: Administers the API provider organization
+* Community Manager: Manages application developer communities
+* Viewer	: Views the API provider organization
+* API Administrator: Manages the API product lifecycle
+* Member:  Minimum role
+* Owner: Owns and administers the API provider organization
+
+Consumer Organisation level
+* Owner: Owns and administers the app developer organization
+* Administrator: Administers the app developer organization
+* Developer: Builds and manages apps in the developer organization
+* Member: Member of the app developer organization
+* Viewer: Viewer of the app developer organization
 
 
 # Overall design of the lab
