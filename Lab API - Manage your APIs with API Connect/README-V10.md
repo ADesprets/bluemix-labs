@@ -230,8 +230,9 @@ The lifecycle of a product is as follow:
 It is possible to use an approbation control between each transition
 
 ### Roles
-Below a high level view of the roles defined in API Connect
-Although it is posible to create custom role, I would argue for the need to do that. There are already a pretty large number of default roles defined.
+Below a high level view of the roles defined in API Connect.
+
+Although it is possible to create custom role, I would argue for the need to do that. There are already a pretty large number of default roles defined.
 ![default roles](./images/default-roles.png)
 
 
