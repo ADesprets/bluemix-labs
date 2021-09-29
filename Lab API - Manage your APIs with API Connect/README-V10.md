@@ -228,6 +228,13 @@ The lifecycle of a product is as follow:
 ![ProductsLifeCycle](./images/diagram_product_lifecycle.jpg)
 
 It is possible to use an approbation control between each transition
+
+### Roles
+Below a high level view of the roles defined in API Connect
+Although it is posible to create custom role, I would argue for the need to do that. There are already a pretty large number of default roles defined.
+![default roles](./images/default-roles.png)
+
+
 # Overall design of the lab
 
 The goal of this lab is to build the following APIs:
