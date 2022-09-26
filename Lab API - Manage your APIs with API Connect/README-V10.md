@@ -1723,14 +1723,64 @@ This invokes the FakeMagento API using the access Token as a Bearer.
 ![Test Get Access Token](./images/test-application-22.png)
 
 ## Protecting an API with OAuth - External Provider
+In this scenario, we have an external OAuth Provider available, we use the IBM app-id application available in IBM Cloud. The integration with API Connect implies a synchronisation of the API keys (client id/client secret) with the applications defined in the OAuth Provider. It can be done in two ways, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect using apic CLI. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
+At runtime, the application first gets the token from the OAuth provider directly, not going through API Connect (this is a more secured approach since the credentials do not flow through API Connect), then the application invokes the API with the Access Token in the Authorization header as a Bearer. API Connect then invokes the OAuth Provider with an Introspect call with the token, if the call returns a 200 (or active=true), then the Access Token is valid and API Connect can proceed.
 
-In this scenario, we already have an OAuth Provider available. The integration with API Connect is very simple, the application first synchronises the API keys with the applications defined in the OAuth Provider. It can be done in two ways, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
-At runtime, the application first gets the token from the OAuth provider directly, not going through API Connect (this is a more secured approach since the credentials do not flow through API Connect), then the application invokes the API with the Access Token in an Authorization header as a Bearer. API Connect then invokes the OAuth Provider with an Introspect call, if the call returns a 200 (or active=true), then the Access Token is valid and API Connect can proceed.
+It is important to understand the various identities that do exist in the context and see that it is not obvious to understand all the various identities and that they are related to the different grants that have been chosen.
+
+In the following diagram, we can see that there are 3 identities: a user identity (that will be used for Resource Owner Password or Authorization grants), a system identity for the application requesting the access token (for all grants) and finaly a system identity representing APIC to access the OAuth provider.
 
 ![Third party OAuth Provider flow](./images/oauth-third-concepts.png)
 
-### Create the OAuth Provider
-We again have decided to create the OAuth Provider in the Cloud Manager.
+Let's stop a few seconds on the configuration on app-id ([App-ID documentation](https://cloud.ibm.com/docs/appid)). The diagram below shows the objects that I have created for this example. Of course depending on your OAuth/OIDC provider it may defer (Ping Federate, Auth0, MSAD, ...).
+As you can see, it important to distinguish the differeent identities. We have a user identity the person who will be authorized to access the API (Resource Owner Password and Authorization grants), and two system identities, the application that is using the API ad also API Connect which is a cliet of the OAuth provider. The later is used to validate (instropect) a token for example.
+
+![App-ID concept](./images/oauth-appid-concepts.png)
+
+### Validating the OAuth provider configuration
+Before configuring and using API Connect, we are making sure the OAuth provider is correctly configured and all the various scenarios are working.
+
+I indicate here the Windows style commands (it is easy to convert them into Linux style)
+
+ #### Get a token (Resource Owner Password grant)
+ ```
+set app_client_id=<client_id of the application accessing APIC>
+set app_client_secret=<client_secret of the application accessing APIC>
+set user_id=<uid of the user>
+set user_password=<password of the user>
+curl -k -u "%app_client_id%:%app_client_secret%" -H "Host: eu-gb.appid.cloud.ibm.com" -H "Accept: application/json" -F "grant_type=password" -F "username=%user_id%" -F "password=%user_password%" -F "scope=credit_scoring details" "https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token" | jq .
+ ```
+ Response is:
+ ```
+ {
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFwcElkLTYyZDQ1NjZiLWY0MTEtNDYxNC04YWRjLTU4YzA5MDcwNzU4NS0yMDE5LTA1LTI5VDE2OjE2OjA2LjE2MyIsInZlciI6NH0.eyJpc3MiOiJodHRwczovL2V1LWdiLmFwcGlkLmNsb3VkLmlibS5jb20vb2F1dGgvdjQvNjJkNDU2NmItZjQxMS00NjE0LThhZGMtNThjMDkwNzA3NTg1IiwiZXhwIjoxNjY0MjIyNTEyLCJhdWQiOlsiYWYwM2Q3OTUtZTM2Yi00NTcxLTkwMTMtNmRjNWI1M2M4NTc4Il0sInN1YiI6IjkwMDBkN2JlLWNjNTUtNDljNS04NTRiLTA3NjdkZTc1Yzc5OCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhbXIiOlsiY2xvdWRfZGlyZWN0b3J5Il0sImlhdCI6MTY2NDIxODkxMiwidGVuYW50IjoiNjJkNDU2NmItZjQxMS00NjE0LThhZGMtNThjMDkwNzA3NTg1Iiwic2NvcGUiOiJvcGVuaWQgYXBwaWRfZGVmYXVsdCBhcHBpZF9yZWFkdXNlcmF0dHIgYXBwaWRfcmVhZHByb2ZpbGUgYXBwaWRfd3JpdGV1c2VyYXR0ciBhcHBpZF9hdXRoZW50aWNhdGVkIGNyZWRpdF9zY29yaW5nIGRldGFpbHMifQ.UE8Oavui91iQwQBDjv0iwSlhiUTY1GwUCHh-nsDeBRo5vekQ-sN4jFXcbu82IT2bJHYFxAdVSWhj2ZTX5oNQ1n-yzVyw59y9AxSFVfdlt409ZAQ1sVIWlyP3TEDXIqo9lUKyOCvKe9TmLGuNjvSb2NvOSr7BKJN-gRYg78peNJG_Nxj7wfMZEfJyR_dQcA--DefvIyWZvfHBOebY_XzHWK8kby_hMdB2AFn44kDmNSfC3kz4uLaVINjm_Df0anIjaw9JJKvs4wv1uy_4iqlVbh_p-hv49UyBVMpal6U3_4nhISRWQ77YuvEr2QyTcTtlDt6d9ICumgH6sXp9cc2ilA",
+  "id_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFwcElkLTYyZDQ1NjZiLWY0MTEtNDYxNC04YWRjLTU4YzA5MDcwNzU4NS0yMDE5LTA1LTI5VDE2OjE2OjA2LjE2MyIsInZlciI6NH0.eyJpc3MiOiJodHRwczovL2V1LWdiLmFwcGlkLmNsb3VkLmlibS5jb20vb2F1dGgvdjQvNjJkNDU2NmItZjQxMS00NjE0LThhZGMtNThjMDkwNzA3NTg1IiwiYXVkIjpbImFmMDNkNzk1LWUzNmItNDU3MS05MDEzLTZkYzViNTNjODU3OCJdLCJleHAiOjE2NjQyMjI1MTIsInRlbmFudCI6IjYyZDQ1NjZiLWY0MTEtNDYxNC04YWRjLTU4YzA5MDcwNzU4NSIsImlhdCI6MTY2NDIxODkxMiwiZW1haWwiOiJhcm5hdWxkX2Rlc3ByZXRzQGZyLmlibS5jb20iLCJuYW1lIjoiQXJuYXVsZCBEZXNwcmV0cyIsInN1YiI6IjkwMDBkN2JlLWNjNTUtNDljNS04NTRiLTA3NjdkZTc1Yzc5OCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJnaXZlbl9uYW1lIjoiQW5hdWxkIiwiZmFtaWx5X25hbWUiOiJEZXNwcmV0cyIsImlkZW50aXRpZXMiOlt7InByb3ZpZGVyIjoiY2xvdWRfZGlyZWN0b3J5IiwiaWQiOiJkNWQ4YzY5ZS1mMzhhLTRkMjMtYjM5YS05ZmEzYzYwNjhlMzcifV0sImFtciI6WyJjbG91ZF9kaXJlY3RvcnkiXX0.GhN38JsqgjCevK-o8zGENWd_kDOAa4EYo1B2JAfJAY9fQyJhjdytR5TWv4sg7OX_JiX15IQt10EDcZXpncbtZQcdBwK55SavTeHYmWgQKn4frgHc24ZRD_kw3MvUwQihRDKZwXctrE01eq566btUDD0lBVuEme8yjPdu6JfXY5DyhVFCPP20BXZMfIxgKtD9prJbi7krd8CK_Hu2FwxpWvXi6zDZpGSwoKqY_6aQcfEr2wVIb6cYucn6KxBzF1Sk-S0sFrp_l9daBmY5web5_8onp7pmcXrn0Lw0PDicgmc9fqVKTGaLdgyXekHdtafHYDCrT4_qpBarXyLCVd4bIQ",
+  "refresh_token": "6a3a3471470627f4cb78247cc6eae58291220ebcea97a6ab2991c5f8fa1daf506001fc4a383798c2af0d2f997fc570bea2b1a92f713e60796518bf8a2c4faef8e86c1182bb29e4d23847576c9afb629da4275025ff655481a8f2eb956a482fa8abdb5faaf2fcc4f87a708f430ed6813bf6a3eeab7fc9cd8572f082798c5ad3099fe197c4e0b0e81c287e0ea6c0cf8a9f59e96471e372298c8e0a4b6f6ab67c1e57d47c9e8345d85270cc3e1b9e485c9faf602531327efb34b488c250c2e6eb98da40eec0890d81a74ed0ac08700f4889df9f8e69dd559786e370d5f63642a8391dc6e29600d177e92eb598bc46aefd477a79eaa233e8df9814085d33c3f225048cb10a330ddd8dc0c84b108d807f33eb288ba9dc9d363510a22a6cf5d33d4d5c9267a36cc55a73e1f37f0a5c89c069b0dce2340c824a39190bb8a2970c45c4104d758c82a8966898cf939873a429715b3eeda9a92d51c806ba90a76e6488818c8b174bcbf8e7645a96893c52db2ce5014432a990d93d6bc9c8680eb2647428f3a80bd910ede179865598cc77a8fa3d8116cedf22d5225394a00aedb46d85c24ab55dd1e04755d068bbd2dba40f8f8ab46a3b8f88a533b06d5f6af3b579df2d9e6ed8a0a6c577b0772fa749e5d9ca2f4a1258b19a86c0fb80ac4457d0791c983f3681bc9d5ebc91cbf077b3b04df48f9a811125e7ab6f10d0c58886b3437d21c155b2b10135bae477394a28b6adaa373ced8754e9b5280c0f2db733e61dbca60c0cabcb44aa56114fb353484c440bb261d26046095627e0673dcae184cb419a6175d13767b7e7122e0a2c936414fe2cdd38549bcedff9db12e0853ac58beff195b05f26497b2267a6771fe0013625bab11e012effa0c788910638650c1469c7112211fb305ce7d18399598c7a93aec4aca11f46323e02267e66bb2ae03f3cfaca6f3315faa76214ff26713ca82e8953b3b09790d080b3a6bd1a19c8081454bf87720d47755a07c1a7fe6ca227eddbf87a",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "openid appid_default appid_readuserattr appid_readprofile appid_writeuserattr appid_authenticated credit_scoring details"
+}
+ ```
+ 
+ #### Introspect the access token
+ ```
+ set btoken=<access_token value got from the above command>
+ set authorizationhapic=<base64(client_id of the application representing APIC system identity:client_secret of the application representing APIC system identity)>
+ curl -k -H "Authorization: Basic %authorizationhapic%" -F "token=%btoken%" "https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/introspect"
+
+ ```
+Response is 
+```
+{
+	"active": true,
+	"scope": "openid appid_default appid_readuserattr appid_readprofile appid_writeuserattr appid_authenticated credit_scoring details"
+}
+```
+
+We are all set, we can create a token, and we can introspect and gget a valid:true response, we can now configure API Connect who is going to do the same instrospect call.
+
+### Create the OAuth Provider in API Connect
+We have decided to create the OAuth Provider in the Cloud Manager, it could have been at an organisation level.
 
 As previously, click on Resources, then OAuth Providers. Click Add button selecting Third Party OAuth Provider on top left.
 Enter:
@@ -1746,9 +1796,12 @@ In the Endpoints panel, enter:
 <BR>Token URL: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token
 <BR>Introspect URL: https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/introspect
 <BR>TLS profile (optional): Default TLS client profile:1.0.0
-<BR>Basic authentication username (optional): e838aebf-f2e6-4941-9a7f-828d6ebccbfe
-<BR>Basic authentication password (optional): <password>
-<BR>Select Connected for Token validation
+<BR>TLS profile (optional): Default TLS client profile:1.0.0
+<BR>Security (optional): Basic Authentication
+<BR>Basic authentication  request header name (optional): x-introspect-basic-authorization-header, you can use whatever, this header is used to overwrite the value of the two following fields from a client perspective. If you do not use this header then the two values defined below will be used.
+<BR>Basic authentication username (optional): <client_id of apic system identity>
+<BR>Basic authentication password (optional): <client_secret of apic system identity>
+<BR>Select Active for Token validation
 Click Next button
 
 The only used endpoint is the Introspect URL. The Authorization and Token URLs are used in the documentation only and published with the API.
@@ -1756,7 +1809,7 @@ The only used endpoint is the Introspect URL. The Authorization and Token URLs a
 ![Third party OAuth Provider endpoints](./images/oauth-third-endpointsV10.png)
 
 For the scope enter:
->details for elevated access
+<BR>details for elevated access
 <BR>openid for OIDC support
 <BR>and then click Save button
 
@@ -1779,7 +1832,7 @@ It is not yet accessible because we are not using it in any API.
 
 ### Protect the API with OAuth - Third Party
 Let's protect, the FakeMagento version 5.0.0 API. Click on Develop and select the FakeMagento-5.0.0 API.
-Click on Security Definitions and click on Add button.
+Click on Security Definitions and click on Add button:
 Enter:
 > Name: AppId Third Party Authorization
 <BR>Description: Using App ID third party OAuth provider for Authorization grant
