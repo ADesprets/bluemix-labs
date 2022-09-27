@@ -18,7 +18,7 @@ In a few words, V10 is addressing user experience improvements adopting a new gr
 
 This article is made of two parts:
 * Explanation of the purpose of API connect and the concepts behind IBM API Connect.
-* Practice labs in order to get hands-on with IBM API Connect. Throughout the lab, you’ll get a chance to use the `apic` command line interface for creating LoopBack applications, the intuitive Web-based user interface and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
+* Practice labs to get hands-on with IBM API Connect. Throughout the lab, you’ll get a chance to use the `apic` command line interface for creating LoopBack applications, the intuitive Web-based user interface and explore the various aspects associated with solution’s configuration of REST API as well as SOAP APIs.
 
 > **Note**:
 This is a Kubernetes installation with IBM API Connect V10.0.1.0. It will be updated as much as possible to follow the new versions of API Connect.
@@ -45,7 +45,7 @@ The version V10.0.0.0 is out since 29th May 2020. This lab is based on the on-pr
 It is possible in IBM API Connect to either develop locally on a developer machine or develop directly in the Manager. The user experience is very similar in both cases. Developing locally provide the benefits of being able to directly use a source control management system such as Git.
 + Download the Designer
 + Have an API Connect instance available (in our case an OpenShift 4.4 with V10.0.0. instance deployed)
-+ In order to perform some basic local testing we will also use the LTE - Local Test Environment which allows to perform simple testing locally.
+To perform some basic local testing, we will also use the LTE - Local Test Environment which allows to perform simple testing locally.
 
 There is no need to install the designer since this is a simple executable. For the Local Test environment, I'm using a Ubuntu desktop because it is simpler to use Docker on it rather than on Windows where there are some incompatibilities between Docker and VMWare. The installation of the LTE is explained here.
 
@@ -74,7 +74,7 @@ Read the full study: The Total Economic Impact™ of an API Management Solution 
 The Forrester Wave™: API Management Solutions, Q3 2020: https://www.forrester.com/report/The+Forrester+Wave+API+Management+Solutions+Q3+2020/-/E-RES159081?objectid=RES159081#
 
 The deployment of API Connect are usually as follow:
-- One non production *API Connect Cloud* use to test the product, the API, perform update of new version of API Connect before going to Production. Use of several catalogs for several purpose (Development, tests, QA, ...). Those instance are used to test API Connect, the API, perform update of new versions of API Connect before going to Production. Use of several catalogs for several purpose (Development, tests, QA, ...)
+- One non production *API Connect Cloud* use to test the product, the API, perform update of new version of API Connect before going to Production. Use of several catalogs for several purpose (Development, tests, QA, ...). Those instances are used to test API Connect, the API, perform update of new versions of API Connect before going to Production. Use of several catalogs for several purpose (Development, tests, QA, ...)
 - One production *API Connect Cloud* for on-premise with a set of internal gateways and a set for external gateways.
 - Optionally,  
 
@@ -84,15 +84,15 @@ The deployment of API Connect are usually as follow:
 ### Components in IBM API Connect V10
 The main components composing API Connect are:
 + The **Gateway** (IBM DataPower Gateway). The requests from apps are going through the gateway, security and policies are enforced and API events for the analytics are generated.
-+ The **Analytics** is a full Elastic Stack deployment. The analytics are closed to the clusters of gateways, they can be deployed in another separated environment along the gateways which requires some kind of colocalization for performance reasons. Notice that the Elastic Stack is partially optional, in the case, where you do already have your own instance of monitoring. In the case, where you really do not want to use the internal analytics then it is possible to only install the ingestion part.
-+ The **Portal**, an open source Drupal CMS - Content Management System. For the API consumers (Apps developers), they create Apps and subscribe to API within the portal. Based on Drupal, it is highly customizable. In v2018, Drupal was updated to version 8.
-+ The **Loopback runtime** or micro services runtime. This is where the loopback applications are running. This component is originally coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and also a good place to perform composition of APIs, especially if you do not have some ESB capabilities.
++ The **Analytics** is a full Elastic Stack deployment. The analytics are closed to the clusters of gateways, they can be deployed in another separated environment along the gateways which requires colocalization for performance reasons. Notice that the Elastic Stack is partially optional, in the case, where you do already have your own instance of monitoring. In the case, where you really do not want to use the internal analytics then it is possible to only install the ingestion part.
++ The **Portal**, an open-source Drupal CMS - Content Management System. For the API consumers (Apps developers), they create Apps and subscribe to API within the portal. Based on Drupal, it is highly customizable. In v2018, Drupal was updated to version 8.
++ The **Loopback runtime** or micro services runtime. This is where the loopback applications are running. This component is originally coming from StrongLoop acquisition. Loopback applications can be created in minutes to expose data from SQL or NoSQL database and a good place to perform composition of APIs, especially if you do not have some ESB capabilities.
 + Associated to the Loopback runtime is the **Kubernetes** that monitors the Loopback runtime and can provide advanced feature such as auto-scaling.
 + The **Designer**, it offers the same web experience as the manager to manage APIs and allow development on the developer's machine.
-+ The apic toolkit, really the CLI for APIC. API Connect is developed in a simple manner and accessible through REST/JSON API. So the Web UI, the apic CLI are just using those REST API. From 2018, we have now a complete set of supported REST API, in order to configure initially the product (APIC Cloud), the Manager and the portal.
++ The apic toolkit, really the CLI for APIC. API Connect is developed in a simple manner and accessible through REST/JSON API. So, the Web UI, the apic CLI are just using those REST API. From 2018, we have now a complete set of supported REST API, to configure initially the product (APIC Cloud), the Manager and the portal.
 + **API Connect Test and Monitor** can now be installed in a standalone mode, unlike V2018 where there was only a SaaS offering. It provides a no code solution to test the API with fined grained assertions.
 
-From an architecture point of view and it is important to consider that for HA the notion of quorum arise and I would advise to have a good understanding of what are the implications. If you do not have a Kubernetes platform available, it is possible to use OVA that are encapsulating the Kubernetes environments. apic CLI encapsulate the kubectl command hiding the complexity of this platform. I would argue that even with OVA, it will be an advantage to understand Kubernetes and Docker principle. In V10 the product is enhanced to allow some configurations where only 2 members of API Connect components are necessary.
+From an architecture point of view and it is important to consider that for HA the notion of quorum , and I would advise to have a good understanding of what are the implications. If you do not have a Kubernetes platform available, it is possible to use OVA that are encapsulating the Kubernetes environments. apic CLI encapsulate the kubectl command hiding the complexity of this platform. I would argue that even with OVA, it will be an advantage to understand Kubernetes and Docker principle. In V10 the product is enhanced to allow some configurations where only 2 members of API Connect components are necessary.
 
 >Below a sample of deployment of API Connect on premise. System API is a generic term to define an API implementation, for example running in WAS Liberty (JAX-RS) or an API exposed on another layer such as an ESB.
 
@@ -111,7 +111,7 @@ In more details some of the communications between each component in an OVA depl
 + A **Product**: this is an aggregation of APIs and one or many plans associated to those APIs. This is what is published to a catalog. One Product = one yaml file.
 + A **Catalog**: it's relates to a cluster of gateways and a portal. It sounds like an environment, but it also contains a business dimension. For example, good names for a catalog are Sandbox, Dev, Production, CRM (for my CRM APIs exposed to a specific population), etc ...
 + An API Connect **Cloud**: not to be confused with a cloud infrastructure/platform, it is a combination of gateways clusters, managers cluster, portal clusters and loopback applications runtimes. Usually a customer will have one, two, sometime three or more API Connect clouds, based on its organization and needs to separate the infrastructures.
-+ **Assembly panel**: this is where we specify the policies to be executed in the gateway for each transactions.
++ **Assembly panel**: this is where we specify the policies to be executed in the gateway for each transaction.
 
 ## Concepts maps
 Below the concepts related to the overall product. There are many ways to choose the right deployment based on requirements.
@@ -137,15 +137,15 @@ Below the concepts related to the organisation of the user registries.
 * 1 Product = 1 YAML file => simplifies the management of the Products (CI/CD)
 * API First, the manager is based on a set of core API that are encapsulated for the CLI, used by the Web UI, and can also be called directly (full documentation) => simplifies the integration with CI/CD tooling. The other components also offers interfaces for example the gateway has REST/SOAP/SNMP/CLI interfaces, Drupal has its own API.
 * Microservices architecture based on Docker/Kubernetes => simplifies deployments in any cloud. We also encapsulate the Kubernetes clusters of each component in OVA if needed (OVA = VMWare Open Virtual Appliance)
-* Multi cloud and hybrid by nature: One cluster of Managers somewhere, as many clusters of gateways/portals instances/Elastic Stack instances anywhere. Communication based on HTTPS usually on 443. => simplifies installation and deployment. No differences types of gateway in the cloud or on-premise.
-* Open approach: based on Elastic Stack/Drupal/Operators/Open API specifications compliance/OAuth/OIDC support => simplifies developments, customization and maintenance.
+* Multi cloud and hybrid by nature: One cluster of Managers somewhere, as many clusters of gateways/portals instances/Elastic Stack instances anywhere. Communication based on HTTPS usually on 443. => simplifies installation and deployment. No difference types of gateways in the cloud or on-premise.
+* Open approach: based on Elastic Stack/Drupal/Operators/Open API specifications compliance/OAuth/OIDC support => simplifies developments, customization, and maintenance.
 * Secured and robust gateway, using IBM DataPower Gateway a market leading IBM product since 1999 offers unprecedent performance and very high security features.
 * The access to the Cloud Manager, the API Manager and the Portal always allow the use of multiple user registries at the same time. In other words, I can use a LUR - Local User Registry and at the same time an OIDC provider.
 
 ### A word on themes
-There are four WEB interfaces with a colored theme. You see in the table below, a small screen capture of the top left corner of the consoles.
+There are four WEB interfaces with a coloured theme. You see in the table below, a small screen capture of the top left corner of the consoles.
 
-| Component     | Runs on         | Color  | Image                                              |
+| Component     | Runs on         | Colour | Image                                              |
 |---------------|-----------------|--------|----------------------------------------------------|
 | Cloud Manager | Manager         | Green  | ![Theme Cloud Manager](./images/v10-theme-cmc.png) |
 | API Manager   | Manager         | Blue   | ![Theme API Manager](./images/v10-theme-mgr.png)   |
@@ -155,7 +155,7 @@ There are four WEB interfaces with a colored theme. You see in the table below, 
 ## Topologies and multitenancy aspects
 ### Topologies - Generic
 
-Below high level a typical hybrid deployment. In this diagram, there is no focus on analytics and portal components.
+Below high-level a typical hybrid deployment. In this diagram, there is no focus on analytics and portal components.
 
 ![Topology: ](./images/topology-generic.png)
 
@@ -179,18 +179,18 @@ In this fourth sample, we illustrate the deployment of API Connect within the Cl
 ![Topology: ](./images/Topologie-4.png)
 
 ### Governance and multitenancy
-There are many variations around what we refer as multitenancy. With a high level definition, what we want to define is a level of separation and governance of the API. The level of separation may vary significantly when looking at the requirements in a specific situation. From a strong and highly separation required to a lightweight one where for example, we only want to separate the consumptions of the API for different groups of consumers.
+There are many variations around what we refer as multitenancy. With a high-level definition, what we want to define is a level of separation and governance of the API. The level of separation may vary significantly when looking at the requirements in a specific situation. From a strong and highly separation required to a lightweight one where for example, we only want to separate the consumptions of the API for different groups of consumers.
 The level of separation may even imply a separation of the deployed instances of the components. In this chapter, we are going to consider only a few cases where we do not consider specific instances of IBP API Connect clouds or cluster of components within an API Connect cloud. In fact, we really consider the "logical" separation in an instance.
 
 * In the first sample, a company has many subsidiaries or brands, referred as entity from now on, maybe in one or more countries. The members of those entities are working pretty much independently, they probably have different marketing strategies, different branding, etc... The need for a common entity to share a common set of API may exist. A variation of this case is where one entity may provide the API for the other entities, but then each entity will manage the API entirely. The one entity may provide a common backends that serves those API.
 
-In this case, we are using the highest level of "logical" separation: the organisation. In that case, they may use their own user registries, they have their own catalogs, the set of developed API are independent, of course the lifecycle are independent, they manage their own set of consumers organisations. To address the requirement of a common set of API, is solved by creating a "common" organisation, where the API that need to be shared are simply copied from the various entities. This can be automated with CI/CD approach. Notice that the use of Organisation to support multitenancy is what IBM is using for the SaaS public version (For Reserved Instance, it is possible to have IBM Managed specific instances).
+In this case, we are using the highest level of "logical" separation: the organisation. In that case, they may use their own user registries, they have their own catalogs, the set of developed APIs are independent, of course the lifecycle are independent, they manage their own set of consumers organisations. To address the requirement of a common set of API, is solved by creating a "common" organisation, where the API that need to be shared are simply copied from the various entities. This can be automated with CI/CD approach. Notice that the use of Organisation to support multitenancy is what IBM is using for the SaaS public version (For Reserved Instance, it is possible to have IBM Managed specific instances).
 
 ![Multitenancy organisation level](./images/tenancy1.png)
 
-* In the second sample, a company has many departments, those departments want to expose and control precisely sets of API and they want to control the lifecycle of those API. They are not concerned that they have a common repository for the development of the API. Also they are ways to address this separation with API Connect (Using Catalog' Spaces and/or using a SCM - Source Control Management system). The members who are developing the API may be the same people, but the API owners belongs to different departments. A variation of this case, is a single company, let's call it PA, provides the API, to different business partners or departments, but those departments are separated enough so that they will not have the same sets of API. PA will publish the API in the various catalogs, and the business partners will be able to expose the API with their own branding (since each Portal has their own site that can be configured).
+* In the second sample, a company has many departments, those departments want to expose and control precisely sets of APIs and they want to control the lifecycle of those API. They are not concerned that they have a common repository for the development of the API. Also, they are ways to address this separation with API Connect (Using Catalog' Spaces and/or using a SCM - Source Control Management system). The members who are developing the API may be the same people, but the API owners belongs to different departments. A variation of this case, is a single company, let's call it PA, provides the API, to different business partners or departments, but those departments are separated enough so that they will not have the same sets of APIs. PA will publish the API in the various catalogs, and the business partners will be able to expose the API with their own branding (since each Portal has their own site that can be configured).
 
-In this case, we have only one organisation, but we use various catalogs for each departments. Each departments may customise the portal as they wish. The lifecycle of the API beyond development is handled within each departments. The management of consumer organisations is also the responsibility of each departments.
+In this case, we have only one organisation, but we use various catalogs for each department. Each department may customise the portal as they wish. The lifecycle of the API beyond development is handled within each department. The management of consumer organisations is also the responsibility of each department.
 
 ![Multitenancy catalog level](./images/tenancy2.png)
 
@@ -201,7 +201,7 @@ In this case, there is one organisation, probably one catalog, one portal, with 
 ![Multitenancy Consumer Organisations level](./images/tenancy3.png)
 
 ## A word on quorum
-Nowadays a lot of systems containing data are distributed. This increases availability but at the same time data consistency between the various instances is highly required. There are several strategies to support this requirement, active-passive, active-active where it becomes a little bit more difficult. One approach to solve this is to use the notion of quorum, where using a simple mathematical decision (N-1)/2 a decision can be taken to identify whether the system should be shut down in order to avoid data corruption or to keep the system available but alert that data corruption has occurred and some reconciliation work may have to happen. Many components in API Connect or related to API Connect are based on distributed databases. Kubernetes etcd, Elastic Stack, Cassandra, Redis, etc ... When you design your topology, I would really advise that you understand what you want, what can be done and what may happen if losing quorum, how the individual component will behave. You should also perform some disaster testing according what you try to achieve. There are a lot of literature on this topic available. One final word, for fun, remember that ∀ n ∈ ℕ (n-1)/2 < n/2 , that means that if you lose half of your instances you are in trouble and you need to start worrying about what is happening!
+Nowadays a lot of systems containing data are distributed. This increases availability but at the same time data consistency between the various instances is highly required. There are several strategies to support this requirement, active-passive, active-active where it becomes a little bit more difficult. One approach to solve this is to use the notion of quorum, where using a simple mathematical decision (N-1)/2 a decision can be taken to identify whether the system should be shut down to avoid data corruption or to keep the system available but alert that data corruption has occurred, and some reconciliation work may have to happen. Many components in API Connect or related to API Connect are based on distributed databases. Kubernetes etcd, Elastic Stack, Cassandra, Redis, etc ... When you design your topology, I would really advise that you understand what you want, what can be done and what may happen if losing quorum, how the individual component will behave. You should also perform some disaster testing according to what you try to achieve. There are a lot of literature on this topic available. One final word, for fun, remember that ∀ n ∈ ℕ (n-1)/2 < n/2 , that means that if you lose half of your instances you are in trouble and you need to start worrying about what is happening!
 
 ## Policies
 Below the available policies in API Connect V10.0.0.0
@@ -229,7 +229,7 @@ The lifecycle of a product is as follow:
 It is possible to use an approbation control between each transition
 
 ## Roles
-Below a high level view of the roles defined in API Connect.
+Below a high-level view of the roles defined in API Connect.
 
 Although it is possible to create custom role, I would argue for the need to do that. There are already a pretty large number of default roles defined.
 ![default roles](./images/default-roles.png)
@@ -246,7 +246,7 @@ Organisation level
 * Developer: Authors API and product definitions
 * Administrator: Administers the API provider organization
 * Community Manager: Manages application developer communities
-* Viewer	: Views the API provider organization
+* Viewer: Views the API provider organization
 * API Administrator: Manages the API product lifecycle
 * Member:  Minimum role
 * Owner: Owns and administers the API provider organization
@@ -266,7 +266,7 @@ The goal of this lab is to build the following APIs:
 
 This provides a mix of REST and SOAP APIs, with or without mapping, using or not a Loopback Application.
 
-The corresponding back-end runtimes are as follow:
+The corresponding back end runtimes are as follow:
 ![RuntimesAndBackEnd](./images/RuntimesAndBackEnd.png)
 This provides a mix of JAX RS, JAX WS and NodeJS (with Loopback Application) for pure cloud APIs. The use of Secure Gateway in relation with a local deployment would demonstrate hybrid APIs.
 
@@ -290,7 +290,7 @@ This provides a mix of JAX RS, JAX WS and NodeJS (with Loopback Application) for
 
 # Step 1 - Check the development environment
 For this lab, we are going to use the Designer and the LTE - Local Test Environment  instead of using the manager (central). We will then deploy the API into the sandbox catalog from the designer.
->**Note**: Using the toolkit/designer (locally) or using manager directly (remote server) is a pretty important decision. The toolkit has the benefit to allow the use of a Source Control Management System to perform micro versioning as well as backup of the various yaml (and WSDLs). It also provides a local experience with usually a lower response time. Using the Manager simplifies sharing the API Drafts. In reality, there are ways to benefit of both approaches, especially considering a devOps approach. I'm using a Linux environment, you may have to adjust the commands with your specific environment being Windows or MacOS.
+>**Note**: Using the toolkit/designer (locally) or using manager directly (remote server) is a pretty important decision. The toolkit has the benefit to allow the use of a Source Control Management System to perform micro versioning as well as backup of the various yaml (and WSDLs). It also provides a local experience with usually a lower response time. Using the Manager simplifies sharing the API Drafts. There are ways to benefit of both approaches, especially considering a devOps approach. I'm using a Linux environment; you may have to adjust the commands with your specific environment being Windows or MacOS.
 
 Let's check that development environment is ok.
 We first prepare the docker environment to start the local test environment. `sudo docker load < apic-lte-images_10.0.1.2-ifix2.tar.gz`.
@@ -305,7 +305,7 @@ If you get Unauthorized you may have to clear the credentials with the following
 
 You should get the following message: Logged into localhost:2000 successfully
 
-To start the designer, just execute the ./api_designer-linux. I assume here you downloaded the version of the Designer from the IBM support site, the version must be similar to the API connect installation.
+To start the designer, just execute the ./api_designer-linux. I assume here you downloaded the version of the Designer from the IBM support site; the version must be similar to the API connect installation.
 It does start a window, the first information to specify is the working directory, where the artefacts (yaml) will be created.
 ![Designer specify working directory](./images/designer-specify-work-dirv10.png).
 
@@ -343,7 +343,7 @@ info:
 ```
 If this is not the case, then download it again or copy it in a file.
 
-1. It  is a good idea to check that the back-end API is running before exposing it. In this case, we are going to use the GET verb on the quote operation. Type the following:  `curl -H "Accept: application/json" "http://SampleJAXRS20-aw.eu-gb.mybluemix.net/loanmgt/resources/loans/v1/quote?loanAmount=10000&annualInterestRate=1.1&termInMonths=36"`
+1. It  is a good idea to check that the back end API is running before exposing it. In this case, we are going to use the GET verb on the quote operation. Type the following:  `curl -H "Accept: application/json" "http://SampleJAXRS20-aw.eu-gb.mybluemix.net/loanmgt/resources/loans/v1/quote?loanAmount=10000&annualInterestRate=1.1&termInMonths=36"`
 You should obtain the following results: {"loanAmount":10000,"annualInterestRate":1.1,"termInMonths":36,"monthlyPaymentAmount":282.51360281363674}.
 
 > This API is not exposed, is not protected, is not monitored, is not governed. Let's use API Connect to fix this.
@@ -362,10 +362,10 @@ Select the file downloaded previously and click *Next* button.
 
 Change the following details
 * Base path: /loans/v1
-* Description: Supports Loan quote operation and also provide a simple way to add a delay in the back-end response time and get variable length messages from back-end.
+* Description: Supports Loan quote operation and also provide a simple way to add a delay in the back end response time and get variable length messages from back end.
 Then click *Next* button.
 
-> Hint: The base path has been chosen carefully to avoid URI rewriting and simplify this first example. You always have to be careful with the exposed URI and back-end URI and adopt strategy to avoid URI rewriting or if not possible to reduce the work required to do this mapping. The worst case is to have a specific URI for each combinations VERB + PATH.
+> Hint: The base path has been chosen carefully to avoid URI rewriting and simplify this first example. You always must be careful with the exposed URI and back end URI and adopt strategy to avoid URI rewriting or if not possible to reduce the work required to do this mapping. The worst case is to have a specific URI for each combination VERB + PATH.
 
 ![Designer Specify quote api](./images/designer-specify-quote-api.png)
 
@@ -381,7 +381,7 @@ Before testing it, in the development environment, let's review what has been cr
 
 Let's see first the API Setup part. Notice that the Schemes supported by default is HTTPS, API Connect does not support HTTP scheme for security reason. Some specifications such as OAuth specifications do require the use of HTTPS scheme anyway.
 
-The host field has been set to $(catalog.host). This indicates where the API is deployed and it is dependent of where we deploy it, so it depends of the catalog, hence why this value for this variable.
+The host field has been set to $(catalog.host). This indicates where the API is deployed and it is dependent of where we deploy it, so it depends on the catalog, hence why this value for this variable.
 
 ![Designer Quote-api info part ](./images/designer-quote-api-info-part.png)
 
@@ -390,11 +390,11 @@ A quick look at the Security Definitions and Security information, which are sta
 We see that there are 2 paths, /extquote (one verb, GET) and /quote (2 verbs GET and POST).
 
 Now let's see the Properties section, there is a property called target-url.
-Properties is a very important concept. It allows the definition of any variable for each catalog. The target-url is by convention a variable to indicate the back-end url. In our case, we are going to adjust it to http://SampleJAXRS20-aw.eu-gb.mybluemix.net/loanmgt/resources. For now, we just use the default value, because we do not care of other catalogs than Sandbox. Click *Save* button.
+Properties is a very important concept. It allows the definition of any variable for each catalog. The target-url is by convention a variable to indicate the back end url. In our case, we are going to adjust it to http://SampleJAXRS20-aw.eu-gb.mybluemix.net/loanmgt/resources. For now, we just use the default value, because we do not care of other catalogs than Sandbox. Click *Save* button.
 
 ![Designer Quote api properties](./images/designer-quote-api-propertiesV10.png)
 
-Before testing we have one small adjustment to perform. The back-end URL invoked and we are going to use the target-url just set.
+Before testing we have one small adjustment to perform. The back end URL invoked and we are going to use the target-url just set.
 
 We go in the Assembly Panel and click on the Invocation policy. The panel with the properties is displayed on the right.
 > Hint: For compatibility of the gateway aspects, here delete the invoke policy and add it again. The choice here is based on which gateway type do we use. In our case, we use the new one, referred as DataPower API Gateway.
@@ -411,19 +411,19 @@ We can test the API which is available in the local Sandbox catalog with a gener
 In a terminal type
  `curl -v -k -H "accept: application/json" -H "content-type: application/json" -H "x-ibm-client-id: c920f9c18395e6ecb3f15375a74fe8be" "https://localhost:9444/localtest/sandbox/loans/v1/quote?loanAmount=10000&annualInterestRate=1.1&termInMonths=3"`
 
-You should get as before when accessing the back-end API directly:
+You should get as before when accessing the back end API directly:
 {"loanAmount":10000,"annualInterestRate":1.1,"termInMonths":3,"monthlyPaymentAmount":3339.4463108727305}
 
 Before moving on, let's discuss some debugging techniques.
 
-In order to do this, we are introducing a few errors and see what we can do to handle them and how to understand them.
+To do this, we are introducing a few errors and see what we can do to handle them and how to understand them.
 
 Using the wrong client-id:
 {"httpCode":"401","httpMessage":"Unauthorized","moreInformation":"Invalid client id or secret."}
-This is situation is pretty clear. Get an unauthorized message.
+This is situation is clear. Get an unauthorized message.
 One way to get a little bit more information is to use the -v option with curl. This will show you the headers sent and received, the TLS session information, etc ...
 
-Now let's use a wrong host or URI for the back-end.
+Now let's use a wrong host or URI for the back end.
 
 ![Trouble shoot 1](./images/troubleshoot-wrong-uri-1.png)
 
@@ -433,7 +433,7 @@ Let's use the -v option.
 
 ![Trouble shoot 2](./images/troubleshoot-wrong-uri-2.png)
 
-Now we see that there was a 500 error. This is better. We do not see any root cause, there is no problem with the plan (still 92 calls possible). It is not clear that the back-end URI is wrong. So, let's see the logs from the Gateway itself. We know that we are running DataPower as a docker container. So, let's get the container id by issuing `sudo docker ps`, then now we can check the logs of the gateway using the `sudo docker logs -f <gateway-container-id>`. (To get the gateway container id, issue the command sudo docker ps). It becomes very clear that the error is the URL...
+Now we see that there was a 500 error. This is better. We do not see any root cause, there is no problem with the plan (still 92 calls possible). It is not clear that the back end URI is wrong. So, let's see the logs from the Gateway itself. We know that we are running DataPower as a docker container. So, let's get the container id by issuing `sudo docker ps`, then now we can check the logs of the gateway using the `sudo docker logs -f <gateway-container-id>`. (To get the gateway container id, issue the command sudo docker ps). It becomes very clear that the error is the URL...
 
 ![Trouble shoot 3](./images/troubleshoot-wrong-uri-3.png)
 
@@ -471,11 +471,11 @@ Select the Quote API by clicking on the check box and the click *Next* button.
 
 ![Designer New product Select API](./images/designer-new-product-selectapi.png)
 
-Change or adjust the plan according your requirements plan and then click on *Next* button.
+Change or adjust the plan according to your requirements plan and then click on *Next* button.
 
 ![Designer New product Select plan](./images/designer-new-product-plan.png)
 
-Change or adjust the visibility or subscribability according your requirements plan and then click on *Next* button.
+Change or adjust the visibility or subscribability according to your requirements plan and then click on *Next* button.
 
 ![Designer New product Select visibility](./images/designer-new-product-visibility.png)
 
@@ -671,14 +671,14 @@ In this section, we will use the developer portal to test Quote Management API R
 
 1. Scroll down, click on the three *Generate* link to populate the values and click the Send button
 2. Scroll down below the Call operation button. You should see a 200 OK and a response body as shown below.
-You get the response from the back-end.
+You get the response from the back end.
 ![Test app](./images/portal-testsend.png)
 
 # Step 5 - Invoke the API
 
 Now that you have browsed the API Portal and registered / tested the API’s that **Quote** is providing, it’s time to test them out from a real application.
 
-Sample code (snippets) are provided from developer portal for different language (cUrl, Ruby, Python, PHP, Javascript, Java, Go, Swift) .
+Sample code (snippets) are provided from developer portal for different language (cUrl, Ruby, Python, PHP, JavaScript, Java, Go, Swift) .
 
   1. Login into the developer portal as an application developer using your developer credentials.
   1. Click the **API Products** link
@@ -719,14 +719,14 @@ If all is OK, you should see the result of the quote in JSON format. (Below slig
 
 ![Analytic icon app](./images/manager-analytics-events.png)
 
-There are many dashboards provided out of the box and also events discoveries that focus on specific aspects such as the latencies, the errors, the data sizes, etc...
+There are many dashboards provided out of the box and events discoveries that focus on specific aspects such as the latencies, the errors, the data sizes, etc...
 Do not hesitate to explore the various dashboards and events lists.
 You can create your own dashboards and events lists with predefined filters.
 
 ![Analytic icon app](./images/manager-analytics-dashboards.png)
 
 # Step 7 - Create a SOAP API
-This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. Before starting, it is important to understand what we try to achieve. In the designer (or the Manager), you find two different possibilities regarding the integration of an existing SOAP API from the WSDL defining this service. The first one is a SOAP proxy which means that we create an API (An Open API document) that exposes SOAP and accesses the SOAP service back-end, the second one is a REST proxy which means that we create an API (An Open API document) that exposes REST/JSON and accesses the SOAP service back-end. This is a very different scenario, we will discuss the difference of implementation in the next Step.
+This is very similar to the creation of a REST API. The big difference is that we use a WSDL. The explanations will be short. Before starting, it is important to understand what we try to achieve. In the designer (or the Manager), you find two different possibilities regarding the integration of an existing SOAP API from the WSDL defining this service. The first one is a SOAP proxy which means that we create an API (An Open API document) that exposes SOAP and accesses the SOAP service back end, the second one is a REST proxy which means that we create an API (An Open API document) that exposes REST/JSON and accesses the SOAP service back end. This is a very different scenario; we will discuss the difference of implementation in the next Step.
 
 1. Download the WSDL for the Branch SOAP Service, you can find it
  [here](./materials/step7/BranchSOAP.wsdl).
@@ -746,7 +746,7 @@ and click Next.
 
 ![SOAP API Load Service Def](./images/designer-soap-service-load.png)
 
-5. Review the API definitions such as name, version and description
+5. Review the API definitions such as name, version and description.
 For example, add SOAP API to get Branches information for the description field, click Next button.
 
 ![SOAP API Load API Definition](./images/designer-soap-api-def-load.png)
@@ -767,11 +767,11 @@ We are going to test it. Go to the Assembly panel. Click on the Test icon and th
 
 ![SOAP API Proxy test](./images/designer-soap-proxy-test-allB.png)
 
->**Note:** We did not use a Properties and did not change the endpoint for the Proxy policy in the assembly panel, because the WSDL does have the correct endpoint on the Secure Gateway in Bluemix. In reality, you would probably want to create a property that will point to the right endpoint depending on the environment.
-We did not publish the service in the integration catalog on the remote Manager, since this is exactly the same procedure as for a REST Service.
+>**Note:** We did not use a Properties and did not change the endpoint for the Proxy policy in the assembly panel, because the WSDL does have the correct endpoint on the Secure Gateway in Bluemix. You would probably want to create a property that will point to the right endpoint depending on the environment.
+We did not publish the service in the integration catalog on the remote Manager since this is exactly the same procedure as for a REST Service.
 
 # Step 8 - Create a SOAP to REST API
->With the 2018 version, this step has been greatly simplified. Similarly to the previous step, we use the designer but instead of using SOAP proxy, we use a REST proxy. We will see that API Connect generates a lot of configurations automatically. Notice that SOAP to REST in this context means that we have a SOAP back-end and we expose it in REST JSON, hence SOAP to REST. We could have had another view and call it REST to SOAP :-). We are not documenting all the steps to add the API because it is very similar to the previous step, the only difference being the selection of REST proxy at the very beginning.
+>With the 2018 version, this step has been greatly simplified. Similarly to the previous step, we use the designer but instead of using SOAP proxy, we use a REST proxy. We will see that API Connect generates a lot of configurations automatically. Notice that SOAP to REST in this context means that we have a SOAP back end and we expose it in REST JSON, hence SOAP to REST. We could have had another view and call it REST to SOAP :-). We are not documenting all the steps to add the API because it is very similar to the previous step, the only difference being the selection of REST proxy at the very beginning.
 
 1. Click on Add and select New API
 
@@ -780,7 +780,7 @@ We did not publish the service in the integration catalog on the remote Manager,
 The next steps are as before. For the Info panel, I used:
 >Title: BranchesREST
 
->Description: REST exposure for the back-end SOAP service
+>Description: REST exposure for the back end SOAP service
 
 At the end click on the Edit API button.
 
@@ -794,7 +794,7 @@ We can see that in the Assembly, it is quite different than before.
 
 You can see that for each operation, there are two REST operations created a GET and a POST.
 For each operation, you can see two mapping actions, REST to SOAP (for the request) and SOAP to REST (for the response).
-You can also see that for each operation there are one or two parse actions. This is a very important concept to understand and also when to use it or not. By default, with the new API Gateway (Native Gateway) messages are streamed and messages are not buffered. This is a very efficient way to serve messages, since the messages can be sent directly to the back-end even if the message was not received completely. This is a very common approaches when dealing with video streaming. Now, when you want to manipulate the message, you cannot do that, let's say you want to remove some pieces especially at the beginning, so you have to get the full message and in order to manipulate you need to get the message and parse it (in other words deserialize it). This is what the parse action does in those flows. Notice that this applies to JSON or XML since you may need to deserialize both types of messages. Of course, parsing a message has a cost in terms of resources and latency and the price will vary a lot depending on the size and complexity of the message.
+You can also see that for each operation there are one or two parse actions. This is a very important concept to understand and also when to use it or not. By default, with the new API Gateway (Native Gateway) messages are streamed and messages are not buffered. This is a very efficient way to serve messages, since the messages can be sent directly to the back end even if the message was not received completely. This is a very common approaches when dealing with video streaming. Now, when you want to manipulate the message, you cannot do that, let's say you want to remove some pieces especially at the beginning, so you must get the full message and to manipulate you need to get the message and parse it (in other words deserialize it). This is what the parse action does in those flows. Notice that this applies to JSON or XML since you may need to deserialize both types of messages. Of course, parsing a message has a cost in terms of resources and latency and the price will vary a lot depending on the size and complexity of the message.
 
 Looking at the mapping actions, we see that it is a very simple one and you have also the opportunity to make more complex ones. As you can see in the following sample, the response of the XML/SOAP message is simply copied to the response to the JSON response.
 
@@ -808,7 +808,7 @@ Let's test it, as usual we use the Test feature within the Assembly panel. We ha
 # Step 9 - Create a Cloudant service
 **This section has not been updated yet because we want to show the new advanced security features included in 2018**
 
-In order to store our data used by our API, we will need a persistent storage. To do so, we will use a Cloudant NoSQL database, a JSON document-oriented store, compatible with CouchDB.
+To store our data used by our API, we will need a persistent storage. To do so, we will use a Cloudant NoSQL database, a JSON document-oriented store, compatible with CouchDB.
 
 You can use a existing Cloudant service or create an instance of the service Cloudant DB.
 
@@ -998,7 +998,7 @@ In this section, you will define the item data model for our **Customer** API an
 
 ####Create Properties for the Customer Model
 
-The ```Customer``` table in the database has 6 columns that will need to mapped as well. To start creating properties for the item model:
+The ```Customer``` table in the database has 6 columns that will need to map as well. To start creating properties for the item model:
 
 1. Click the ```+ button``` in the Properties section.
 
@@ -1023,9 +1023,9 @@ The ```Customer``` table in the database has 6 columns that will need to mapped 
 ## Introduction
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitation was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
 
-In the materials, you also find a POSTMAN collection (alongside the environment definitions). You may have to change the env file in order to have it working for your environment.
+In the materials, you also find a POSTMAN collection (alongside the environment definitions). You may have to change the env file to have it working for your environment.
 
-In order to perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
+To perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
 
 | Version | Security scheme                                 | Referred as     |Link                                                                              |
 |---------|-------------------------------------------------|-----------------|----------------------------------------------------------------------------------|
@@ -1045,7 +1045,7 @@ In order to perform all the scenarios below, we are going to use the same API th
 * Local User Registry - Based on API Connect Local User Registry (Internal registry of the solution)
 * OpenID Connect (OIDC) - Configure user authentication using JSON Web Tokens (External OIDC provider)
 
-Because we do not want to spend too much time to install an LDAP server, for simplicity of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in a production environment.**. But this is perfect for educational purpose and it is also an example of using API Connect with some gateway script samples.
+Because we do not want to spend too much time to install an LDAP server, for simplicity of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in a production environment.**. But this is perfect for educational purpose, and it is also an example of using API Connect with some gateway script samples.
 
 The API provided contains a few more paths (operations) than what we describe here. We only describe the /basic-auth path. Below a screen capture of the  API assembly.
 
@@ -1081,7 +1081,7 @@ Here are some characteristics of this API:
 <BR>No security, not even an API Key.
 <BR>Four paths: /basic-auth (GET), /authenticate	(POST), /authenticate/{uid}/{pwd}	GET, /ping (GET)
 <BR>Two definitions:
-* UserCredential	object	Object containing the credentials in order to perform authentication (uid and password)
+* UserCredential	object	Object containing the credentials to perform authentication (uid and password)
 * AuthenticatedUser	object	Object returned when a user is authenticated
 
 Here are the YAML definitions: [Fake Authentication API Open API Document](./materials/step12/fakeauthenticationurl_1.0.0.yaml "FakeAuthenticationURL-1.0.0 API") and [Fake Authentication Product Open API Document](./materials/step12/fakeauthenticationproduct_1.0.0.yaml "FakeAuthenticationProduct-1.0.0 Product").
@@ -1106,11 +1106,11 @@ Here is a sample response (formatted):
 At this stage, we have configured the Fake Authentication URL API that we will use in the next chapters. Of course, in real life that would be more of a user registry or OIDC provider that should be used.
 
 ## Protecting an API with Basic Authentication
-First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with a Web application, using Basic Authentication is as secured as using it for a Web application. A 401 challenge compared to a form-based authentication will imply that every request contains the uid/pwd, not very secured indeed.
+First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with a Web application, using Basic Authentication is as secured as using it for a Web application. A 401-challenge compared to a form-based authentication will imply that every request contains the uid/pwd, not very secured indeed.
 
 There is an important design decision regarding what is the scope of the resource we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should they apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.
 
-The list of Steps are the following:
+The list of Steps is the following:
 * In the Cloud Management console, define the User Registry based on the *Fake Authentication URL API*
 * In the Manager console, associate the user registry with the Catalogs
 * Configure the API security to use Basic Authentication and publish it into the catalog
@@ -1160,7 +1160,7 @@ In the Security section, select BA Protection.
 
 Create a product and publish it to the Integration Catalog, then subscribe to it. (Not explained here, see previous steps).
 
-We can now test the API. The credentials are located in the Authorization header.
+We can now test the API. The credentials are in the Authorization header.
 curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 421223e773f237c5231842102660896e" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://gw.159.8.70.38.xip.io/org1/integration/fakemagento/v1/order"
 You should obtain a response:
 ```
@@ -1190,7 +1190,7 @@ The Resource Owner Password Credentials grant type is specified in [RFC 6749 - O
 
 In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorization to extract identity, the user will be authenticated against the User Registry. We use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider, we will see it later. This grant type is used when there is a high trust between the client and the application. Some people may find it less secure than using the Authorization grant, but it does not mean that it cannot be used when the conditions of trust are met. The client authenticates directly to the native OAuth provider specified in API Connect with its uid/pwd along the application credentials (client-id/client-secret) and gets an Access Token. Then the application accesses API Connect.
 
-> **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question and there are different ways to get user information like having the back-end performing a callback with the OAuth token to get information. We are not explaining the generation of an OIDC token. As of today, this is not a mandatory scenario required by OpenID and we are still in discussion to decide to implement it.
+> **Note**: In this lab, we do not explain how to propagate the user information with a JWT token, it will be done in another version of this lab. But this is an important question and there are different ways to get user information like having the back end performing a call back with the OAuth token to get information. We are not explaining the generation of an OIDC token. As of today, this is not a mandatory scenario required by OpenID and we are still in discussion to decide to implement it.
 
 ### Create the OAuth Provider
 So let's start! First let's create the native OAuth provider. As discussed earlier, we use the Cloud Management console, but it was a design decision and we could use the API Manager console and manage OAuth resources, if we wanted.
@@ -1222,7 +1222,7 @@ Specify the scopes you want to support, in our case we will use only one scope *
 Click Next button
 
 The following settings are very important and there are many ways to configure OAuth, API Connect is very flexible and extensible on this part.
-The processing has been described in the specific steps happening during the token(s) creation procedure. It is similar in the way the AAA framework in DataPower is separating clearly each step. I do not want to explain all the combinations below, but provide the different values for each step.
+The processing has been described in the specific steps happening during the token(s) creation procedure. It is similar in the way the AAA framework in DataPower is clearly separating each step. I do not want to explain all the combinations below but provide the different values for each step.
 
 | Identity Extraction  | Authentication       | Authorization     |
 |----------------------|----------------------|-------------------|
@@ -1728,12 +1728,12 @@ At runtime, the application first gets the token from the OAuth provider directl
 
 It is important to understand the various identities that do exist in the context and see that it is not obvious to understand all the various identities and that they are related to the different grants that have been chosen.
 
-In the following diagram, we can see that there are 3 identities: a user identity (that will be used for Resource Owner Password or Authorization grants), a system identity for the application requesting the access token (for all grants) and finaly a system identity representing APIC to access the OAuth provider.
+In the following diagram, we can see that there are 3 identities: a user identity (that will be used for Resource Owner Password or Authorization grants), a system identity for the application requesting the access token (for all grants) and finally a system identity representing APIC to access the OAuth provider.
 
 ![Third party OAuth Provider flow](./images/oauth-third-concepts.png)
 
-Let's stop a few seconds on the configuration on app-id ([App-ID documentation](https://cloud.ibm.com/docs/appid)). The diagram below shows the objects that I have created for this example. Of course depending on your OAuth/OIDC provider it may defer (Ping Federate, Auth0, MSAD, ...).
-As you can see, it important to distinguish the differeent identities. We have a user identity the person who will be authorized to access the API (Resource Owner Password and Authorization grants), and two system identities, the application that is using the API ad also API Connect which is a cliet of the OAuth provider. The later is used to validate (instropect) a token for example.
+Let's stop a few seconds on the configuration on app-id ([App-ID documentation](https://cloud.ibm.com/docs/appid)). The diagram below shows the objects that I have created for this example. Of course, depending on your OAuth/OIDC provider it may defer (Ping Federate, Auth0, MSAD, ...).
+As you can see, it important to distinguish the different identities. We have a user identity the person who will be authorized to access the API (Resource Owner Password and Authorization grants), and two system identities, the application that is using the API and also API Connect which is a client of the OAuth provider. The later is used to validate (introspect) a token for example.
 
 ![App-ID concept](./images/oauth-appid-concepts.png)
 
@@ -1777,7 +1777,7 @@ Response is
 }
 ```
 
-We are all set, we can create a token, and we can introspect and gget a valid:true response, we can now configure API Connect who is going to do the same instrospect call.
+We are all set, we can create a token, and we can introspect and get a valid:true response, we can now configure API Connect who is going to do the same introspect call.
 
 ### Create the OAuth Provider in API Connect
 We have decided to create the OAuth Provider in the Cloud Manager, it could have been at an organisation level.
@@ -1856,7 +1856,7 @@ What we do here is get the API keys defined in App ID for the application and th
 apic.exe login -s <manager-endpoint> -u <user> -p <password> -r provider/default-idp-2
 ```
 
-**Note:** From now on, I'm going to use a short cut/alias in order to simplify what I type. And notice that I'm using Windows so you may have to slightly modify those command if on Linux.
+**Note:** From now on, I'm going to use a short cut/alias to simplify what I type. And notice that I'm using Windows so you may have to slightly modify those command if on Linux.
 ```
 set  apic10=<path-to-apic> -s <manager-endpoint> -o <organisation>
 ```
@@ -2032,13 +2032,13 @@ Enter the following:
 <BR>Client_id: \<client_id\>
 <BR>Client_secret: \<client_secret\>
 
-I also changed the User mapping and replaced sub (like subject) by name in order to get the right identifier displayed when the user is logged on. You have to make sure that this is possible in your environment and that the subject is unique.
+I also changed the User mapping and replaced sub (like subject) by name in to get the right identifier displayed when the user is logged on. You must make sure that this is possible in your environment and that the subject is unique.
 
 ![OIDC User Registry creation](./images/oidc-ur-createV10.png)
 
 ### Associate the OIDC User Registry to provide access to an organization
 In this case we use the OIDC provider to provide access to the Manager for all the organizations. Notice that it is possible to restrain the use of the User Registry to one or more Organizations.
-In order to make it working we need to make sure that the redirect URL is registered in the OIDC Provider configuration in our case AppId.
+To make it work we need to make sure that the redirect URL is registered in the OIDC Provider configuration in our case AppId.
 
 **Hint**: A simple way to get the exact value is to let the authentication fail., and then copy it from the URL.
 
@@ -2051,7 +2051,7 @@ Then add it in AppId:
 
 Now, we can register the user from the OIDC Provider.
 
-**Notice**: In my case, I like the idea that the owner (of the organization) is using the local registry and all the other users are in the OIDC registry. This allows to have a special user who does not depend on the external system. It can be a real user or not. I understand that some security policies will not allow this everywhere so it is not applicable all the the time.
+**Notice**: In my case, I like the idea that the owner (of the organization) is using the local registry and all the other users are in the OIDC registry. This allows to have a special user who does not depend on the external system. It can be a real user or not. I understand that some security policies will not allow this everywhere, so it is not applicable all the time.
 
 I'm using the owner of the organization (org1owner), this user is defined in the local User registry). Notice, that we now can also login with AppId
 
@@ -2134,7 +2134,7 @@ The redirect URI must be the one of the platform endpoint in this case (using an
 # Step 13 - Testing the quality of your API
 In this step we are going to see quickly how to use IBM API Connect Test and Monitor. The documentation associated with IBM API Connect Test and Monitor is available at https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted.
 This tool addresses in a no code approach testing the API with a fine granularity in the test and either on demand or with scheduled testing.
-This provides capabilities to create tests that are very fined grained, in the sense that you are able to validate API (or group of API) either onDemand or on a regular schedule. This then allows to display functional and performance dashboards in order to better understand how the API are behaving. This is not for performance testing but quality testing. If an error occur you can receive an email, and deep dive to understand why it failed. It is also a mechanism to validate that all your API are sill working if a change was performed to the platform, API, etc ...
+This provides capabilities to create tests that are very fined grained, in the sense that you are able to validate API (or group of API) either onDemand or on a regular schedule. This then allows to display functional and performance dashboards to better understand how the API are behaving. This is not for performance testing but quality testing. If an error occur you can receive an email, and deep dive to understand why it failed. It is also a mechanism to validate that all your API are still working if a change was performed to the platform, API, etc ...
 
 ## Creating a test
 There are several ways to create a test using: a call, a Postman collection, from scratch.
