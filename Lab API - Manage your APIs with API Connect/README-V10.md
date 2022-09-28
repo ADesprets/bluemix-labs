@@ -1023,6 +1023,34 @@ The ```Customer``` table in the database has 6 columns that will need to map as 
 ## Introduction
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitation was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
 
+We cannot work with OAuth without mentioning the vrious specification around OAuth. And as usual with pretty recent technology, they evolve quite a lot. The Resource Owner Password Credentials scenario demonstrated below is not popular anymore.
+Below is a table with the main specifications.
+| Name                                                      | Link                                                                   |
+|-----------------------------------------------------------|------------------------------------------------------------------------|
+| OAuth 2.0 Core (RFC   6749)                               | https://datatracker.ietf.org/doc/html/rfc6749                          |
+| Bearer Token Usage (RFC 6750)                             | https://datatracker.ietf.org/doc/html/rfc6750                          |
+| PKCE: Proof Key for Code Exchange (RFC   7636)            | https://datatracker.ietf.org/doc/html/rfc7636                          |
+| Threat Model and Security Considerations   (RFC 6819)     | https://datatracker.ietf.org/doc/html/rfc6819                          |
+| OAuth 2.0 Security Best Current Practice   (Security BCP) | https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics |
+| Token Revocation (RFC 7009)                               | https://datatracker.ietf.org/doc/html/rfc7009                          |
+| Token Introspection (RFC 7662)                            | https://datatracker.ietf.org/doc/html/rfc7662                          |
+| JWT Profile for OAuth Access Tokens (RFC   9068)          | https://datatracker.ietf.org/doc/html/rfc9068                          |
+| OAuth 2.0 for Native Apps (RFC 8252)                      | https://datatracker.ietf.org/doc/html/rfc8252                          |
+| Browser-Based Apps                                        | datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps      |
+| Device Authorization Grant (RFC 8628)                     | https://datatracker.ietf.org/doc/html/rfc8628                          |
+| OpenID Connect                                            | https://openid.net/connect/                                            |
+| Authorization Server Metadata (RFC 8414)                  | https://datatracker.ietf.org/doc/html/rfc8414                          |
+| Dynamic Client Registration (RFC 7591)                    | https://datatracker.ietf.org/doc/html/rfc7591                          |
+| Dynamic Client Management (RFC 7592)                      | https://datatracker.ietf.org/doc/html/rfc7592                          |
+| High Security: Pushed Authorization   Requests (RFC 9126) | https://datatracker.ietf.org/doc/html/rfc9126                          |
+| JWT Authorization Request (RFC 9101)                      | https://datatracker.ietf.org/doc/html/rfc9101                          |
+| Mutual TLS Bound Access Tokens (RFC 8705)                 | https://datatracker.ietf.org/doc/html/rfc8705                          |
+| Rich Authorization Requests                               | https://datatracker.ietf.org/doc/html/draft-ietf-oauth-rar             |
+| DPoP                                                      | https://datatracker.ietf.org/doc/html/draft-fett-oauth-dpop            |
+| Assertion Framework (RFC 7521)                            | https://datatracker.ietf.org/doc/html/rfc7521                          |
+| JWT Profile for Client Authentication   (RFC 7523)        | https://datatracker.ietf.org/doc/html/rfc7523                          |
+| SAML Assertions (RFC 7522)                                | https://datatracker.ietf.org/doc/html/rfc7522                          |
+
 In the materials, you also find a POSTMAN collection (alongside the environment definitions). You may have to change the env file to have it working for your environment.
 
 To perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
