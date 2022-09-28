@@ -1751,7 +1751,7 @@ This invokes the FakeMagento API using the access Token as a Bearer.
 ![Test Get Access Token](./images/test-application-22.png)
 
 ## Protecting an API with OAuth - External Provider
-In this scenario, we have an external OAuth Provider available, we use the IBM app-id application available in IBM Cloud. The integration with API Connect implies a synchronisation of the API keys (client id/client secret) with the applications defined in the OAuth Provider. It can be done in two ways, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect using apic CLI. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
+In this scenario, we have an external OAuth Provider available, we use the IBM app-id application available in IBM Cloud as an OAuth/OIDC provider ([App-ID documentation](https://cloud.ibm.com/docs/appid)). The integration with API Connect implies a synchronisation of the API keys (client id/client secret) with the applications defined in the OAuth Provider. It can be done in two ways, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect using apic CLI. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
 At runtime, the application first gets the token from the OAuth provider directly, not going through API Connect (this is a more secured approach since the credentials do not flow through API Connect), then the application invokes the API with the Access Token in the Authorization header as a Bearer. API Connect then invokes the OAuth Provider with an Introspect call with the token, if the call returns a 200 (or active=true), then the Access Token is valid and API Connect can proceed.
 
 It is important to understand the various identities that do exist in the context and see that it is not obvious to understand all the various identities and that they are related to the different grants that have been chosen.
@@ -1805,10 +1805,10 @@ Response is
 }
 ```
 
-We are all set, we can create a token, and we can introspect and get a valid:true response, we can now configure API Connect who is going to do the same introspect call.
+We are all set, we can create a token, and we can introspect and get a *valid:true* response, we can now configure API Connect who is going to do the same introspect call.
 
 ### Create the OAuth Provider in API Connect
-We have decided to create the OAuth Provider in the Cloud Manager, it could have been at an organisation level.
+We have decided to create the OAuth Provider in the API Connect Cloud Manager using the Cloud Management Console, it could have been at an organisation level uisng the API Connect Manager.
 
 As previously, click on Resources, then OAuth Providers. Click Add button selecting Third Party OAuth Provider on top left.
 Enter:
