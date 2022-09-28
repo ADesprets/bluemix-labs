@@ -1036,7 +1036,7 @@ Below is a table with the main specifications.
 | Token Introspection (RFC 7662)                            | https://datatracker.ietf.org/doc/html/rfc7662                          |
 | JWT Profile for OAuth Access Tokens (RFC   9068)          | https://datatracker.ietf.org/doc/html/rfc9068                          |
 | OAuth 2.0 for Native Apps (RFC 8252)                      | https://datatracker.ietf.org/doc/html/rfc8252                          |
-| Browser-Based Apps                                        | datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps      |
+| Browser-Based Apps                                        | http://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps      |
 | Device Authorization Grant (RFC 8628)                     | https://datatracker.ietf.org/doc/html/rfc8628                          |
 | OpenID Connect                                            | https://openid.net/connect/                                            |
 | Authorization Server Metadata (RFC 8414)                  | https://datatracker.ietf.org/doc/html/rfc8414                          |
