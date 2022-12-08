@@ -1216,6 +1216,9 @@ You should obtain a response:
 ```
 {"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}
 ```
+You can use the Explorer to test the API.
+image::../images/test-in-explorer.png)[Test in explorer]
+
 Here, I'm introducing the POSTMAN collection.
 In the POSTMAN, there is a number of requests that you can adapt for your environment.
 The collection is called: API Education. The environment that you need to adjust for your environment is called: API_Education.
