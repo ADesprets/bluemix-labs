@@ -690,7 +690,7 @@ Sample code (snippets) are provided from developer portal for different language
 
 ```
 curl --request POST \
-  --url https://gw.159.8.70.38.xip.io/org1/integration/loans/v1/quote \
+  --url https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/loans/v1/quote \
   --header 'accept: application/json' \
   --header 'content-type: application/json' \
   --header 'x-ibm-client-id: Client ID' \
@@ -1055,6 +1055,8 @@ In the materials, you also find a POSTMAN collection (alongside the environment 
 
 To perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
 
+The sandbox test application client id and client secret are: d02c553d2f05277d91f6fb0189cc13c6 / e5ef1f10fa79402946f1b30f7af623c0
+
 | Version | Security scheme                                 | Referred as     |Link                                                                              |
 |---------|-------------------------------------------------|-----------------|----------------------------------------------------------------------------------|
 | V1      | API Key + Basic Authentication                  |                 |[here](#protecting-an-api-with-basic-authentication)                              |
@@ -1073,19 +1075,20 @@ To perform all the scenarios below, we are going to use the same API that will b
 * Local User Registry - Based on API Connect Local User Registry (Internal registry of the solution)
 * OpenID Connect (OIDC) - Configure user authentication using JSON Web Tokens (External OIDC provider)
 
-Because we do not want to spend too much time to install an LDAP server, for simplicity of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in a production environment.**. But this is perfect for educational purpose, and it is also an example of using API Connect with some gateway script samples.
+Because we do not want to spend too much time to install an LDAP server, for simplicity of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in unauthenticated. **This is for educational purpose only and is of course not secured and should not be used in a production environment**. But this is perfect for educational purpose, and it is also an example of using API Connect with some gateway script samples.
+
+This API is called *FakeAuthenticationURL* and you can find it in the materials directoy under the name *fakeauthenticationurl_1.0.0.yaml*.
 
 The API provided contains a few more paths (operations) than what we describe here. We only describe the /basic-auth path. Below a screen capture of the  API assembly.
 
 ![Fake Authentication URL Assembly](./images/V10_API-FakeURLUserRegistry-Assembly.png)
 
 Below the processing performed in the "BA authc logic" gateway JavaScript:
-<BR>Line 1: Get the Basic Authorization header and split it based on space
+<BR>Line 1: Get the Basic Authorization header and split it based on space, it must contain Basic: `<base 64 encoding of uid:password>`
 <BR>Line 2: Takes the uid:password base 64 and decode it. Then separate uid and password, separator :.
 <BR>Line 7: Create a response header called *api-authenticated-credential* with the CN of the user with a hard coded email domain name.
 <BR>Line 10: Provide the body of the response following the expected body as defined in the documentation.
 <BR>Line 12: If username is different from password then returns UNAUTHENTICATED.
-
 
 
 ```
@@ -1112,14 +1115,14 @@ Here are some characteristics of this API:
 * UserCredential	object	Object containing the credentials to perform authentication (uid and password)
 * AuthenticatedUser	object	Object returned when a user is authenticated
 
-Here are the YAML definitions: [Fake Authentication API Open API Document](./materials/step12/fakeauthenticationurl_1.0.0.yaml "FakeAuthenticationURL-1.0.0 API") and [Fake Authentication Product Open API Document](./materials/step12/fakeauthenticationproduct_1.0.0.yaml "FakeAuthenticationProduct-1.0.0 Product").
+Here are the YAML definitions: [Fake Authentication API Open API Document](./materials/fakeauthenticationurl_1.0.0.yaml "FakeAuthenticationURL-1.0.0 API") and [Fake Authentication Product Open API Document](./materials/fakeauthenticationurlproduct_1.0.0.yaml "FakeAuthenticationProduct-1.0.0 Product").
 
 You need to publish the API, let's say in our Integration catalog. I'm going to use the CLI to do that.
 ```
 apic login -s <manager endpoint> -u <uid> -p <pwd> -r provider/default-idp-2
 apic products:publish -c integration -o org1 -s <manager endpoint> --scope catalog fakeauthenticationproduct_1.0.0.yaml
 ```
-Sample invocation: `curl -k -H "Accept: application/json" -H "Authorization: Basic: Zm9vOmZvbw" https://gw.159.8.70.38.xip.io/org1/integration/fakeauth/v1/basic-auth`
+Sample invocation: `curl -k -H "Accept: application/json" -H "Authorization: Basic: Zm9vOmZvbw" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/fakeauth/v1/basic-auth`
 
 Here is a sample response (formatted):
 ```
@@ -1174,7 +1177,39 @@ Click on the checkbox for the SampleAuthURL and click Save button.
 
 ![User Registry definitions in the Catalog](./images/V10_manager-user-registry-select.png)
 
-Now, let's configure the security for the API. In the Manager, click on the Develop menu, import the fakemagento API. This is the initial API to work with and it is available in the materials folder. It is at version 1.0. Now, we can edit the Security Definitions section and Add the Basic Authentication, click on Add.
+Before starting to protect the API and in the rest of the lab, we are going to use a test API that will serve as the basic for all the scenarios. We will version it and change the endpoint everytime we use a different configuration. This API is called FakeMagento. We start with version 1.0.0.
+This API contains only one operations, a POST with a path /order.
+The processing in the flow is a little bit more complex than an Hello World API, because we want to illustrate other features of API Connect security wise.
+
+The flow is as follow:
+![Fake Magento 1.0.0](./images/V10_fake-magento-100.png)
+
+So we have a parse action followed by a gateway script to log a message , then a gateway script to create a response, then a schema validate action, then a gateway script to geerate a JWT, then a gateway script to inject the JWT as a header, and finaly a map action.
+
+The sample request is
+```
+{
+  "orderDetails": "2 plates",
+  "orderDate": "2019-12-25T10:00:00.000Z"
+}
+```
+and the response is 
+```
+{
+    "norderId": "7275084087558144",
+    "norderResult": true,
+    "norderDetails": "2 plates",
+    "norderDate": "2019-12-25T10:00:00.000Z"
+}
+```
+
+In the response headers, we have the header `location: id_token=Bearer eyJraWQiOiJteXNpZ25rZXkiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxYzQ3YmI0Yy1iMjliLTQwOTQtYTNmMy01OTdhNTg2NTc5N2EiLCJpc3MiOiJJbSB0aGUgaXNzdWVyIiwic3ViIjoiZm9vc3ViIiwiYXVkIjoiZm9vYXVkIiwiZXhwIjoxNjY5NjUzMDQ5LCJpYXQiOjE2Njk2NDk0NDl9.1obPO5JnNHMDNMgi-eErxpobW1b-BlTeacHi0B1R8v8`
+
+Now, let's configure the security for the API. In the Manager, click on the Develop menu, import the fakemagento API. This is the initial API to work with and it is available in the materials folder. It is at version 1.0. We save it as a new version, version 2.0.0.
+
+![Basic authentication Security Definition](./images/V10_Save_new_version.png)
+
+Now, we can edit the Security Scheme section and Add the Basic Authentication, click on Add.
 Enter
 >Name: BA Protection
 <BR>Type: Select Basic
@@ -1186,14 +1221,24 @@ In the Security section, select BA Protection.
 
 ![Basic authentication Security section](./images/V10_manager-BA-Security-section.png)
 
+Make sure you use both security schemes. API Connect allows you to edit the configuration so you can combine OR and AND.
+In my case since I want to have both information in the request, I have configured it like this:
+
+![Security Definition with both schemes](./images/V10_ba_clientid_definition.png)
+
 Create a product and publish it to the Integration Catalog, then subscribe to it. (Not explained here, see previous steps).
 
 We can now test the API. The credentials are in the Authorization header.
-curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 421223e773f237c5231842102660896e" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://gw.159.8.70.38.xip.io/org1/integration/fakemagento/v1/order"
+curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v2/order"
+
 You should obtain a response:
 ```
 {"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}
 ```
+
+You can use the Explorer to test the API.
+![Test in explorer ](./images/test-in-explorer.png)
+
 Here, I'm introducing the POSTMAN collection.
 In the POSTMAN, there is a number of requests that you can adapt for your environment.
 The collection is called: API Education. The environment that you need to adjust for your environment is called: API_Education.
@@ -1205,7 +1250,7 @@ Clicking on Send button will give you the expected result.
 
 Below the equivalent with curl (on Windows):
 ```
-curl -k "https://gw.159.8.70.38.xip.io/org1/integration/fakemagento/v1/order" -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 421223e773f237c5231842102660896e" -H "Authorization: Basic Zm9vOmZvbw==" -H "Accept-Encoding: application/json" -d "{   \"orderDetails\": \"2 plates\",   \"orderDate\": \"2019-12-25T10:00:00.000Z\" }"
+curl -k "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/fakemagento/v1/order" -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -H "Accept-Encoding: application/json" -d "{   \"orderDetails\": \"2 plates\",   \"orderDate\": \"2019-12-25T10:00:00.000Z\" }"
 ```
 returns
 ```
@@ -1235,17 +1280,17 @@ Enter
 
 Click Next button
 
-![Native OAuth provider creation base information](./images/OAuth-native-baseinfo.png)
+![Native OAuth provider creation base information](./images/V10_oauth-native-baseinfo.png)
 
 Select the grant types you want to support, in our case we are going to use : Application, Access code and Resource owner - Password. We also select the Public client type, as well as Confidential by default selected. We keep the default values for the endpoints.
 
-![Native OAuth provider creation base information](./images/OAuth-native-grants.png)
+![Native OAuth provider creation base information](./images/V10_OAuth-native-grants.png)
 
 Click Next button
 
 Specify the scopes you want to support, in our case we will use only one scope *details*. To provide detailed access.
 
-![Native OAuth provider creation scopes](./images/OAuth-native-scopes.png)
+![Native OAuth provider creation scopes](./images/V10_OAuth-native-scopes.png)
 
 Click Next button
 
@@ -1263,45 +1308,44 @@ The processing has been described in the specific steps happening during the tok
 There are many possible combinations, but you can have even further possibilities to add more processing as we will see later, especially in how the consents are managed, metadata is added, scopes are managed, etc..
 In our case, it is simple and we keep all default values, so nothing to do!
 
-![Native OAuth provider creation processing](./images/OAuth-native-auth.png)
+![Native OAuth provider creation processing](./images/V10_OAuth-native-auth.png)
 
 Click Next button
 
 You get a Summary screen.
 
-![Native OAuth provider creation summary](./images/OAuth-native-summary.png)
+![Native OAuth provider creation summary](./images/V10_OAuth-native-summary.png)
 
 Click on Finish button.
-
 We are going to add a few features to the OAuth Provider, such as OIDC and use of other endpoints such as introspection.
 Edit the NativeProvider:
 * In the Scopes panel, add openid as a scope for the support of OIDC.
 
-![Native OAuth provider scopes configuration](./images/native-edit-scopes.png)
+![Native OAuth provider scopes configuration](./images/V10_native-edit-scopes.png)
 
 * In the Tokens panel, click on the Refresh tokens checkbox and click Save button
 
-![Native OAuth provider tokens configuration ](./images/native-edit-tokens.png)
+![Native OAuth provider tokens configuration ](./images/V10_native-edit-token.png)
 
 * In the Token Management panel, click on the Token Management checkbox, Resource owner revocation path checkbox and Client revocation path checkbox and then click Save button. It will ask you if you want to update the Assembly, keep yes and click on the Confirm button.
 
-![Native OAuth provider token management configuration ](./images/native-edit-token-mgmt.png)
+![Native OAuth provider token management configuration ](./images/V10_native-edit-token-mgmt.png)
 
 * In the Introspection panel, click on the Introspection checkbox and then click on the Save button
 
-![Native OAuth provider introspection configuration](./images/native-edit-introspection.png)
+![Native OAuth provider introspection configuration](./images/V10_native-edit-introspection.png)
 
 * Look at the Metadata Panel, you will see other settings to collect metadata.
 
-![Native OAuth provider metadata configuration](./images/native-edit-metadata.png)
+![Native OAuth provider metadata configuration](./images/V10_native-edit-metadata.png)
 
 * In the OpenID Connect panel, click on the Enable OIDC checkbox and keep the other values, then click on the Save button.
 
-![Native OAuth provider OIDC configuration](./images/native-edit-oidc.png)
+![Native OAuth provider OIDC configuration](./images/V10_native-edit-oidc.png)
 
 * Look at the API Editor Panel, this is where the code is implemented based on the settings used to configure the OAuth provider. This allows to extend even more how you want to manage your token, given the possibility to use your own code (Gateway script or XSLT). Click on Back and Save button.
 
-![Native OAuth provider Assembly Panel](./images/native-edit-assembly.png)
+![Native OAuth provider Assembly Panel](./images/V10_native-edit-assembly.png)
 
 We have an OAuth provider definition.
 
@@ -1311,39 +1355,39 @@ We need to make this OAuth Provider accessible in the various catalogs where we 
 We leave the Cloud Manager console and go to the Manager Console.
 Click on Manage and select Sandbox, then Settings and OAuth Providers. Click on Edit button on the top left.
 
-![OAuth provider association to Catalog Edit](./images/oauth-native-manager-associate.png)
+![OAuth provider association to Catalog Edit](./images/V10_oauth-native-manager-associate.png)
 
 Click on the checkbox close to the NativeProvider
 
-![OAuth provider association to Catalog](./images/oauth-native-manager-associate-edit.png)
+![OAuth provider association to Catalog](./images/V10_oauth-native-manager-associate-edit.png)
 
 Repeat the same operation with the Integration Catalog.
 It is not yet accessible because we are not using it in any API.
 
 ### Protect the API with OAuth
-Now let's protect the FakeMagento version 2.0.0 API.
-Click on Develop and select the FakeMagento-2.0.0 API.
+Now let's protect the FakeMagento, we create a version 3.0.0 API from the version 1.0.0.
+Click on Develop and select the FakeMagento-3.0.0 API. We have changed the base path to /fakemagento/v3.
 
-![OAuth Resource Owner Password Credentials API protection](./images/ropc-secure-API.png)
-
-Click on Security Definitions and click on Add button.
+Create a security scheme for OAuth
 
 enter:
-> Name: Native ROPC OAuth
+> Name: Native ROPW
 <BR>Description: Using the native OAuth provider for Resource Owner Password grant
 <BR>Select OAuth2
 <BR>Select NativeProvider for the OAuth Provider
 <BR>Select Resource Owner for the Flow
 
-Click Save button.
+![OAuth Resource Owner Password Credentials Security Scheme](./images/V10_native-ropc-security-scheme.png)
 
-![OAuth Resource Owner Password Credentials API security Definition](./images/ropc-secure-API-sec-def.png)
+Add the Security requirement
+![OAuth Resource Owner Password Credentials Security Requirement](./images/V10_native-ropc-security-requirement.png)
 
-In the Security selection, select Native ROPC OAuth and the details scope.
-
-![OAuth Resource Owner Password Credentials API security Definition](./images/ropc-secure-API-sec.png)
+Click Create and Save button.
 
 ### Tests
+I first test in the sandbox after making the API online.
+
+
 Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
 
 I'm going to test it in different ways: using Postman, curl and using the developer portal.
@@ -1374,162 +1418,98 @@ I'm going to test it in different ways: using Postman, curl and using the develo
 1) Get token
 Request
 ```
-POST /org1/integration/nativeprovider/oauth2/token HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-accept: application/json
-grant_type=password&username=foo&password=foo&client_id=421223e773f237c5231842102660896e&client_secret=556a75ce26097f96ea281ed47c1cf2e7&scope=details&APIm-Debug=true
+curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -d "grant_type=password&username=foo&password=foo&client_id=d02c553d2f05277d91f6fb0189cc13c6&client_secret=e5ef1f10fa79402946f1b30f7af623c0&scope=details&APIm-Debug=true" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/token |jq .
 ```
 Response
 ```
-HTTP/1.1 200 OK
-Transfer-Encoding: chunked
-X-RateLimit-Limit: name=default,100;
-X-RateLimit-Remaining: name=default,92;
-accept: application/json
-X-Client-IP: 10.126.64.177
-X-Global-Transaction-ID: 6fc036bd5e87307000066131
-Content-Type: application/json
-Pragma: no-cache
-Date: Fri, 03 Apr 2020 12:47:45 GMT
 {
-	"token_type": "Bearer",
-	"access_token": "AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmW513MzVpeO_t4EViZ_M9Nb_xWVKN0qah8cQUsosmbkMbVbfxwTMBUtuhSMXs-5MzT4MxG9eqdzODLHzfv00CP4",
-	"scope": "details",
-	"expires_in": 3600,
-	"consented_on": 1585918065,
-	"refresh_token": "AAIbeP1VikS6hIMuLClKVQF1LxQAhZqlcY5TFZ6wC4MBJ7xwcE7kBQ3Dp7v_SskGuSQmIHSZKBvEAuZ61sfPAU_28L11EzZpd4zzl4l9LNRefg",
-	"refresh_token_expires_in": 2682000
+  "token_type": "Bearer",
+  "access_token": "AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz",
+  "scope": "details",
+  "expires_in": 3600,
+  "consented_on": 1670448393,
+  "refresh_token": "AALZ8UzdVDKQ_bhEcQ5jr8u1du2R_0MoQBuWEmZewlOzJLT-7H9V_Ue3H0aNAe5C8U0RLozeIHPQULqmWxUDg0ZGrdiFX2DGx9pVLJyzhyEfWQ",
+  "refresh_token_expires_in": 2682000
 }
 ```
 
 2) Use token to access FakeMagento V2.0.0 API
 Request
 ```
-POST /org1/integration/fakemagento/v2/order HTTP/1.1
-X-IBM-Client-Id: 421223e773f237c5231842102660896e
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmW513MzVpeO_t4EViZ_M9Nb_xWVKN0qah8cQUsosmbkMbVbfxwTMBUtuhSMXs-5MzT4MxG9eqdzODLHzfv00CP4
-{
-  "orderDetails": "2 plates",
-  "orderDate": "2019-12-25T10:00:00.000Z"
-}
+curl -v -k -X POST -H "X-IBM-Client-Id: d02c553d2f05277d91f6fb0189cc13c6" -H "Authorization: Bearer AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" -H "Content-Type: application/json" -H "accept: application/json" -d  "{\"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\" }" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v3/order |jq .
 ```
 Response
 ```
-HTTP/1.1 200 OK
-Transfer-Encoding: chunked
-X-RateLimit-Limit: name=ten,10;
-X-RateLimit-Remaining: name=ten,9;
-Accept: application/json
-X-Client-IP: 10.126.64.177
-X-Global-Transaction-ID: 6fc036bd5e873073000805e9
-Content-Type: application/json
-Date: Fri, 03 Apr 2020 12:47:47 GMT
 {
-	"norderId": "7275084087558144",
-	"norderResult": true,
-	"norderDetails": "2 plates",
-	"norderDate": "2019-12-25T10:00:00.000Z"
+  "norderId": "7275084087558144",
+  "norderResult": true,
+  "norderDetails": "2 plates",
+  "norderDate": "2019-12-25T10:00:00.000Z"
 }
 ```
 
 3) Introspect token API
 Request
 ```
-POST /org1/integration/nativeprovider/oauth2/introspect HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-Accept: application/json
-x-ibm-client-id: 421223e773f237c5231842102660896e
-x-ibm-client-secret: 556a75ce26097f96ea281ed47c1cf2e7
-token_type_hint=access_token&token=AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmW513MzVpeO_t4EViZ_M9Nb_xWVKN0qah8cQUsosmbkMbVbfxwTMBUtuhSMXs-5MzT4MxG9eqdzODLHzfv00CP4
+curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/introspect |jq . 
 ```
 Response
 ```
-HTTP/1.1 200 OK
-Transfer-Encoding: chunked
-X-RateLimit-Limit: name=default,100;
-X-RateLimit-Remaining: name=default,90;
-Accept: application/json
-x-ibm-client-id: 421223e773f237c5231842102660896e
-x-ibm-client-secret: 556a75ce26097f96ea281ed47c1cf2e7
-X-Client-IP: 10.126.64.177
-X-Global-Transaction-ID: 6fc036bd5e873077000805f9
-Content-Type: application/json
-Date: Fri, 03 Apr 2020 12:47:51 GMT
 {
-	"active": true,
-	"scope": "details",
-	"client_id": "421223e773f237c5231842102660896e",
-	"username": "foo",
-	"token_type": "Bearer",
-	"grant_type": "password",
-	"ttl": 3594,
-	"exp": 1585921665,
-	"expstr": "2020-04-03T13:47:45Z",
-	"iat": 1585918065,
-	"nbf": 1585918065,
-	"nbfstr": "2020-04-03T12:47:45Z",
-	"consented_on": 1585918065,
-	"consented_on_str": "2020-04-03T12:47:45Z",
-	"one_time_use": false
+  "active": true,
+  "scope": "details",
+  "client_id": "d02c553d2f05277d91f6fb0189cc13c6",
+  "username": "foo",
+  "token_type": "Bearer",
+  "grant_type": "password",
+  "ttl": 3387,
+  "exp": 1670451993,
+  "expstr": "2022-12-07T22:26:33Z",
+  "iat": 1670448393,
+  "nbf": 1670448393,
+  "nbfstr": "2022-12-07T21:26:33Z",
+  "consented_on": 1670448393,
+  "consented_on_str": "2022-12-07T21:26:33Z",
+  "one_time_use": false
 }
 ```
 
 4) Revoke token API
 Request
 ```
-POST /org1/integration/mainprovideroa/oauth2/revoke HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-Accept: application/json
-x-ibm-client-id: 421223e773f237c5231842102660896e
-x-ibm-client-secret: 556a75ce26097f96ea281ed47c1cf2e7
-token_type_hint=access_token&token=AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmW513MzVpeO_t4EViZ_M9Nb_xWVKN0qah8cQUsosmbkMbVbfxwTMBUtuhSMXs-5MzT4MxG9eqdzODLHzfv00CP4
+curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/revoke |jq . 
 ```
 Response
 ```
-HTTP/1.1 200 OK
-Transfer-Encoding: chunked
-X-RateLimit-Limit: name=default,100;
-X-RateLimit-Remaining: name=default,89;
-Accept: application/json
-x-ibm-client-id: 421223e773f237c5231842102660896e
-x-ibm-client-secret: 556a75ce26097f96ea281ed47c1cf2e7
-X-Client-IP: 10.126.64.177
-X-Global-Transaction-ID: 6fc036bd5e87307b000661a1
-Content-Type: application/json
-Pragma: no-cache
-Date: Fri, 03 Apr 2020 12:47:55 GMT
 {"status":"success"}
 ```
 
 5) Access API again with revoked token API
 Request
 ```
-POST /org1/integration/fakemagento/v2/order HTTP/1.1
-X-IBM-Client-Id: 421223e773f237c5231842102660896e
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmW513MzVpeO_t4EViZ_M9Nb_xWVKN0qah8cQUsosmbkMbVbfxwTMBUtuhSMXs-5MzT4MxG9eqdzODLHzfv00CP4
-{
-  "orderDetails": "2 plates",
-  "orderDate": "2019-12-25T10:00:00.000Z"
-}
+curl -v -k -X POST -H "X-IBM-Client-Id: d02c553d2f05277d91f6fb0189cc13c6" -H "Authorization: Bearer AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" -H "Content-Type: application/json" -H "accept: application/json" -d  "{\"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\" }" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v3/order |jq .
 ```
 Response
 ```
-HTTP/1.1 401 Unauthorized
-Content-Type: application/json
-X-RateLimit-Limit: name=ten,10;
-X-RateLimit-Remaining: name=ten,8;
-WWW-Authenticate: Bearer error='invalid_token'
-Date: Fri, 03 Apr 2020 12:48:01 GMT
 {
-	"httpCode": "401",
-	"httpMessage": "Unauthorized",
-	"moreInformation": "Cannot pass the security checks that are required by the target API or operation, Enable debug headers for more details."
+  "httpCode": "401",
+  "httpMessage": "Unauthorized",
+  "moreInformation": "Cannot pass the security checks that are required by the target API or operation, Enable debug headers for more details."
 }
 ```
+
+6) Re-introspect the token API with revoked token
+Request
+```
+curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/introspect |jq . 
+```
+Response
+```
+{
+  "active": false
+}
+```
+
 
 ### Using the Developer portal
 We do not explain all the steps because it has been done in previous chapters.
@@ -1538,12 +1518,10 @@ In the first step, we get the token.
 We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button.
 It returns the Access Token.
 
-![Test Get Access Token](./images/test-ropc-21.png)
-
 In the second step, we click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
 This invokes the FakeMagento API using the access Token as a Bearer.
 
-![Test Get Access Token](./images/test-ropc-22.png)
+![Test Get Access Token](./images/V10_test-ropc-22.png)
 
 ## Protecting an API with OAuth - Authorization Code grant and OIDC
 
@@ -1594,7 +1572,7 @@ Use the Access Token to access the FakeMagento V3 API.
 
 #### Using curl
  1) Get the Access Code
- Use a browser and enter https://gw.159.8.70.38.xip.io/org1/integration/mainprovideroa/oauth2/authorize?response_type=code&redirect_uri=https://www.getpostman.com/oauth2/callback&client_id=421223e773f237c5231842102660896e&scope=details%20openid
+ Use a browser and enter https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/mainprovideroa/oauth2/authorize?response_type=code&redirect_uri=https://www.getpostman.com/oauth2/callback&client_id=3beaa6887601bb3a6c5f802e67372535&scope=details%20openid
 <BR>You get the login pages.
 
 ![Postman Test Access Token - Get Access Code](./images/test-access-31.png)
@@ -1611,7 +1589,7 @@ POST /org1/integration/mainprovideroa/oauth2/token HTTP/1.1
 Accept: application/json
 Postman-Token: cadf4de6-713a-4741-ae42-e49c2a6552ff
 Content-Type: application/x-www-form-urlencoded
-grant_type=authorization_code&client_id=421223e773f237c5231842102660896e&client_secret=556a75ce26097f96ea281ed47c1cf2e7&code=AAIANrOjEOMYqicDr7MkV3khttTEMasEphtiBZz3ieiYXj2qmFToG6mH6MtUvmnceAlbNhFtlHEBsgSrV8Z3otBRXMOXuGg7V-F_DCy13V1dbg&redirect_uri=https%3A%2F%2Fwww.getpostman.com%2Foauth2%2Fcallback&scope=details%20openid
+grant_type=authorization_code&client_id=3beaa6887601bb3a6c5f802e67372535&client_secret=556a75ce26097f96ea281ed47c1cf2e7&code=AAIANrOjEOMYqicDr7MkV3khttTEMasEphtiBZz3ieiYXj2qmFToG6mH6MtUvmnceAlbNhFtlHEBsgSrV8Z3otBRXMOXuGg7V-F_DCy13V1dbg&redirect_uri=https%3A%2F%2Fwww.getpostman.com%2Foauth2%2Fcallback&scope=details%20openid
 ```
 Response
 ```
@@ -1688,7 +1666,7 @@ Request
 POST /org1/integration/nativeprovider/oauth2/token HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 accept: application/json
-grant_type=client_credentials&client_id=421223e773f237c5231842102660896e&client_secret=556a75ce26097f96ea281ed47c1cf2e7&scope=details&APIm-Debug=true
+grant_type=client_credentials&client_id=3beaa6887601bb3a6c5f802e67372535&client_secret=556a75ce26097f96ea281ed47c1cf2e7&scope=details&APIm-Debug=true
 ```
 Response
 ```
@@ -1710,7 +1688,7 @@ Content-Type: application/json
 Request
 ```
 POST /org1/integration/fakemagento/v2/order HTTP/1.1
-X-IBM-Client-Id: 421223e773f237c5231842102660896e
+X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmV0AD6QpfILhTsnddGNJQ5MQIHdQI9eESHYs0QyOFDUc4x3A55wFGH2jfbiVLlhDhlddI5tUIe9x-pGgFgHMZZ8IGYVL2wYiB_aOsElY1h8yNRymzvCzDWTFRU4UiaPGH4
@@ -1953,7 +1931,7 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
             "name": "credential-for-mymobileapp",
             "title": "Credential for MyMobileApp",
             "summary": "Credential for MyMobileApp",
-            "client_id": "421223e773f237c5231842102660896e",
+            "client_id": "3beaa6887601bb3a6c5f802e67372535",
             "client_secret_hashed": "91IcbIJ+mL/oC0EnPrroU7mzRGMrwROoja8KhT8s4RQ=",
             "created_at": "2020-03-05T13:28:03.994Z",
             "updated_at": "2020-03-05T13:28:03.994Z",

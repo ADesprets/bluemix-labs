@@ -1,0 +1,30 @@
+info:
+  version: 1.0.0
+  title: FakeAuthenticationURLProduct
+  name: fakeauthenticationurlproduct
+gateways:
+  - datapower-api-gateway
+plans:
+  default-plan:
+    title: Default Plan
+    description: Default Plan
+    rate-limits:
+      default:
+        value: 100/1hour
+    apis:
+      fakeauthenticationurl1.0.0: {}
+apis:
+  fakeauthenticationurl1.0.0:
+    $ref: fakeauthenticationurl_1.0.0.yaml
+visibility:
+  view:
+    type: public
+    orgs: []
+    tags: []
+    enabled: true
+  subscribe:
+    type: authenticated
+    orgs: []
+    tags: []
+    enabled: true
+product: 1.0.0

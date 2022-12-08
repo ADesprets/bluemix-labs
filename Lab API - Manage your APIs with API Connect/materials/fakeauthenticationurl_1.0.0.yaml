@@ -1,0 +1,252 @@
+swagger: '2.0'
+info:
+  title: FakeAuthenticationURL
+  x-ibm-name: fakeauthenticationurl
+  version: 1.0.0
+  description: >-
+    Use to simulate a user registry to test OAuth. The user registry should be
+    used as a URL Authentication user registry. The endpoint is
+    $(catalog)/fakeauth/v1/basic-auth
+x-ibm-configuration:
+  cors:
+    enabled: true
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  assembly:
+    execute:
+      - switch:
+          version: 2.0.0
+          title: switch
+          case:
+            - condition: ($httpVerb() = 'GET' and $operationPath() = '/basic-auth')
+              execute:
+                - gatewayscript:
+                    version: 2.0.0
+                    title: BA authentication logic
+                    source: "var reqauth =  context.get('request.headers.authorization').split(' ');\nvar splitval = new Buffer((reqauth[1] || ''), 'base64').toString('utf8').split(':');\nvar username = splitval[0] || '';\nvar password = splitval[1] || '';\nconsole.error('>>> User credentials: [' + username + ':' + password + ']');\nif (username ===  password ) {\n\tcontext.set('message.headers.api-authenticated-credential', 'cn=' + username + ',email=' + username + '@fr.ibm.com');\n\tcontext.set('message.status.code', 200);\n\tcontext.set('message.headers.content-type', 'application/json');\n    context.message.body.write({username: username, email: username + '@fr.ibm.com', first_name: username, last_name: username});\n} else {\n\tcontext.set('message.status.code', 401);\n}"
+                    description: >-
+                      This gateway script check that the uid and password are
+                      the same. If they are the same the user is authenticated.
+            - condition: ($httpVerb() = 'GET' and $operationPath() = '/ping')
+              execute:
+                - gatewayscript:
+                    version: 2.0.0
+                    title: ping logic
+                    description: This gateway script just retrun hello world message.
+                    source: |-
+                      var outmessage={"message": "hello world!"};
+                      var outmessageS= JSON.stringify(outmessage);
+                      console.error('>>> response:' + outmessageS);
+                      context.message.body.write(outmessage);
+            - condition: ($httpVerb() = 'POST' and $operationPath() = '/authenticate')
+              execute:
+                - parse:
+                    version: 2.0.0
+                    title: parse
+                    parse-settings-reference:
+                      default: apic-default-parsesettings
+                - gatewayscript:
+                    version: 2.0.0
+                    title: gatewayscript
+                    source: "var username = context.get('message.body.uid');\nvar password = context.get('message.body.pwd');\nconsole.error('>>> User credentials: [' + username + ':' + password + ']');\nif (username ===  password ) {\n\tcontext.set('message.headers.api-authenticated-credential', 'cn=' + username + ',email=' + username + '@fr.ibm.com');\n\tcontext.set('message.status.code', 200);\n\tcontext.set('message.headers.content-type', 'application/json');\n    context.message.body.write({username: username, email: username + '@fr.ibm.com', first_name: username, last_name: username});\n} else {\n\tcontext.set('message.status.code', 401);\n}"
+            - condition: >-
+                ($httpVerb() = 'GET' and $operationPath() =
+                '/authenticate/{uid}/{pwd}')
+              execute:
+                - gatewayscript:
+                    version: 2.0.0
+                    title: gatewayscript
+                    source: "var req = context.get('request');\n// console.error(\"request %s\", JSON.stringify(req));\nvar username = req.parameters.uid.values[0];\nvar password = req.parameters.pwd.values[0];\nconsole.error('>>> User credentials: [' + username + ':' + password + ']');\nif (username ===  password ) {\n\tcontext.set('message.headers.api-authenticated-credential', 'cn=' + username + ',email=' + username + '@fr.ibm.com');\n\tcontext.set('message.status.code', 200);\n\tcontext.set('message.headers.content-type', 'application/json');\n    context.message.body.write({username: username, email: username + '@fr.ibm.com', first_name: username, last_name: username});\n} else {\n\tcontext.set('message.status.code', 401);\n}"
+  properties:
+    target-url:
+      value: http://example.com/operation-name
+      description: The URL of the target service
+      encoded: false
+  application-authentication:
+    certificate: false
+  activity-log:
+    enabled: true
+    error-content: header
+    success-content: activity
+basePath: /fakeauth/v1
+paths:
+  /basic-auth:
+    parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Basic Authentication header
+        type: string
+        format: byte
+    get:
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/AuthenticatedUser'
+      consumes: []
+      produces: []
+      summary: 'Basic: dG90bzp0b3Rv'
+      parameters: []
+      description: >
+        The credentials uid and password should be provided using the standard
+        Basic Authentication, which is the Authorization header.
+
+
+        When using the **same uid and password** the authentication succeeds,
+        when they are different the authentication fails. This is obviously for
+        demonstration purpose.
+
+
+        For example: 
+
+
+        > Basic: Zm9vOmZvbw
+
+
+        The base64 decoding of Zm9vOmZvbw is: foo:foo. Do not omit the **Basic:
+        ** in your tests, it will fail otherwise.
+      tags: []
+  /authenticate:
+    post:
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/AuthenticatedUser'
+      summary: This operation is for the POST
+      parameters:
+        - name: credentials
+          in: body
+          required: true
+          description: The credentials of the user to be authenticated
+          schema:
+            $ref: '#/definitions/UserCredential'
+      consumes: []
+      produces: []
+      description: >-
+        The credentials uid and password should be provided in the **body.**
+
+
+        When using the same uid and password the authentication succeeds, when
+        they are different the authentication fails. This is obviously for
+        demonstration purpose.
+
+
+        For example:
+
+
+        ```
+
+        {
+          "uid": "foo",
+          "pwd": "foo"
+        }
+
+        ```
+
+
+        Hint: you can **use the generate link** to generate the body
+        automatically.
+  /authenticate/{uid}/{pwd}:
+    get:
+      responses:
+        '200':
+          description: success
+          schema:
+            $ref: '#/definitions/AuthenticatedUser'
+      description: >-
+        The credentials uid and password should be provided in the path.
+
+
+        When using the same uid and password the authentication succeeds, when
+        they are different the authentication fails. This is obviously for
+        demonstration purpose.
+      parameters: []
+      consumes: []
+      produces: []
+    parameters:
+      - name: uid
+        in: path
+        required: true
+        type: string
+        description: The uid of the User
+      - name: pwd
+        in: path
+        required: true
+        type: string
+        description: The password of the User
+  /ping:
+    get:
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
+      consumes: []
+      produces: []
+      description: >-
+        This path is used to validate that the API Connect is correctly
+        answering. No argument, no backend invocation,  just a ping.
+
+        The message generated is
+
+
+        ```
+
+        {
+          "message": "hello world!"
+        }
+
+        ```
+securityDefinitions:
+  clientID:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+security:
+  - {}
+schemes:
+  - https
+definitions:
+  UserCredential:
+    type: object
+    description: >-
+      Object containing the credentials in order to perform authentication (uid
+      and password)
+    additionalProperties: false
+    properties:
+      uid:
+        type: string
+        description: The user id of the user
+        example: foo
+      pwd:
+        type: string
+        description: The password associated with the user
+        example: foo
+  AuthenticatedUser:
+    type: object
+    description: Object returned when a user is authenticated
+    additionalProperties: false
+    properties:
+      username:
+        type: string
+        description: The user id of the authenticated user
+        example: myuser
+      email:
+        type: string
+        description: The email of the authenticated user
+        example: myuser@example.com
+      first_name:
+        type: string
+        description: First name of the user
+        example: My
+      last_name:
+        type: string
+        description: Last name of the user
+        example: User
+produces:
+  - application/json
