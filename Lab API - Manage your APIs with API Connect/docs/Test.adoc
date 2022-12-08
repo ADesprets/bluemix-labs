@@ -1211,7 +1211,9 @@ image::../images/V10_manager-BA-Security-section.png[Basic authentication Securi
 Create a product and publish it to the Integration Catalog, then subscribe to it. (Not explained here, see previous steps).
 
 We can now test the API. The credentials are in the Authorization header.
+```
 curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v2/order"
+```
 You should obtain a response:
 ```
 {"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}
