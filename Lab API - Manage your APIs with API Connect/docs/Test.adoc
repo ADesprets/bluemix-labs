@@ -1604,6 +1604,7 @@ Click Save button.
 
 ===== Using the Developer portal
 You enter the following:
+
 * The client secret
 * Select the *details* scope
 * Specify the redirect URL to https://oauth.pstmn.io/v1/browser-callback
@@ -1640,29 +1641,18 @@ https://app.getpostman.com/oauth2/callback?code=AAIANrOjEOMYqicDr7MkV3khttTEMasE
 3) Send the Access Code to get the Access Token
 Request
 ```
-POST /org1/integration/mainprovideroa/oauth2/token HTTP/1.1
-Accept: application/json
-Postman-Token: cadf4de6-713a-4741-ae42-e49c2a6552ff
-Content-Type: application/x-www-form-urlencoded
-grant_type=authorization_code&client_id=3beaa6887601bb3a6c5f802e67372535&client_secret=556a75ce26097f96ea281ed47c1cf2e7&code=AAIANrOjEOMYqicDr7MkV3khttTEMasEphtiBZz3ieiYXj2qmFToG6mH6MtUvmnceAlbNhFtlHEBsgSrV8Z3otBRXMOXuGg7V-F_DCy13V1dbg&redirect_uri=https%3A%2F%2Fwww.getpostman.com%2Foauth2%2Fcallback&scope=details%20openid
+curl -k -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: application/json" -d "grant_type=authorization_code&client_id=d02c553d2f05277d91f6fb0189cc13c6&client_secret=e5ef1f10fa79402946f1b30f7af623c0&code=AAK7-QqL0wqWK1MP-CPFEvpYqnobktBSgY-VmreRYbrrSk417CiQ9YqHhN4yEqp7xb17NvpeqpbyDpKDIcDIEkYr&redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fbrowser-callback&scope=details" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/token
 ```
 Response
 ```
-HTTP/1.1 200 OK
-X-RateLimit-Limit: name=default,100;
-X-RateLimit-Remaining: name=default,81;
-X-Client-IP: 10.126.64.177
-X-Global-Transaction-ID: 6fc036bd5e876d7200066931
-Content-Type: application/json
 {
-	"token_type": "Bearer",
-	"access_token": "AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmVqjyeCu56Y1cVo_QEk0y4MR4WNBR8Zmq3RKEWsp4J89lQ5qyEYWzTaFN9mYWNJt26o_NIYWWElfl3OMliuc5hDgDhEVV6LOYlKnaBvuHJH5w",
-	"scope": "details openid",
-	"expires_in": 3600,
-	"consented_on": 1585933682,
-	"refresh_token": "AAIZ_fOxRAPcGz8CHCEDTfcGoNMICMj8I-NpcMtiHmeBbtmOsDWNPGD8LhlRq3t6ESqleJgcVogHd7oaDohU0tRBLpW_r-bE6H1B1iXhftWi6FTeHGvtfq2nINWhcRUHn4s",
-	"refresh_token_expires_in": 2682000,
-	"id_token": "eyJraWQiOiJteXNpZ25rZXkiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmNDUwMzIwOS00OTI3LTQ0NDgtODdjMy1iZDM2YzA2ZjMyZjgiLCJpc3MiOiJJQk0gQVBJQ29ubmVjdCBBcyBPQXV0aCBhbmQgT0lEQyBQcm92aWRlciIsInN1YiI6ImZvbyIsImF1ZCI6IjQyMTIyM2U3NzNmMjM3YzUyMzE4NDIxMDI2NjA4OTZlIiwiZXhwIjoxNTg1OTM3MjgyLCJpYXQiOjE1ODU5MzM2ODIsImF0X2hhc2giOiJVV3p4aW1NeTNZRzJHOFhQd0xGbFV3In0.oa845Xm9hN8F0e1Vaij_Xys0riGdkCV-7Q_PAM1E_zM"
+  "token_type": "Bearer",
+  "access_token": "AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzYla3T-GAkVVQyIw1MQGhOrwl_GwMX2yq6990JmAp3k0I9n_tJnPmiFkjEAlyWeIsvq3-1WIh64hKv53fpbMmpq",
+  "scope": "details",
+  "expires_in": 3600,
+  "consented_on": 1670875409,
+  "refresh_token": "AAJruSSuQnT9oNoNUcVjzm_gLRKIccrqMlkhDfxD1s3W3V6mWpQxMdX3Y0RDO3vesSYTuqhKM97sve7jN_AcpceZsRHF8FreTGQraFqHz3YHlw",
+  "refresh_token_expires_in": 2682000
 }
 ```
 
