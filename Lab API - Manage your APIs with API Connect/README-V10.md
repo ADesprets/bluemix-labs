@@ -1018,7 +1018,21 @@ The ```Customer``` table in the database has 6 columns that will need to map as 
 
 
 # Step 12 - Using OAuth to protect your API
-**WARNING: The following section is under construction, but I want to show you what is coming soon**
+In the materials, you also find a POSTMAN collection (alongside the environment definitions). You may have to change the env file to have it working for your environment.
+
+To perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
+
+The sandbox test application client id and client secret are: d02c553d2f05277d91f6fb0189cc13c6 / e5ef1f10fa79402946f1b30f7af623c0
+
+| Version | Security scheme                                 | Referred as     |Link                                                                              |
+|---------|-------------------------------------------------|-----------------|----------------------------------------------------------------------------------|
+| V1      | API Key + Basic Authentication                  |                 |[here](#protecting-an-api-with-basic-authentication)                              |
+| V2      | Resource Owner Password Credentials Grant       | Resource owner  |[here](#protecting-an-api-with-oauth---resource-owner-password-credentials-grant) |
+| V3      | Authorization Code grant + OIDC                 | Access code     |[here](#protecting-an-api-with-oauth---authorization-code-grant-and-oidc)         |
+| V4      | Client Credentials grant                        | Application     |[here](#protecting-an-api-with-oauth---client-credentials-grant)                  |
+| V5      | External OAuth Provider                         |                 |[here](#protecting-an-api-with-oauth---external-provider)                         |
+| V6      | Custom JWT Generate and Validate                |                 |[here](#custom-jwt-generate-and-validate)                                         |
+| N/A     | Using an OIDC Registry to protect the platform  |                 |[here](#using-an-oidc-registry-to-protect-the-platform)                           |
 
 ## Introduction
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitation was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
@@ -1050,23 +1064,6 @@ Below is a table with the main specifications.
 | Assertion Framework (RFC 7521)                            | https://datatracker.ietf.org/doc/html/rfc7521                          |
 | JWT Profile for Client Authentication   (RFC 7523)        | https://datatracker.ietf.org/doc/html/rfc7523                          |
 | SAML Assertions (RFC 7522)                                | https://datatracker.ietf.org/doc/html/rfc7522                          |
-
-In the materials, you also find a POSTMAN collection (alongside the environment definitions). You may have to change the env file to have it working for your environment.
-
-To perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different path /fakemagento/v<n>, for example, /fakemagento/v1.
-
-The sandbox test application client id and client secret are: d02c553d2f05277d91f6fb0189cc13c6 / e5ef1f10fa79402946f1b30f7af623c0
-
-| Version | Security scheme                                 | Referred as     |Link                                                                              |
-|---------|-------------------------------------------------|-----------------|----------------------------------------------------------------------------------|
-| V1      | API Key + Basic Authentication                  |                 |[here](#protecting-an-api-with-basic-authentication)                              |
-| V2      | Resource Owner Password Credentials Grant       | Resource owner  |[here](#protecting-an-api-with-oauth---resource-owner-password-credentials-grant) |
-| V3      | Authorization Code grant + OIDC                 | Access code     |[here](#protecting-an-api-with-oauth---authorization-code-grant-and-oidc)         |
-| V4      | Client Credentials grant                        | Application     |[here](#protecting-an-api-with-oauth---client-credentials-grant)                  |
-| V5      | External OAuth Provider                         |                 |[here](#protecting-an-api-with-oauth---external-provider)                         |
-| V6      | Custom JWT Generate and Validate                |                 |[here](#custom-jwt-generate-and-validate)                                         |
-| N/A     | Using an OIDC Registry to protect the platform  |                 |[here](#using-an-oidc-registry-to-protect-the-platform)                           |
-
 
 ## Preparing the environment - Fake Authentication URL API
  To perform some more advanced scenarii with security, we need a user registry where all the users are defined. There are several types of user registries for user authentication supported in API Connect:
@@ -1513,7 +1510,7 @@ Response
 
 ### Using the Developer portal
 We do not explain all the steps because it has been done in previous chapters.
-We sign into the developer Portal, then select the FakeMagento V2.0.0 API and click on Try it.
+We sign into the developer Portal, then select the FakeMagento V3.0.0 API and click on Try it.
 In the first step, we get the token.
 We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button.
 It returns the Access Token.
