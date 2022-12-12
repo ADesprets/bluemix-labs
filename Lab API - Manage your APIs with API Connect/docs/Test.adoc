@@ -1627,7 +1627,8 @@ image::../images/V10_oauth_authorization_invoke_api.png[Authorization Grant invo
 
 ====== Using curl
  1) Get the Access Code
- Use a browser and enter https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/mainprovideroa/oauth2/authorize?response_type=code&redirect_uri=https://www.getpostman.com/oauth2/callback&client_id=3beaa6887601bb3a6c5f802e67372535&scope=details%20openid
+ Use a browser and enter 
+ https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/mainprovideroa/oauth2/authorize?response_type=code&redirect_uri=https://www.getpostman.com/oauth2/callback&client_id=3beaa6887601bb3a6c5f802e67372535&scope=details%20openid
 
 * You get the login pages.
 
@@ -1636,7 +1637,7 @@ image::../images/test-access-31.png[Postman Test Access Token - Get Access Code]
 2) Enter the user credentials and click on Login button.
 In the Browser URL, you get the Access Code
 ```
-https://app.getpostman.com/oauth2/callback?code=AAIANrOjEOMYqicDr7MkV3khttTEMasEphtiBZz3ieiYXj2qmFToG6mH6MtUvmnceAlbNhFtlHEBsgSrV8Z3otBRXMOXuGg7V-F_DCy13V1dbg
+https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/authorize?response_type=code&redirect_uri=https://oauth.pstmn.io/v1/browser-callback&client_id=d02c553d2f05277d91f6fb0189cc13c6&scope=details
 ```
 3) Send the Access Code to get the Access Token
 Request
