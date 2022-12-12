@@ -1176,7 +1176,7 @@ This chapter is only to illustrate the version V1 of the fakemagento API. This A
 
 image::../images/V10_fake-magento-v1-assembly.png[Fake magento assembly]
 
-The important parts that we will change in the lab is the base path, the description to indicate the security mechanism used, the security requirement and securty scheme.
+The important parts that we will change in the lab âre the base path, the description to indicate the security mechanism used, the security requirement and security scheme.
 It is important to change the base path to have deterministic results when invoking the API to have a different endpoint.
 
 Below, an invocation using the web explorer, showing the use of the API key client id only. Go to the Explorer, click on generte to get a sample body, and then click on the Send button.
