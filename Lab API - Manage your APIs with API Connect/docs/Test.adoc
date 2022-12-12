@@ -1066,7 +1066,6 @@ To perform all the scenarios below, we are going to use the same API that will b
 | N/A | Using an OIDC Registry to protect the platform  | |xref:#_using_an_oidc_registry_to_protect_the_platform[here] 
 |===
 
-
 ==== Introduction
 OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user's credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitation was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …
 
@@ -1123,7 +1122,6 @@ Below the processing performed in the "BA authc logic" gateway JavaScript:
 * Line 12: If username is different from password then returns UNAUTHENTICATED.
 
 
-
 ```
 1 var reqauth =  context.get('request.headers.authorization').split(' ');
 2 var splitval = new Buffer((reqauth[1] || ''), 'base64').toString('utf8').split(':');
@@ -1170,21 +1168,37 @@ Here is a sample response (formatted):
 
 At this stage, we have configured the Fake Authentication URL API that we will use in the next chapters. Of course, in real life that would be more of a user registry or OIDC provider that should be used.
 
-
 ==== Protecting an API with an API key
 This chapter is only to illustrate the version V1 of the fakemagento API. This API does not contains an Invoke action, but rather a series of actions to demonstrate various capability of API Connect. Among them, we use a parse action, several gateway scripts, a validate action and a map.
 
 image::../images/V10_fake-magento-v1-assembly.png[Fake magento assembly]
 
-The important parts that we will change in the lab âre the base path, the description to indicate the security mechanism used, the security requirement and security scheme.
+The important parts that we will change in the lab are the base path, the description to indicate the security mechanism used, the security requirement and security scheme.
 It is important to change the base path to have deterministic results when invoking the API to have a different endpoint.
 
+===== Tests
+
+====== Test using Explorer
 Below, an invocation using the web explorer, showing the use of the API key client id only. Go to the Explorer, click on generte to get a sample body, and then click on the Send button.
 
 image::../images/V10_fake-magento-v1-api-key.png[Invoking the Fake magento API key]
 
 Notice the name of the element contains begins with an n in the response, result of the map action.
 
+====== Test using curl
+Request
+```
+curl -k --url https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v1/order -H "X-IBM-Client-Id: d02c553d2f05277d91f6fb0189cc13c6" -H "accept: application/json" -H "content-type: application/json" --data "{   \"orderDetails\": \"2 plates\",   \"orderDate\": \"2019-12-25T10:00:00.000Z\" }" | jq .
+```
+Response
+```
+{
+  "norderId": "7275084087558144",
+  "norderResult": true,
+  "norderDetails": "2 plates",
+  "norderDate": "2019-12-25T10:00:00.000Z"
+}
+```
 ==== Protecting an API with Basic Authentication
 First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the *Fake Authentication URL API* is correctly working and can be used to secure an API. If I may make a parallel with a Web application, using Basic Authentication is as secured as using it for a Web application. A 401-challenge compared to a form-based authentication will imply that every request contains the uid/pwd, not very secured indeed.
 
@@ -1243,35 +1257,38 @@ image::../images/V10_manager-BA-Security-section.png[Basic authentication Securi
 Create a product and publish it to the Integration Catalog, then subscribe to it. (Not explained here, see previous steps).
 
 We can now test the API. The credentials are in the Authorization header.
-```
-curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v2/order"
-```
-You should obtain a response:
-```
-{"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}
-```
+
+===== Tests
+====== Test with Explorer
 You can use the Explorer to test the API.
 
 image::../images/test-in-explorer.png[Test in explorer]
+
+====== Test With curl
+Below the equivalent with curl (on Windows):
+```
+curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v2/order" | jq .
+```
+You should obtain a response:
+```
+{
+  "norderId": "7275084087558144",
+  "norderResult": true,
+  "norderDetails": "2 plates",
+  "norderDate": "2019-12-25T10:00:00.000Z"
+}
+```
+====== Test with POSTMAN
 
 Here, I'm introducing the POSTMAN collection.
 In the POSTMAN, there is a number of requests that you can adapt for your environment.
 The collection is called: API Education. The environment that you need to adjust for your environment is called: API_Education.
 
-To test the API with Basic Authentication security. You can use the *FakeMagentoOrderBA V1* API.
+To test the API with Basic Authentication security. You can use the *FakeMagentoOrderBA V2* API.
 
 image::../images/postman-ba-test.png[Postman Basic Authentication test]
 
 Clicking on Send button will give you the expected result.
-
-Below the equivalent with curl (on Windows):
-```
-curl -k "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/fakemagento/v1/order" -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -H "Accept-Encoding: application/json" -d "{   \"orderDetails\": \"2 plates\",   \"orderDate\": \"2019-12-25T10:00:00.000Z\" }"
-```
-returns
-```
-{"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}
-```
 
 ==== OAuth Resource Owner Password Credentials grant
 The first test was not based on OAuth, all the following ones are. We will use two OAuth providers only. One for native support, API Connect acting as an OAuth/OIDC provider and one for third party integration, using IBM  AppId, one of IBM Cloud solution for OAuth/OIDC support.
@@ -1410,32 +1427,18 @@ image::../images/V10_native-ropc-security-requirement.png[OAuth Resource Owner P
 ===== Tests
 Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
 
-I'm going to test it in different ways: using Postman, curl and using the developer portal.
+I'm going to test it in different ways: using developer portal, curl and Postman.
 
-====== Using POSTMAN
-1) Get token using the "1 -Resource Owner Password Token V2" request
+====== Using the Developer portal
+We do not explain all the steps because it has been done in previous chapters. We sign into the developer Portal, then select the FakeMagento V3.0.0 API and click on Try it. In the first step, we get the token. We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button. It returns the Access Token.
 
-image::../images/test-ropc-11.png[Test Get Access Token]
+In the second step, we click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button. This invokes the FakeMagento API using the access Token as a Bearer.
 
-2) Use token to access FakeMagento V2.0.0 API using the "2 -FakeMagentaOrder NativeOAuth API" request
-
-image::../images/test-ropc-12.png[Test Access API]
-
-3) Introspect token API using the "Introspect Access Token" request
-
-image::../images/test-ropc-13.png[Test Introspect Access Token]
-
-4) Revoke token API using the "3 -Revoke" request
-
-image::../images/test-ropc-14.png[Test Revoke Access Token]
-
-5) Access the API again with the revoked token using the "2 -FakeMagentaOrder NativeOAuth API" request
-
-image::../images/test-ropc-15.png[Test Access API]
+image::../images/V10_test-ropc-22.png[Test Get Access Token]
 
 ====== Using curl
-
 1) Get token
+
 Request
 ```
 curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -d "grant_type=password&username=foo&password=foo&client_id=d02c553d2f05277d91f6fb0189cc13c6&client_secret=e5ef1f10fa79402946f1b30f7af623c0&scope=details&APIm-Debug=true" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/token |jq .
@@ -1454,20 +1457,23 @@ Response
 ```
 
 2) Use token to access FakeMagento V2.0.0 API
+
 Request
 ```
 curl -v -k -X POST -H "X-IBM-Client-Id: d02c553d2f05277d91f6fb0189cc13c6" -H "Authorization: Bearer AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" -H "Content-Type: application/json" -H "accept: application/json" -d  "{\"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\" }" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v3/order |jq .
 ```
 Response
 ```
+{
   "norderId": "7275084087558144",
   "norderResult": true,
   "norderDetails": "2 plates",
   "norderDate": "2019-12-25T10:00:00.000Z"
-
+}
 ```
 
 3) Introspect token API
+
 Request
 ```
 curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/introspect |jq . 
@@ -1494,6 +1500,7 @@ Response
 ```
 
 4) Revoke token API
+
 Request
 ```
 curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/revoke |jq . 
@@ -1504,6 +1511,7 @@ Response
 ```
 
 5) Access API again with revoked token API
+
 Request
 ```
 curl -v -k -X POST -H "X-IBM-Client-Id: d02c553d2f05277d91f6fb0189cc13c6" -H "Authorization: Bearer AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" -H "Content-Type: application/json" -H "accept: application/json" -d  "{\"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\" }" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v3/order |jq .
@@ -1519,6 +1527,7 @@ Response
 ```
 
 6) Re-introspect the token API with revoked token
+
 Request
 ```
 curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/introspect |jq . 
@@ -1527,18 +1536,31 @@ Response
 ```
 {"active": false}
 ```
+====== Using POSTMAN
+1) Get token using the "1 -Resource Owner Password Token V2" request
 
-===== Using the Developer portal
-We do not explain all the steps because it has been done in previous chapters. We sign into the developer Portal, then select the FakeMagento V3.0.0 API and click on Try it. In the first step, we get the token. We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button. It returns the Access Token.
+image::../images/test-ropc-11.png[Test Get Access Token]
 
-In the second step, we click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button. This invokes the FakeMagento API using the access Token as a Bearer.
+2) Use token to access FakeMagento V2.0.0 API using the "2 -FakeMagentaOrder NativeOAuth API" request
 
-image::../images/V10_test-ropc-22.png[Test Get Access Token]
+image::../images/test-ropc-12.png[Test Access API]
+
+3) Introspect token API using the "Introspect Access Token" request
+
+image::../images/test-ropc-13.png[Test Introspect Access Token]
+
+4) Revoke token API using the "3 -Revoke" request
+
+image::../images/test-ropc-14.png[Test Revoke Access Token]
+
+5) Access the API again with the revoked token using the "2 -FakeMagentaOrder NativeOAuth API" request
+
+image::../images/test-ropc-15.png[Test Access API]
 
 ==== Authorization Code grant and OIDC
 
 ===== Protect the API with OAuth - Authorization
-Let's protect, the FakeMagento version 3.0.0 API. Click on Develop and select the FakeMagento-3.0.0 API.
+After creating a version V4 (from V1). Let's protect, the FakeMagento version 4.0.0 API. Click on Develop and select the FakeMagento-4.0.0 API.
 Click on Security Definitions and click on Add button.
 Enter:
 > Name: Native Authorization

@@ -2815,16 +2815,16 @@ Express server listening on http://127.0.0.1:9000
 </tr>
 </tbody>
 </table>
-<div class="sect3 data-line-1070">
+<div class="sect3 data-line-1069">
 <h4 id="_introduction_2">Introduction</h4>
-<div class="paragraph data-line-1071">
+<div class="paragraph data-line-1070">
 <p>OAuth - Open Authorization is a great and modern security mechanism. It is used for two main cases: authentication and authorization. The very nice thing with OAuth is that there is a full control on the life of the token (client side or server side), it is possible to refresh the token, meaning being able to recreate an access token without the need of re-entering the user&#8217;s credentials, it is possible to perform authorization with the notion of scope, it is possible to authorize a third party to access your data without authenticating (or using your credentials) to this third party, it is possible to revoke the token, a lot of very good things. The only limitation was the content of the token regarding the identity of the parties, this is basically a UUID, but this limitation is corrected with OpenID Connect. One difficulty with OAuth is coming from its flexibility, it is so flexible that it implies a lot of various ways to use OAuth, choices to use different grant types, the way to extract the identity, to perform authentication, to control the revocation and introspection, the way the scope and the consents are handled, the redirection, etc …</p>
 </div>
-<div class="paragraph data-line-1073">
+<div class="paragraph data-line-1072">
 <p>We cannot work with OAuth without mentioning the various specifications around OAuth. And as usual with pretty recent technology, they evolve quite a lot. The Resource Owner Password Credentials scenario demonstrated below is not popular anymore.
 Below is a table with the main specificatiNOTE:ons.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch data-line-1075">
+<table class="tableblock frame-all grid-all stretch data-line-1074">
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2931,61 +2931,61 @@ Below is a table with the main specificatiNOTE:ons.</p>
 </tbody>
 </table>
 </div>
-<div class="sect3 data-line-1103">
+<div class="sect3 data-line-1102">
 <h4 id="_preparing_the_environment_fake_authentication_url_api">Preparing the environment - Fake Authentication URL API</h4>
-<div class="paragraph data-line-1104">
+<div class="paragraph data-line-1103">
 <p>To perform some more advanced scenarii with security, we need a user registry where all the users are defined. There are several types of user registries for user authentication supported in API Connect:</p>
 </div>
-<div class="ulist data-line-1106">
+<div class="ulist data-line-1105">
 <ul>
-<li class="data-line-1106">
+<li class="data-line-1105">
 <p>Authentication URL User Registry - Based on an authentication URL (Following a simple HTTP/S based invocation)</p>
 </li>
-<li class="data-line-1107">
+<li class="data-line-1106">
 <p>LDAP User Registry - Based on a LDAP server (Standard LDAP integration)</p>
 </li>
-<li class="data-line-1108">
+<li class="data-line-1107">
 <p>Local User Registry - Based on API Connect Local User Registry (Internal registry of the solution)</p>
 </li>
-<li class="data-line-1109">
+<li class="data-line-1108">
 <p>OpenID Connect (OIDC) - Configure user authentication using JSON Web Tokens (External OIDC provider)</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-1111">
+<div class="paragraph data-line-1110">
 <p>Because we do not want to spend too much time to install an LDAP server, for simplicity of usage, we create a small API that will perform the role of an Authentication URL User Registry. The principle is very easy, if the password is equal to the uid, the user is authenticated, if not equal then the user in unauthenticated. <strong>This is for educational purpose only and is of course not secured and should not be used in a production environment</strong>. But this is perfect for educational purpose, and it is also an example of using API Connect with some gateway script samples.</p>
 </div>
-<div class="paragraph data-line-1113">
+<div class="paragraph data-line-1112">
 <p>The API provided contains a few more paths (operations) than what we describe here. We only describe the /basic-auth path. Below a screen capture of the  API assembly.</p>
 </div>
-<div class="imageblock data-line-1115">
+<div class="imageblock data-line-1114">
 <div class="content">
 <img src="../images/V10_API-FakeURLUserRegistry-Assembly.png" alt="Fake Authentication URL Assembly">
 </div>
 </div>
-<div class="paragraph data-line-1117">
+<div class="paragraph data-line-1116">
 <p>Below the processing performed in the "BA authc logic" gateway JavaScript:</p>
 </div>
-<div class="ulist data-line-1119">
+<div class="ulist data-line-1118">
 <ul>
-<li class="data-line-1119">
+<li class="data-line-1118">
 <p>Line 1: Get the Basic Authorization header and split it based on space, it must contain Basic: <code>&lt;base 64 encoding of uid:password&gt;</code></p>
 </li>
-<li class="data-line-1120">
+<li class="data-line-1119">
 <p>Line 2: Takes the uid:password base 64 and decode it. Then separate uid and password, separator :.</p>
 </li>
-<li class="data-line-1121">
+<li class="data-line-1120">
 <p>Line 7: Create a response header called <strong>api-authenticated-credential</strong> with the CN of the user with a hard coded email domain name.</p>
 </li>
-<li class="data-line-1122">
+<li class="data-line-1121">
 <p>Line 10: Provide the body of the response following the expected body as defined in the documentation.</p>
 </li>
-<li class="data-line-1123">
+<li class="data-line-1122">
 <p>Line 12: If username is different from password then returns UNAUTHENTICATED.</p>
 </li>
 </ul>
 </div>
-<div class="listingblock data-line-1127">
+<div class="listingblock data-line-1125">
 <div class="content">
 <pre class="highlight"><code>1 var reqauth =  context.get('request.headers.authorization').split(' ');
 2 var splitval = new Buffer((reqauth[1] || ''), 'base64').toString('utf8').split(':');
@@ -3002,48 +3002,48 @@ Below is a table with the main specificatiNOTE:ons.</p>
 13 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1143">
+<div class="paragraph data-line-1141">
 <p>Here are some characteristics of this API:</p>
 </div>
-<div class="ulist data-line-1145">
+<div class="ulist data-line-1143">
 <ul>
-<li class="data-line-1145">
+<li class="data-line-1143">
 <p>Base path:  /fakeauth/v1</p>
 </li>
-<li class="data-line-1146">
+<li class="data-line-1144">
 <p>No security, not even an API Key.</p>
 </li>
-<li class="data-line-1147">
+<li class="data-line-1145">
 <p>Four paths: /basic-auth (GET), /authenticate	(POST), /authenticate/{uid}/{pwd}	GET, /ping (GET)
 Two definitions:</p>
 </li>
-<li class="data-line-1149">
+<li class="data-line-1147">
 <p>UserCredential	object	Object containing the credentials to perform authentication (uid and password)</p>
 </li>
-<li class="data-line-1150">
+<li class="data-line-1148">
 <p>AuthenticatedUser	object	Object returned when a user is authenticated</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-1152">
+<div class="paragraph data-line-1150">
 <p>Here are the YAML definitions: [Fake Authentication API Open API Document](./materials/fakeauthenticationurl_1.0.0.yaml "FakeAuthenticationURL-1.0.0 API") and [Fake Authentication Product Open API Document](./materials/fakeauthenticationurlproduct_1.0.0.yaml "FakeAuthenticationProduct-1.0.0 Product").</p>
 </div>
-<div class="paragraph data-line-1154">
+<div class="paragraph data-line-1152">
 <p>You need to publish the API, let&#8217;s say in our Integration catalog. I&#8217;m going to use the CLI to do that.</p>
 </div>
-<div class="listingblock data-line-1155">
+<div class="listingblock data-line-1153">
 <div class="content">
 <pre class="highlight"><code>apic login -s &lt;manager endpoint&gt; -u &lt;uid&gt; -p &lt;pwd&gt; -r provider/default-idp-2
 apic products:publish -c integration -o org1 -s &lt;manager endpoint&gt; --scope catalog fakeauthenticationproduct_1.0.0.yaml</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1159">
+<div class="paragraph data-line-1157">
 <p>Sample invocation: <code>curl -k -H "Accept: application/json" -H "Authorization: Basic: Zm9vOmZvbw" <a href="https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/fakeauth/v1/basic-auth" class="undefined" data-href="https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/fakeauth/v1/basic-auth">https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/fakeauth/v1/basic-auth</a></code></p>
 </div>
-<div class="paragraph data-line-1161">
+<div class="paragraph data-line-1159">
 <p>Here is a sample response (formatted):</p>
 </div>
-<div class="listingblock data-line-1162">
+<div class="listingblock data-line-1160">
 <div class="content">
 <pre class="highlight"><code>{
   "username" : "foo",
@@ -3053,24 +3053,28 @@ apic products:publish -c integration -o org1 -s &lt;manager endpoint&gt; --scope
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1171">
+<div class="paragraph data-line-1169">
 <p>At this stage, we have configured the Fake Authentication URL API that we will use in the next chapters. Of course, in real life that would be more of a user registry or OIDC provider that should be used.</p>
 </div>
 </div>
-<div class="sect3 data-line-1174">
+<div class="sect3 data-line-1171">
 <h4 id="_protecting_an_api_with_an_api_key">Protecting an API with an API key</h4>
-<div class="paragraph data-line-1175">
+<div class="paragraph data-line-1172">
 <p>This chapter is only to illustrate the version V1 of the fakemagento API. This API does not contains an Invoke action, but rather a series of actions to demonstrate various capability of API Connect. Among them, we use a parse action, several gateway scripts, a validate action and a map.</p>
 </div>
-<div class="imageblock data-line-1177">
+<div class="imageblock data-line-1174">
 <div class="content">
 <img src="../images/V10_fake-magento-v1-assembly.png" alt="Fake magento assembly">
 </div>
 </div>
-<div class="paragraph data-line-1179">
-<p>The important parts that we will change in the lab âre the base path, the description to indicate the security mechanism used, the security requirement and security scheme.
+<div class="paragraph data-line-1176">
+<p>The important parts that we will change in the lab are the base path, the description to indicate the security mechanism used, the security requirement and security scheme.
 It is important to change the base path to have deterministic results when invoking the API to have a different endpoint.</p>
 </div>
+<div class="sect4 data-line-1179">
+<h5 id="_tests">Tests</h5>
+<div class="sect5 data-line-1181">
+<h6 id="_test_using_explorer">Test using Explorer</h6>
 <div class="paragraph data-line-1182">
 <p>Below, an invocation using the web explorer, showing the use of the API key client id only. Go to the Explorer, click on generte to get a sample body, and then click on the Send button.</p>
 </div>
@@ -3083,184 +3087,214 @@ It is important to change the base path to have deterministic results when invok
 <p>Notice the name of the element contains begins with an n in the response, result of the map action.</p>
 </div>
 </div>
-<div class="sect3 data-line-1188">
-<h4 id="_protecting_an_api_with_basic_authentication">Protecting an API with Basic Authentication</h4>
+<div class="sect5 data-line-1188">
+<h6 id="_test_using_curl">Test using curl</h6>
 <div class="paragraph data-line-1189">
-<p>First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the <strong>Fake Authentication URL API</strong> is correctly working and can be used to secure an API. If I may make a parallel with a Web application, using Basic Authentication is as secured as using it for a Web application. A 401-challenge compared to a form-based authentication will imply that every request contains the uid/pwd, not very secured indeed.</p>
+<p>Request</p>
 </div>
-<div class="paragraph data-line-1191">
-<p>There is an important design decision regarding what is the scope of the resource we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should they apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.</p>
+<div class="listingblock data-line-1190">
+<div class="content">
+<pre class="highlight"><code>curl -k --url https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v1/order -H "X-IBM-Client-Id: d02c553d2f05277d91f6fb0189cc13c6" -H "accept: application/json" -H "content-type: application/json" --data "{   \"orderDetails\": \"2 plates\",   \"orderDate\": \"2019-12-25T10:00:00.000Z\" }" | jq .</code></pre>
+</div>
 </div>
 <div class="paragraph data-line-1193">
+<p>Response</p>
+</div>
+<div class="listingblock data-line-1194">
+<div class="content">
+<pre class="highlight"><code>{
+  "norderId": "7275084087558144",
+  "norderResult": true,
+  "norderDetails": "2 plates",
+  "norderDate": "2019-12-25T10:00:00.000Z"
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3 data-line-1202">
+<h4 id="_protecting_an_api_with_basic_authentication">Protecting an API with Basic Authentication</h4>
+<div class="paragraph data-line-1203">
+<p>First, please consider that using Basic Authentication is not the best and most secured approach! The reason we have this test, is because it is a simple way to check that the <strong>Fake Authentication URL API</strong> is correctly working and can be used to secure an API. If I may make a parallel with a Web application, using Basic Authentication is as secured as using it for a Web application. A 401-challenge compared to a form-based authentication will imply that every request contains the uid/pwd, not very secured indeed.</p>
+</div>
+<div class="paragraph data-line-1205">
+<p>There is an important design decision regarding what is the scope of the resource we are going to configure. Resource, here, means User Registries, TLS configurations and OAuth Providers. Should they apply and be visible for only one organization, or should it be defined for all organizations. In our case, we have taken the decision that the resources will be defined for all organizations and so we defined them in the Cloud Management Console. We could have decided to do it for each organization so they all would have their specific configurations.</p>
+</div>
+<div class="paragraph data-line-1207">
 <p>The list of Steps is the following:
 * In the Cloud Management console, define the User Registry based on the <strong>Fake Authentication URL API</strong>
 * In the Manager console, associate the user registry with the Catalogs
 * Configure the API security to use Basic Authentication and publish it into the catalog
 * Test and validate that everything is working</p>
 </div>
-<div class="paragraph data-line-1199">
+<div class="paragraph data-line-1213">
 <p>To add the User Registry, go in Cloud Management Console, click on Resources on the navigation panel, click on Create button.</p>
 </div>
-<div class="imageblock data-line-1201">
+<div class="imageblock data-line-1215">
 <div class="content">
 <img src="../images/V10_cmc-create-user-registry.png" alt="Create User Registry">
 </div>
 </div>
-<div class="paragraph data-line-1203">
+<div class="paragraph data-line-1217">
 <p>Select Authentication URL User Registry</p>
 </div>
-<div class="imageblock data-line-1205">
+<div class="imageblock data-line-1219">
 <div class="content">
 <img src="../images/V10_cmc-user-registry-definition.png" alt="User Registry definitions start">
 </div>
 </div>
-<div class="paragraph data-line-1207">
+<div class="paragraph data-line-1221">
 <p>Enter the following Information:
 &gt;Title: SampleAuthURL</p>
 </div>
-<div class="ulist data-line-1210">
+<div class="ulist data-line-1224">
 <ul>
-<li class="data-line-1210">
+<li class="data-line-1224">
 <p>Summary: Created by OAuth Provider configuration as a sample. Make sure to update the OAuth Providers using this sample with a valid User Registry.</p>
 </li>
-<li class="data-line-1211">
+<li class="data-line-1225">
 <p>URL: <a href="https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0001.par01.containers.appdomain.cloud/org1/production/fakeauth/v1/basic-auth" class="undefined" data-href="https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0001.par01.containers.appdomain.cloud/org1/production/fakeauth/v1/basic-auth">https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0001.par01.containers.appdomain.cloud/org1/production/fakeauth/v1/basic-auth</a></p>
 </li>
-<li class="data-line-1212">
+<li class="data-line-1226">
 <p>TLS Client Profile: Select Default TLS Client Profile</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1214">
+<div class="imageblock data-line-1228">
 <div class="content">
 <img src="../images/V10_cmc-user-registry-definition-values.png" alt="User Registry definitions">
 </div>
 </div>
-<div class="paragraph data-line-1216">
+<div class="paragraph data-line-1230">
 <p>Click on Save. You have now defined a User registry at the platform level. It can be reused by the different organizations.</p>
 </div>
-<div class="paragraph data-line-1218">
+<div class="paragraph data-line-1232">
 <p>To associate the user registry with the Catalog, go in the Manager console, click on Manage, select the catalog where you want to use the user registry just created</p>
 </div>
-<div class="imageblock data-line-1220">
+<div class="imageblock data-line-1234">
 <div class="content">
 <img src="../images/V10_manager-user-registry-edit.png" alt="User Registry definitions in the Catalog start">
 </div>
 </div>
-<div class="paragraph data-line-1222">
+<div class="paragraph data-line-1236">
 <p>Click on User Registries, then on Catalog Settings</p>
 </div>
-<div class="imageblock data-line-1224">
+<div class="imageblock data-line-1238">
 <div class="content">
 <img src="../images/V10_cmc-user-registry-definition-catalog-settings.png" alt="User Registry definitions in the Catalog start">
 </div>
 </div>
-<div class="paragraph data-line-1226">
+<div class="paragraph data-line-1240">
 <p>Click on the checkbox for the SampleAuthURL and click Save button.</p>
 </div>
-<div class="imageblock data-line-1228">
+<div class="imageblock data-line-1242">
 <div class="content">
 <img src="../images/V10_manager-user-registry-select.png" alt="User Registry definitions in the Catalog">
 </div>
 </div>
-<div class="paragraph data-line-1230">
+<div class="paragraph data-line-1244">
 <p>Now, let&#8217;s configure the security for the API. In the Manager, click on the Develop menu, import the fakemagento API. This is the initial API to work with and it is available in the materials folder. It is at version 1.0. Now, we can edit the Security Definitions section and Add the Basic Authentication, click on Add.
 Enter
 &gt;Name: BA Protection</p>
 </div>
-<div class="ulist data-line-1234">
+<div class="ulist data-line-1248">
 <ul>
-<li class="data-line-1234">
+<li class="data-line-1248">
 <p>Type: Select Basic</p>
 </li>
-<li class="data-line-1235">
+<li class="data-line-1249">
 <p>Select SampleAuthURL for the <strong>Authenticate using User Registry</strong></p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1237">
+<div class="imageblock data-line-1251">
 <div class="content">
 <img src="../images/V10_manager-BA-Security-definition.png" alt="Basic authentication Security Definition">
 </div>
 </div>
-<div class="paragraph data-line-1239">
+<div class="paragraph data-line-1253">
 <p>In the Security section, select BA Protection.</p>
 </div>
-<div class="imageblock data-line-1241">
+<div class="imageblock data-line-1255">
 <div class="content">
 <img src="../images/V10_manager-BA-Security-section.png" alt="Basic authentication Security section">
 </div>
 </div>
-<div class="paragraph data-line-1243">
+<div class="paragraph data-line-1257">
 <p>Create a product and publish it to the Integration Catalog, then subscribe to it. (Not explained here, see previous steps).</p>
 </div>
-<div class="paragraph data-line-1245">
+<div class="paragraph data-line-1259">
 <p>We can now test the API. The credentials are in the Authorization header.</p>
 </div>
-<div class="listingblock data-line-1246">
-<div class="content">
-<pre class="highlight"><code>curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v2/order"</code></pre>
-</div>
-</div>
-<div class="paragraph data-line-1249">
-<p>You should obtain a response:</p>
-</div>
-<div class="listingblock data-line-1250">
-<div class="content">
-<pre class="highlight"><code>{"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}</code></pre>
-</div>
-</div>
-<div class="paragraph data-line-1253">
+<div class="sect4 data-line-1261">
+<h5 id="_tests_2">Tests</h5>
+<div class="sect5 data-line-1262">
+<h6 id="_test_with_explorer">Test with Explorer</h6>
+<div class="paragraph data-line-1263">
 <p>You can use the Explorer to test the API.</p>
 </div>
-<div class="imageblock data-line-1255">
+<div class="imageblock data-line-1265">
 <div class="content">
 <img src="../images/test-in-explorer.png" alt="Test in explorer">
 </div>
 </div>
-<div class="paragraph data-line-1257">
+</div>
+<div class="sect5 data-line-1267">
+<h6 id="_test_with_curl">Test With curl</h6>
+<div class="paragraph data-line-1268">
+<p>Below the equivalent with curl (on Windows):</p>
+</div>
+<div class="listingblock data-line-1269">
+<div class="content">
+<pre class="highlight"><code>curl -k -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -d "{   \"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\"}" "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v2/order" | jq .</code></pre>
+</div>
+</div>
+<div class="paragraph data-line-1272">
+<p>You should obtain a response:</p>
+</div>
+<div class="listingblock data-line-1273">
+<div class="content">
+<pre class="highlight"><code>{
+  "norderId": "7275084087558144",
+  "norderResult": true,
+  "norderDetails": "2 plates",
+  "norderDate": "2019-12-25T10:00:00.000Z"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect5 data-line-1281">
+<h6 id="_test_with_postman">Test with POSTMAN</h6>
+<div class="paragraph data-line-1283">
 <p>Here, I&#8217;m introducing the POSTMAN collection.
 In the POSTMAN, there is a number of requests that you can adapt for your environment.
 The collection is called: API Education. The environment that you need to adjust for your environment is called: API_Education.</p>
 </div>
-<div class="paragraph data-line-1261">
-<p>To test the API with Basic Authentication security. You can use the <strong>FakeMagentoOrderBA V1</strong> API.</p>
+<div class="paragraph data-line-1287">
+<p>To test the API with Basic Authentication security. You can use the <strong>FakeMagentoOrderBA V2</strong> API.</p>
 </div>
-<div class="imageblock data-line-1263">
+<div class="imageblock data-line-1289">
 <div class="content">
 <img src="../images/postman-ba-test.png" alt="Postman Basic Authentication test">
 </div>
 </div>
-<div class="paragraph data-line-1265">
+<div class="paragraph data-line-1291">
 <p>Clicking on Send button will give you the expected result.</p>
 </div>
-<div class="paragraph data-line-1267">
-<p>Below the equivalent with curl (on Windows):</p>
-</div>
-<div class="listingblock data-line-1268">
-<div class="content">
-<pre class="highlight"><code>curl -k "https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/fakemagento/v1/order" -H "Content-Type: application/json" -H "Accept: application/json" -H "X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535" -H "Authorization: Basic Zm9vOmZvbw==" -H "Accept-Encoding: application/json" -d "{   \"orderDetails\": \"2 plates\",   \"orderDate\": \"2019-12-25T10:00:00.000Z\" }"</code></pre>
-</div>
-</div>
-<div class="paragraph data-line-1271">
-<p>returns</p>
-</div>
-<div class="listingblock data-line-1272">
-<div class="content">
-<pre class="highlight"><code>{"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}</code></pre>
 </div>
 </div>
 </div>
-<div class="sect3 data-line-1276">
+<div class="sect3 data-line-1293">
 <h4 id="_oauth_resource_owner_password_credentials_grant">OAuth Resource Owner Password Credentials grant</h4>
-<div class="paragraph data-line-1277">
+<div class="paragraph data-line-1294">
 <p>The first test was not based on OAuth, all the following ones are. We will use two OAuth providers only. One for native support, API Connect acting as an OAuth/OIDC provider and one for third party integration, using IBM  AppId, one of IBM Cloud solution for OAuth/OIDC support.
 The Resource Owner Password Credentials grant type is specified in [RFC 6749 - OAuth 2.0 Authorization Framework](<a href="https://tools.ietf.org/html/rfc6749" class="undefined" data-href="https://tools.ietf.org/html/rfc6749">https://tools.ietf.org/html/rfc6749</a> "The OAuth 2.0 Authorization Framework Specification"), likewise the other grants used in this article.</p>
 </div>
-<div class="paragraph data-line-1280">
+<div class="paragraph data-line-1297">
 <p>In this lab, we start with a very simple case, but still very useful: the use of the Password flow which really is the Resource Owner Password Credentials grant type in OAuth terminology. It is easy because it is 2-legged, for simplicity we also use Basic Authorization to extract identity, the user will be authenticated against the User Registry. We use API Connect as the OAuth provider, notice that it is also possible to use API Connect with an external OAuth provider, we will see it later. This grant type is used when there is a high trust between the client and the application. Some people may find it less secure than using the Authorization grant, but it does not mean that it cannot be used when the conditions of trust are met. The client authenticates directly to the native OAuth provider specified in API Connect with its uid/pwd along the application credentials (client-id/client-secret) and gets an Access Token. Then the application accesses API Connect.</p>
 </div>
-<div class="admonitionblock note data-line-1282">
+<div class="admonitionblock note data-line-1299">
 <table>
 <tr>
 <td class="icon">
@@ -3272,71 +3306,71 @@ In this lab, we do not explain how to propagate the user information with a JWT 
 </tr>
 </table>
 </div>
-<div class="sect4 data-line-1284">
+<div class="sect4 data-line-1301">
 <h5 id="_create_the_oauth_provider">Create the OAuth Provider</h5>
-<div class="paragraph data-line-1285">
+<div class="paragraph data-line-1302">
 <p>So let&#8217;s start! First let&#8217;s create the native OAuth provider. As discussed earlier, we use the Cloud Management console, but it was a design decision and we could use the API Manager console and manage OAuth resources, if we wanted.</p>
 </div>
-<div class="paragraph data-line-1287">
+<div class="paragraph data-line-1304">
 <p>Login to the Cloud Manager console and select Resources (or Manage Resources from home). Select OAuth Providers and click on Add and select Native OAuth Provider button.</p>
 </div>
-<div class="imageblock data-line-1289">
+<div class="imageblock data-line-1306">
 <div class="content">
 <img src="../images/OAuth-native-create.png" alt="Native OAuth provider creation">
 </div>
 </div>
-<div class="paragraph data-line-1291">
+<div class="paragraph data-line-1308">
 <p>Enter
 &gt; Title: NativeProvider</p>
 </div>
-<div class="ulist data-line-1294">
+<div class="ulist data-line-1311">
 <ul>
-<li class="data-line-1294">
+<li class="data-line-1311">
 <p>Description: Internal OAuth Provider shared among organisations</p>
 </li>
-<li class="data-line-1295">
+<li class="data-line-1312">
 <p>Base path: /nativeprovider</p>
 </li>
-<li class="data-line-1296">
+<li class="data-line-1313">
 <p>Select DataPower API Gateway</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-1298">
+<div class="paragraph data-line-1315">
 <p>Click Next button</p>
 </div>
-<div class="imageblock data-line-1300">
+<div class="imageblock data-line-1317">
 <div class="content">
 <img src="../images/V10_oauth-native-baseinfo.png" alt="Native OAuth provider creation base information">
 </div>
 </div>
-<div class="paragraph data-line-1302">
+<div class="paragraph data-line-1319">
 <p>Select the grant types you want to support, in our case we are going to use : Application, Access code and Resource owner - Password. We also select the Public client type, as well as Confidential by default selected. We keep the default values for the endpoints.</p>
 </div>
-<div class="imageblock data-line-1304">
+<div class="imageblock data-line-1321">
 <div class="content">
 <img src="../images/V10_OAuth-native-grants.png" alt="Native OAuth provider creation base information">
 </div>
 </div>
-<div class="paragraph data-line-1306">
+<div class="paragraph data-line-1323">
 <p>Click Next button</p>
 </div>
-<div class="paragraph data-line-1308">
+<div class="paragraph data-line-1325">
 <p>Specify the scopes you want to support, in our case we will use only one scope <strong>details</strong>. To provide detailed access.</p>
 </div>
-<div class="imageblock data-line-1310">
+<div class="imageblock data-line-1327">
 <div class="content">
 <img src="../images/V10_OAuth-native-scopes.png" alt="Native OAuth provider creation scopes">
 </div>
 </div>
-<div class="paragraph data-line-1312">
+<div class="paragraph data-line-1329">
 <p>Click Next button</p>
 </div>
-<div class="paragraph data-line-1314">
+<div class="paragraph data-line-1331">
 <p>The following settings are very important and there are many ways to configure OAuth, API Connect is very flexible and extensible on this part.
 The processing has been described in the specific steps happening during the token(s) creation procedure. It is similar in the way the AAA framework in DataPower is clearly separating each step. I do not want to explain all the combinations below but provide the different values for each step.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch data-line-1317">
+<table class="tableblock frame-all grid-all stretch data-line-1334">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -3377,252 +3411,225 @@ The processing has been described in the specific steps happening during the tok
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-1328">
+<div class="paragraph data-line-1345">
 <p>There are many possible combinations, but you can have even further possibilities to add more processing as we will see later, especially in how the consents are managed, metadata is added, scopes are managed, etc..
 In our case, it is simple and we keep all default values, so nothing to do!</p>
 </div>
-<div class="imageblock data-line-1331">
+<div class="imageblock data-line-1348">
 <div class="content">
 <img src="../images/V10_OAuth-native-auth.png" alt="Native OAuth provider creation processing">
 </div>
 </div>
-<div class="paragraph data-line-1333">
+<div class="paragraph data-line-1350">
 <p>Click Next button</p>
 </div>
-<div class="paragraph data-line-1335">
+<div class="paragraph data-line-1352">
 <p>You get a Summary screen.</p>
 </div>
-<div class="imageblock data-line-1337">
+<div class="imageblock data-line-1354">
 <div class="content">
 <img src="../images/V10_OAuth-native-summary.png" alt="Native OAuth provider creation summary">
 </div>
 </div>
-<div class="paragraph data-line-1339">
+<div class="paragraph data-line-1356">
 <p>Click on Finish button.</p>
 </div>
-<div class="paragraph data-line-1341">
+<div class="paragraph data-line-1358">
 <p>We are going to add a few features to the OAuth Provider, such as OIDC and use of other endpoints such as introspection.
 Edit the NativeProvider:
 * In the Scopes panel, add openid as a scope for the support of OIDC.</p>
 </div>
-<div class="imageblock data-line-1345">
+<div class="imageblock data-line-1362">
 <div class="content">
 <img src="../images/V10_native-edit-scopes.png" alt="Native OAuth provider scopes configuration">
 </div>
 </div>
-<div class="ulist data-line-1347">
+<div class="ulist data-line-1364">
 <ul>
-<li class="data-line-1347">
+<li class="data-line-1364">
 <p>In the Tokens panel, click on the Refresh tokens checkbox and click Save button</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1349">
+<div class="imageblock data-line-1366">
 <div class="content">
 <img src="../images/V10_native-edit-token.png" alt="Native OAuth provider tokens configuration">
 </div>
 </div>
-<div class="ulist data-line-1351">
+<div class="ulist data-line-1368">
 <ul>
-<li class="data-line-1351">
+<li class="data-line-1368">
 <p>In the Token Management panel, click on the Token Management checkbox, Resource owner revocation path checkbox and Client revocation path checkbox and then click Save button. It will ask you if you want to update the Assembly, keep yes and click on the Confirm button.</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1353">
+<div class="imageblock data-line-1370">
 <div class="content">
 <img src="../images/V10_native-edit-token-mgmt.png" alt="Native OAuth provider token management configuration">
 </div>
 </div>
-<div class="ulist data-line-1355">
+<div class="ulist data-line-1372">
 <ul>
-<li class="data-line-1355">
+<li class="data-line-1372">
 <p>In the Introspection panel, click on the Introspection checkbox and then click on the Save button</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1357">
+<div class="imageblock data-line-1374">
 <div class="content">
 <img src="../images/V10_native-edit-introspection.png" alt="Native OAuth provider introspection configuration">
 </div>
 </div>
-<div class="ulist data-line-1359">
+<div class="ulist data-line-1376">
 <ul>
-<li class="data-line-1359">
+<li class="data-line-1376">
 <p>Look at the Metadata Panel, you will see other settings to collect metadata.</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1361">
+<div class="imageblock data-line-1378">
 <div class="content">
 <img src="../images/V10_native-edit-metadata.png" alt="Native OAuth provider metadata configuration">
 </div>
 </div>
-<div class="ulist data-line-1363">
+<div class="ulist data-line-1380">
 <ul>
-<li class="data-line-1363">
+<li class="data-line-1380">
 <p>In the OpenID Connect panel, click on the Enable OIDC checkbox and keep the other values, then click on the Save button.</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1365">
+<div class="imageblock data-line-1382">
 <div class="content">
 <img src="../images/V10_native-edit-oidc.png" alt="Native OAuth provider OIDC configuration">
 </div>
 </div>
-<div class="ulist data-line-1367">
+<div class="ulist data-line-1384">
 <ul>
-<li class="data-line-1367">
+<li class="data-line-1384">
 <p>Look at the API Editor Panel, this is where the code is implemented based on the settings used to configure the OAuth provider. This allows to extend even more how you want to manage your token, given the possibility to use your own code (Gateway script or XSLT). Click on Back and Save button.</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1369">
+<div class="imageblock data-line-1386">
 <div class="content">
 <img src="../images/V10_native-edit-assembly.png" alt="Native OAuth provider Assembly Panel">
 </div>
 </div>
-<div class="paragraph data-line-1371">
+<div class="paragraph data-line-1388">
 <p>We have an OAuth provider definition.</p>
 </div>
 </div>
-<div class="sect4 data-line-1373">
+<div class="sect4 data-line-1390">
 <h5 id="_make_the_oauth_provider_usable_in_the_catalogs">Make the OAuth provider usable in the catalogs</h5>
-<div class="paragraph data-line-1375">
+<div class="paragraph data-line-1392">
 <p>We need to make this OAuth Provider accessible in the various catalogs where we want to use it.
 We leave the Cloud Manager console and go to the Manager Console.
 Click on Manage and select Sandbox, then Settings and OAuth Providers. Click on Edit button on the top left.</p>
 </div>
-<div class="imageblock data-line-1379">
+<div class="imageblock data-line-1396">
 <div class="content">
 <img src="../images/V10_oauth-native-manager-associate.png" alt="OAuth provider association to Catalog Edit">
 </div>
 </div>
-<div class="paragraph data-line-1381">
+<div class="paragraph data-line-1398">
 <p>Click on the checkbox close to the NativeProvider</p>
 </div>
-<div class="imageblock data-line-1383">
+<div class="imageblock data-line-1400">
 <div class="content">
 <img src="../images/V10_oauth-native-manager-associate-edit.png" alt="OAuth provider association to Catalog">
 </div>
 </div>
-<div class="paragraph data-line-1385">
+<div class="paragraph data-line-1402">
 <p>Repeat the same operation with the Integration Catalog.
 It is not yet accessible because we are not using it in any API.</p>
 </div>
 </div>
-<div class="sect4 data-line-1388">
+<div class="sect4 data-line-1405">
 <h5 id="_protect_the_api_with_oauth">Protect the API with OAuth</h5>
-<div class="paragraph data-line-1389">
+<div class="paragraph data-line-1406">
 <p>Now let&#8217;s protect the FakeMagento, we create a version 3.0.0 API from the version 1.0.0.
 Click on Develop and select the FakeMagento-3.0.0 API. We have changed the base path to /fakemagento/v3.</p>
 </div>
-<div class="paragraph data-line-1392">
+<div class="paragraph data-line-1409">
 <p>Create a security scheme for OAuth</p>
 </div>
-<div class="paragraph data-line-1394">
+<div class="paragraph data-line-1411">
 <p>enter:
 &gt; Name: Native ROPW</p>
 </div>
-<div class="ulist data-line-1397">
+<div class="ulist data-line-1414">
 <ul>
-<li class="data-line-1397">
+<li class="data-line-1414">
 <p>Description: Using the native OAuth provider for Resource Owner Password grant</p>
 </li>
-<li class="data-line-1398">
+<li class="data-line-1415">
 <p>Select OAuth2</p>
 </li>
-<li class="data-line-1399">
+<li class="data-line-1416">
 <p>Select NativeProvider for the OAuth Provider</p>
 </li>
-<li class="data-line-1400">
+<li class="data-line-1417">
 <p>Select Resource Owner for the Flow</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-1402">
+<div class="paragraph data-line-1419">
 <p>Click Save button.</p>
 </div>
-<div class="imageblock data-line-1404">
+<div class="imageblock data-line-1421">
 <div class="content">
 <img src="../images/V10_native-ropc-security-scheme.png" alt="OAuth Resource Owner Password Credentials API security Requirement">
 </div>
 </div>
-<div class="paragraph data-line-1406">
+<div class="paragraph data-line-1423">
 <p>Add the Security requirement</p>
 </div>
-<div class="imageblock data-line-1408">
+<div class="imageblock data-line-1425">
 <div class="content">
 <img src="../images/V10_native-ropc-security-requirement.png" alt="OAuth Resource Owner Password Credentials API security Definition">
 </div>
 </div>
 </div>
-<div class="sect4 data-line-1410">
-<h5 id="_tests">Tests</h5>
-<div class="paragraph data-line-1411">
+<div class="sect4 data-line-1427">
+<h5 id="_tests_3">Tests</h5>
+<div class="paragraph data-line-1428">
 <p>Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.</p>
 </div>
-<div class="paragraph data-line-1413">
-<p>I&#8217;m going to test it in different ways: using Postman, curl and using the developer portal.</p>
+<div class="paragraph data-line-1430">
+<p>I&#8217;m going to test it in different ways: using developer portal, curl and Postman.</p>
 </div>
-<div class="sect5 data-line-1415">
-<h6 id="_using_postman">Using POSTMAN</h6>
-<div class="paragraph data-line-1416">
-<p>1) Get token using the "1 -Resource Owner Password Token V2" request</p>
+<div class="sect5 data-line-1432">
+<h6 id="_using_the_developer_portal">Using the Developer portal</h6>
+<div class="paragraph data-line-1433">
+<p>We do not explain all the steps because it has been done in previous chapters. We sign into the developer Portal, then select the FakeMagento V3.0.0 API and click on Try it. In the first step, we get the token. We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button. It returns the Access Token.</p>
 </div>
-<div class="imageblock data-line-1418">
+<div class="paragraph data-line-1435">
+<p>In the second step, we click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button. This invokes the FakeMagento API using the access Token as a Bearer.</p>
+</div>
+<div class="imageblock data-line-1437">
 <div class="content">
-<img src="../images/test-ropc-11.png" alt="Test Get Access Token">
-</div>
-</div>
-<div class="paragraph data-line-1420">
-<p>2) Use token to access FakeMagento V2.0.0 API using the "2 -FakeMagentaOrder NativeOAuth API" request</p>
-</div>
-<div class="imageblock data-line-1422">
-<div class="content">
-<img src="../images/test-ropc-12.png" alt="Test Access API">
-</div>
-</div>
-<div class="paragraph data-line-1424">
-<p>3) Introspect token API using the "Introspect Access Token" request</p>
-</div>
-<div class="imageblock data-line-1426">
-<div class="content">
-<img src="../images/test-ropc-13.png" alt="Test Introspect Access Token">
-</div>
-</div>
-<div class="paragraph data-line-1428">
-<p>4) Revoke token API using the "3 -Revoke" request</p>
-</div>
-<div class="imageblock data-line-1430">
-<div class="content">
-<img src="../images/test-ropc-14.png" alt="Test Revoke Access Token">
-</div>
-</div>
-<div class="paragraph data-line-1432">
-<p>5) Access the API again with the revoked token using the "2 -FakeMagentaOrder NativeOAuth API" request</p>
-</div>
-<div class="imageblock data-line-1434">
-<div class="content">
-<img src="../images/test-ropc-15.png" alt="Test Access API">
+<img src="../images/V10_test-ropc-22.png" alt="Test Get Access Token">
 </div>
 </div>
 </div>
-<div class="sect5 data-line-1436">
+<div class="sect5 data-line-1439">
 <h6 id="_using_curl">Using curl</h6>
-<div class="paragraph data-line-1438">
-<p>1) Get token
-Request</p>
+<div class="paragraph data-line-1440">
+<p>1) Get token</p>
 </div>
-<div class="listingblock data-line-1440">
+<div class="paragraph data-line-1442">
+<p>Request</p>
+</div>
+<div class="listingblock data-line-1443">
 <div class="content">
 <pre class="highlight"><code>curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -d "grant_type=password&amp;username=foo&amp;password=foo&amp;client_id=d02c553d2f05277d91f6fb0189cc13c6&amp;client_secret=e5ef1f10fa79402946f1b30f7af623c0&amp;scope=details&amp;APIm-Debug=true" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/token |jq .</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1443">
+<div class="paragraph data-line-1446">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1444">
+<div class="listingblock data-line-1447">
 <div class="content">
 <pre class="highlight"><code>{
   "token_type": "Bearer",
@@ -3635,39 +3642,45 @@ Request</p>
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1456">
-<p>2) Use token to access FakeMagento V2.0.0 API
-Request</p>
+<div class="paragraph data-line-1459">
+<p>2) Use token to access FakeMagento V2.0.0 API</p>
 </div>
-<div class="listingblock data-line-1458">
+<div class="paragraph data-line-1461">
+<p>Request</p>
+</div>
+<div class="listingblock data-line-1462">
 <div class="content">
 <pre class="highlight"><code>curl -v -k -X POST -H "X-IBM-Client-Id: d02c553d2f05277d91f6fb0189cc13c6" -H "Authorization: Bearer AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" -H "Content-Type: application/json" -H "accept: application/json" -d  "{\"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\" }" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v3/order |jq .</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1461">
+<div class="paragraph data-line-1465">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1462">
+<div class="listingblock data-line-1466">
 <div class="content">
-<pre class="highlight"><code>  "norderId": "7275084087558144",
+<pre class="highlight"><code>{
+  "norderId": "7275084087558144",
   "norderResult": true,
   "norderDetails": "2 plates",
-  "norderDate": "2019-12-25T10:00:00.000Z"</code></pre>
+  "norderDate": "2019-12-25T10:00:00.000Z"
+}</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1470">
-<p>3) Introspect token API
-Request</p>
+<div class="paragraph data-line-1475">
+<p>3) Introspect token API</p>
 </div>
-<div class="listingblock data-line-1472">
+<div class="paragraph data-line-1477">
+<p>Request</p>
+</div>
+<div class="listingblock data-line-1478">
 <div class="content">
 <pre class="highlight"><code>curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&amp;token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/introspect |jq .</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1475">
+<div class="paragraph data-line-1481">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1476">
+<div class="listingblock data-line-1482">
 <div class="content">
 <pre class="highlight"><code>{
   "active": true,
@@ -3688,36 +3701,40 @@ Request</p>
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1496">
-<p>4) Revoke token API
-Request</p>
+<div class="paragraph data-line-1502">
+<p>4) Revoke token API</p>
 </div>
-<div class="listingblock data-line-1498">
+<div class="paragraph data-line-1504">
+<p>Request</p>
+</div>
+<div class="listingblock data-line-1505">
 <div class="content">
 <pre class="highlight"><code>curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&amp;token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/revoke |jq .</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1501">
+<div class="paragraph data-line-1508">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1502">
+<div class="listingblock data-line-1509">
 <div class="content">
 <pre class="highlight"><code>{"status":"success"}</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1506">
-<p>5) Access API again with revoked token API
-Request</p>
+<div class="paragraph data-line-1513">
+<p>5) Access API again with revoked token API</p>
 </div>
-<div class="listingblock data-line-1508">
+<div class="paragraph data-line-1515">
+<p>Request</p>
+</div>
+<div class="listingblock data-line-1516">
 <div class="content">
 <pre class="highlight"><code>curl -v -k -X POST -H "X-IBM-Client-Id: d02c553d2f05277d91f6fb0189cc13c6" -H "Authorization: Bearer AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" -H "Content-Type: application/json" -H "accept: application/json" -d  "{\"orderDetails\": \"2 plates\", \"orderDate\": \"2019-12-25T10:00:00.000Z\" }" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v3/order |jq .</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1511">
+<div class="paragraph data-line-1519">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1512">
+<div class="listingblock data-line-1520">
 <div class="content">
 <pre class="highlight"><code>{
   "httpCode": "401",
@@ -3727,168 +3744,199 @@ Request</p>
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1521">
-<p>6) Re-introspect the token API with revoked token
-Request</p>
+<div class="paragraph data-line-1529">
+<p>6) Re-introspect the token API with revoked token</p>
 </div>
-<div class="listingblock data-line-1523">
+<div class="paragraph data-line-1531">
+<p>Request</p>
+</div>
+<div class="listingblock data-line-1532">
 <div class="content">
 <pre class="highlight"><code>curl -k -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "accept: application/json" -H "x-ibm-client-id: d02c553d2f05277d91f6fb0189cc13c6" -H "x-ibm-client-secret: e5ef1f10fa79402946f1b30f7af623c0" -d "token_type_hint=access_token&amp;token=AAIgZDAyYzU1M2QyZjA1Mjc3ZDkxZjZmYjAxODljYzEzYzbSW49ATSXFYDCq4HxAezoCfHMTLEL1PFdo3oXRhngC9cxrlJoX_4RvRpwQLWHMLn-khvn7w-SyaDLpGcOcpVdz" https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/sandbox/nativeprovider/oauth2/introspect |jq .</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1526">
+<div class="paragraph data-line-1535">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1527">
+<div class="listingblock data-line-1536">
 <div class="content">
 <pre class="highlight"><code>{"active": false}</code></pre>
 </div>
 </div>
 </div>
+<div class="sect5 data-line-1539">
+<h6 id="_using_postman">Using POSTMAN</h6>
+<div class="paragraph data-line-1540">
+<p>1) Get token using the "1 -Resource Owner Password Token V2" request</p>
 </div>
-<div class="sect4 data-line-1531">
-<h5 id="_using_the_developer_portal">Using the Developer portal</h5>
-<div class="paragraph data-line-1532">
-<p>We do not explain all the steps because it has been done in previous chapters. We sign into the developer Portal, then select the FakeMagento V3.0.0 API and click on Try it. In the first step, we get the token. We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button. It returns the Access Token.</p>
-</div>
-<div class="paragraph data-line-1534">
-<p>In the second step, we click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button. This invokes the FakeMagento API using the access Token as a Bearer.</p>
-</div>
-<div class="imageblock data-line-1536">
+<div class="imageblock data-line-1542">
 <div class="content">
-<img src="../images/V10_test-ropc-22.png" alt="Test Get Access Token">
+<img src="../images/test-ropc-11.png" alt="Test Get Access Token">
+</div>
+</div>
+<div class="paragraph data-line-1544">
+<p>2) Use token to access FakeMagento V2.0.0 API using the "2 -FakeMagentaOrder NativeOAuth API" request</p>
+</div>
+<div class="imageblock data-line-1546">
+<div class="content">
+<img src="../images/test-ropc-12.png" alt="Test Access API">
+</div>
+</div>
+<div class="paragraph data-line-1548">
+<p>3) Introspect token API using the "Introspect Access Token" request</p>
+</div>
+<div class="imageblock data-line-1550">
+<div class="content">
+<img src="../images/test-ropc-13.png" alt="Test Introspect Access Token">
+</div>
+</div>
+<div class="paragraph data-line-1552">
+<p>4) Revoke token API using the "3 -Revoke" request</p>
+</div>
+<div class="imageblock data-line-1554">
+<div class="content">
+<img src="../images/test-ropc-14.png" alt="Test Revoke Access Token">
+</div>
+</div>
+<div class="paragraph data-line-1556">
+<p>5) Access the API again with the revoked token using the "2 -FakeMagentaOrder NativeOAuth API" request</p>
+</div>
+<div class="imageblock data-line-1558">
+<div class="content">
+<img src="../images/test-ropc-15.png" alt="Test Access API">
 </div>
 </div>
 </div>
 </div>
-<div class="sect3 data-line-1538">
+</div>
+<div class="sect3 data-line-1560">
 <h4 id="_authorization_code_grant_and_oidc">Authorization Code grant and OIDC</h4>
-<div class="sect4 data-line-1540">
+<div class="sect4 data-line-1562">
 <h5 id="_protect_the_api_with_oauth_authorization">Protect the API with OAuth - Authorization</h5>
-<div class="paragraph data-line-1541">
-<p>Let&#8217;s protect, the FakeMagento version 3.0.0 API. Click on Develop and select the FakeMagento-3.0.0 API.
+<div class="paragraph data-line-1563">
+<p>After creating a version V4 (from V1). Let&#8217;s protect, the FakeMagento version 4.0.0 API. Click on Develop and select the FakeMagento-4.0.0 API.
 Click on Security Definitions and click on Add button.
 Enter:
 &gt; Name: Native Authorization</p>
 </div>
-<div class="ulist data-line-1546">
+<div class="ulist data-line-1568">
 <ul>
-<li class="data-line-1546">
+<li class="data-line-1568">
 <p>Description: Using the native OAuth provider for Authorization grant</p>
 </li>
-<li class="data-line-1547">
+<li class="data-line-1569">
 <p>Select OAuth2</p>
 </li>
-<li class="data-line-1548">
+<li class="data-line-1570">
 <p>Select NativeProvider for the OAuth Provider</p>
 </li>
-<li class="data-line-1549">
+<li class="data-line-1571">
 <p>Select Access code for the Flow</p>
 </li>
-<li class="data-line-1550">
+<li class="data-line-1572">
 <p>Select details and openid for the scopes</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1552">
+<div class="imageblock data-line-1574">
 <div class="content">
 <img src="../images/access-secure-API-sec-def.png" alt="OAuth Access Code API protection Security Definition">
 </div>
 </div>
-<div class="paragraph data-line-1554">
+<div class="paragraph data-line-1576">
 <p>Click Save button.
 In the Security section, select Native Authorization and the two scope details and openid, then click Save button.</p>
 </div>
-<div class="imageblock data-line-1557">
+<div class="imageblock data-line-1579">
 <div class="content">
 <img src="../images/access-secure-API-sec.png" alt="OAuth Access Code API protection Security">
 </div>
 </div>
 </div>
-<div class="sect4 data-line-1559">
-<h5 id="_tests_2">Tests</h5>
-<div class="paragraph data-line-1560">
+<div class="sect4 data-line-1581">
+<h5 id="_tests_4">Tests</h5>
+<div class="paragraph data-line-1582">
 <p>Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.</p>
 </div>
-<div class="sect5 data-line-1562">
+<div class="sect5 data-line-1584">
 <h6 id="_using_postman_2">Using POSTMAN</h6>
-<div class="paragraph data-line-1563">
+<div class="paragraph data-line-1585">
 <p>We are using one nice feature of Postman to directly get the access token. It hides a little bit the use of the Access Code. I have provided the request in Postman to exchange the Access Code for the Access Token.
 Using the "1 -Access Token Authorization V3" request
 Click on the Authorization link, then click on Get New Access Token</p>
 </div>
-<div class="imageblock data-line-1567">
+<div class="imageblock data-line-1589">
 <div class="content">
 <img src="../images/test-access-11.png" alt="Postman Test Access Token">
 </div>
 </div>
-<div class="paragraph data-line-1569">
+<div class="paragraph data-line-1591">
 <p>Then click on Request Token button</p>
 </div>
-<div class="imageblock data-line-1571">
+<div class="imageblock data-line-1593">
 <div class="content">
 <img src="../images/test-access-12.png" alt="Postman Test Access Token">
 </div>
 </div>
-<div class="paragraph data-line-1573">
+<div class="paragraph data-line-1595">
 <p>Enter the credentials for the user. Click Login button. Notice that this page is generated by API Connect, this is the default page for authentication.</p>
 </div>
-<div class="imageblock data-line-1575">
+<div class="imageblock data-line-1597">
 <div class="content">
 <img src="../images/test-access-13.png" alt="Postman Test Access Token">
 </div>
 </div>
-<div class="paragraph data-line-1577">
+<div class="paragraph data-line-1599">
 <p>You get the Access Token and the idtoken. Copy the Access Token.</p>
 </div>
-<div class="imageblock data-line-1579">
+<div class="imageblock data-line-1601">
 <div class="content">
 <img src="../images/test-access-14.png" alt="Postman Test Access Token">
 </div>
 </div>
-<div class="paragraph data-line-1581">
+<div class="paragraph data-line-1603">
 <p>Use the Access Token to access the FakeMagento V3 API.</p>
 </div>
-<div class="imageblock data-line-1583">
+<div class="imageblock data-line-1605">
 <div class="content">
 <img src="../images/test-access-15.png" alt="Postman Test Access Token">
 </div>
 </div>
 </div>
-<div class="sect5 data-line-1586">
+<div class="sect5 data-line-1608">
 <h6 id="_using_curl_2">Using curl</h6>
-<div class="literalblock data-line-1587">
+<div class="literalblock data-line-1609">
 <div class="content">
 <pre>1) Get the Access Code
 Use a browser and enter https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0000.par01.containers.appdomain.cloud/org1/integration/mainprovideroa/oauth2/authorize?response_type=code&amp;redirect_uri=https://www.getpostman.com/oauth2/callback&amp;client_id=3beaa6887601bb3a6c5f802e67372535&amp;scope=details%20openid</pre>
 </div>
 </div>
-<div class="ulist data-line-1590">
+<div class="ulist data-line-1612">
 <ul>
-<li class="data-line-1590">
+<li class="data-line-1612">
 <p>You get the login pages.</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1592">
+<div class="imageblock data-line-1614">
 <div class="content">
 <img src="../images/test-access-31.png" alt="Postman Test Access Token - Get Access Code">
 </div>
 </div>
-<div class="paragraph data-line-1594">
+<div class="paragraph data-line-1616">
 <p>2) Enter the user credentials and click on Login button.
 In the Browser URL, you get the Access Code</p>
 </div>
-<div class="listingblock data-line-1596">
+<div class="listingblock data-line-1618">
 <div class="content">
 <pre class="highlight"><code>https://app.getpostman.com/oauth2/callback?code=AAIANrOjEOMYqicDr7MkV3khttTEMasEphtiBZz3ieiYXj2qmFToG6mH6MtUvmnceAlbNhFtlHEBsgSrV8Z3otBRXMOXuGg7V-F_DCy13V1dbg</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1599">
+<div class="paragraph data-line-1621">
 <p>3) Send the Access Code to get the Access Token
 Request</p>
 </div>
-<div class="listingblock data-line-1601">
+<div class="listingblock data-line-1623">
 <div class="content">
 <pre class="highlight"><code>POST /org1/integration/mainprovideroa/oauth2/token HTTP/1.1
 Accept: application/json
@@ -3897,10 +3945,10 @@ Content-Type: application/x-www-form-urlencoded
 grant_type=authorization_code&amp;client_id=3beaa6887601bb3a6c5f802e67372535&amp;client_secret=556a75ce26097f96ea281ed47c1cf2e7&amp;code=AAIANrOjEOMYqicDr7MkV3khttTEMasEphtiBZz3ieiYXj2qmFToG6mH6MtUvmnceAlbNhFtlHEBsgSrV8Z3otBRXMOXuGg7V-F_DCy13V1dbg&amp;redirect_uri=https%3A%2F%2Fwww.getpostman.com%2Foauth2%2Fcallback&amp;scope=details%20openid</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1608">
+<div class="paragraph data-line-1630">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1609">
+<div class="listingblock data-line-1631">
 <div class="content">
 <pre class="highlight"><code>HTTP/1.1 200 OK
 X-RateLimit-Limit: name=default,100;
@@ -3922,19 +3970,19 @@ Content-Type: application/json
 </div>
 </div>
 </div>
-<div class="sect4 data-line-1628">
+<div class="sect4 data-line-1650">
 <h5 id="_using_the_developer_portal_2">Using the Developer portal</h5>
-<div class="paragraph data-line-1629">
+<div class="paragraph data-line-1651">
 <p>You get the Access Token directly using curl or Postman. In my case, I use Postman to get the Access Token.
 We select the MyMobileApp application, then enter the client_secret, and the Access Token. We click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
 This invokes the FakeMagento API using the access Token as a Bearer.</p>
 </div>
-<div class="imageblock data-line-1633">
+<div class="imageblock data-line-1655">
 <div class="content">
 <img src="../images/test-access-21.png" alt="Test Using the Access Token">
 </div>
 </div>
-<div class="paragraph data-line-1636">
+<div class="paragraph data-line-1658">
 <p>JSON Web Key (JWK) is specified at [RFC 7517](<a href="https://tools.ietf.org/html/rfc7517" class="undefined" data-href="https://tools.ietf.org/html/rfc7517">https://tools.ietf.org/html/rfc7517</a> "RFC 7517 Specification").
 A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key.
 I&#8217;m using a Simple JSON Web Key generator: [mkjwk](<a href="https://mkjwk.org/" class="undefined" data-href="https://mkjwk.org/">https://mkjwk.org/</a> "Simple JSON Web Key generator ").
@@ -3942,81 +3990,81 @@ OIDC specification is based on the use of the idtoken which is a JSON Web Token 
 </div>
 </div>
 </div>
-<div class="sect3 data-line-1641">
+<div class="sect3 data-line-1663">
 <h4 id="_oauth_client_credentials_grant">OAuth Client Credentials grant</h4>
-<div class="sect4 data-line-1643">
+<div class="sect4 data-line-1665">
 <h5 id="_protect_the_api_with_oauth_application">Protect the API with OAuth - Application</h5>
-<div class="paragraph data-line-1644">
+<div class="paragraph data-line-1666">
 <p>Let&#8217;s protect, the FakeMagento version 4.0.0 API. Click on Develop and select the FakeMagento-4.0.0 API.
 Click on Security Definitions and click on Add button.
 Enter:
 &gt; Name: Native Application</p>
 </div>
-<div class="ulist data-line-1649">
+<div class="ulist data-line-1671">
 <ul>
-<li class="data-line-1649">
+<li class="data-line-1671">
 <p>Description: Using the native OAuth provider for Application grant</p>
 </li>
-<li class="data-line-1650">
+<li class="data-line-1672">
 <p>Select OAuth2</p>
 </li>
-<li class="data-line-1651">
+<li class="data-line-1673">
 <p>Select NativeProvider for the OAuth Provider</p>
 </li>
-<li class="data-line-1652">
+<li class="data-line-1674">
 <p>Select Application for the Flow</p>
 </li>
-<li class="data-line-1653">
+<li class="data-line-1675">
 <p>Select details for the scopes</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-1655">
+<div class="paragraph data-line-1677">
 <p>Click Save button
 image::../images/application-secure-API-sec-def.png[OAuth Application API Security Definition]</p>
 </div>
-<div class="paragraph data-line-1658">
+<div class="paragraph data-line-1680">
 <p>In the Security selection, select Native Application oatuh2 and the details scope.</p>
 </div>
-<div class="paragraph data-line-1660">
+<div class="paragraph data-line-1682">
 <p>Click Save button.</p>
 </div>
-<div class="imageblock data-line-1662">
+<div class="imageblock data-line-1684">
 <div class="content">
 <img src="../images/application-secure-API-sec.png" alt="OAuth Application API Security">
 </div>
 </div>
 </div>
-<div class="sect4 data-line-1664">
-<h5 id="_tests_3">Tests</h5>
-<div class="paragraph data-line-1665">
+<div class="sect4 data-line-1686">
+<h5 id="_tests_5">Tests</h5>
+<div class="paragraph data-line-1687">
 <p>Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.</p>
 </div>
-<div class="sect5 data-line-1667">
+<div class="sect5 data-line-1689">
 <h6 id="_using_postman_3">Using POSTMAN</h6>
-<div class="paragraph data-line-1668">
+<div class="paragraph data-line-1690">
 <p>1) Get token using the "1 -Client Credentials V4" request</p>
 </div>
-<div class="imageblock data-line-1670">
+<div class="imageblock data-line-1692">
 <div class="content">
 <img src="../images/test-application-11.png" alt="Test Get Access Token">
 </div>
 </div>
-<div class="paragraph data-line-1672">
+<div class="paragraph data-line-1694">
 <p>2) Use token to access FakeMagento V4.0.0 API using the "2 -FakeMagentaOrder Native OAuth API" request</p>
 </div>
-<div class="imageblock data-line-1674">
+<div class="imageblock data-line-1696">
 <div class="content">
 <img src="../images/test-application-12.png" alt="Test Access API">
 </div>
 </div>
 </div>
-<div class="sect5 data-line-1677">
+<div class="sect5 data-line-1699">
 <h6 id="_using_curl_3">Using curl</h6>
-<div class="paragraph data-line-1679">
+<div class="paragraph data-line-1701">
 <p>Request</p>
 </div>
-<div class="listingblock data-line-1680">
+<div class="listingblock data-line-1702">
 <div class="content">
 <pre class="highlight"><code>POST /org1/integration/nativeprovider/oauth2/token HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
@@ -4024,10 +4072,10 @@ accept: application/json
 grant_type=client_credentials&amp;client_id=3beaa6887601bb3a6c5f802e67372535&amp;client_secret=556a75ce26097f96ea281ed47c1cf2e7&amp;scope=details&amp;APIm-Debug=true</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1686">
+<div class="paragraph data-line-1708">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1687">
+<div class="listingblock data-line-1709">
 <div class="content">
 <pre class="highlight"><code>HTTP/1.1 200 OK
 X-RateLimit-Limit: name=default,100;
@@ -4044,10 +4092,10 @@ Content-Type: application/json
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1703">
+<div class="paragraph data-line-1725">
 <p>Request</p>
 </div>
-<div class="listingblock data-line-1704">
+<div class="listingblock data-line-1726">
 <div class="content">
 <pre class="highlight"><code>POST /org1/integration/fakemagento/v2/order HTTP/1.1
 X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535
@@ -4060,10 +4108,10 @@ Authorization: Bearer AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmV0AD6QpfILhT
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1715">
+<div class="paragraph data-line-1737">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1716">
+<div class="listingblock data-line-1738">
 <div class="content">
 <pre class="highlight"><code>HTTP/1.1 200 OK
 X-RateLimit-Limit: name=ten,10;
@@ -4082,66 +4130,66 @@ Content-Type: application/json
 </div>
 </div>
 </div>
-<div class="sect4 data-line-1732">
+<div class="sect4 data-line-1754">
 <h5 id="_using_the_developer_portal_3">Using the Developer portal</h5>
-<div class="paragraph data-line-1733">
+<div class="paragraph data-line-1755">
 <p>We do not explain all the steps because it has been done in previous chapters.
 We sign in to the developer Portal, then select the FakeMagento V4.0.0 API and click on Try it.
 In the first step, we get the token.
 We select the MyMobileApp application, then enter the client_secret, enter the username and password and click on the Get Token button.
 It returns the Access Token.</p>
 </div>
-<div class="imageblock data-line-1739">
+<div class="imageblock data-line-1761">
 <div class="content">
 <img src="../images/test-application-21.png" alt="Test Get Access Token">
 </div>
 </div>
-<div class="paragraph data-line-1741">
+<div class="paragraph data-line-1763">
 <p>In the second step, we click on Generate link to automatically populate the parameters needed to call the API. Then click on Send button.
 This invokes the FakeMagento API using the access Token as a Bearer.</p>
 </div>
-<div class="imageblock data-line-1744">
+<div class="imageblock data-line-1766">
 <div class="content">
 <img src="../images/test-application-22.png" alt="Test Get Access Token">
 </div>
 </div>
 </div>
 </div>
-<div class="sect3 data-line-1746">
+<div class="sect3 data-line-1768">
 <h4 id="_external_oauth_provider">External OAuth Provider</h4>
-<div class="paragraph data-line-1747">
+<div class="paragraph data-line-1769">
 <p>In this scenario, we have an external OAuth Provider available, we use the IBM app-id application available in IBM Cloud as an OAuth/OIDC provider ([App-ID documentation](<a href="https://cloud.ibm.com/docs/appid)" class="undefined" data-href="https://cloud.ibm.com/docs/appid)">https://cloud.ibm.com/docs/appid)</a>). The integration with API Connect implies a synchronisation of the API keys (client id/client secret) with the applications defined in the OAuth Provider. It can be done in two ways, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect using apic CLI. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
 At runtime, the application first gets the token from the OAuth provider directly, not going through API Connect (this is a more secured approach since the credentials do not flow through API Connect), then the application invokes the API with the Access Token in the Authorization header as a Bearer. API Connect then invokes the OAuth Provider with an Introspect call with the token, if the call returns a 200 (or active=true), then the Access Token is valid and API Connect can proceed.</p>
 </div>
-<div class="paragraph data-line-1750">
+<div class="paragraph data-line-1772">
 <p>It is important to understand the various identities that do exist in the context and see that it is not obvious to understand all the various identities and that they are related to the different grants that have been chosen.</p>
 </div>
-<div class="paragraph data-line-1752">
+<div class="paragraph data-line-1774">
 <p>In the following diagram, we can see that there are 3 identities: a user identity (that will be used for Resource Owner Password or Authorization grants), a system identity for the application requesting the access token (for all grants) and finally a system identity representing APIC to access the OAuth provider.</p>
 </div>
-<div class="imageblock data-line-1754">
+<div class="imageblock data-line-1776">
 <div class="content">
 <img src="../images/oauth-third-concepts.png" alt="Third party OAuth Provider flow">
 </div>
 </div>
-<div class="paragraph data-line-1756">
+<div class="paragraph data-line-1778">
 <p>Let&#8217;s stop a few seconds on the configuration on app-id ([App-ID documentation](<a href="https://cloud.ibm.com/docs/appid)" class="undefined" data-href="https://cloud.ibm.com/docs/appid)">https://cloud.ibm.com/docs/appid)</a>). The diagram below shows the objects that I have created for this example. Of course, depending on your OAuth/OIDC provider it may defer (Ping Federate, Auth0, MSAD, &#8230;&#8203;).
 As you can see, it important to distinguish the different identities. We have a user identity the person who will be authorized to access the API (Resource Owner Password and Authorization grants), and two system identities, the application that is using the API and also API Connect which is a client of the OAuth provider. The later is used to validate (introspect) a token for example.</p>
 </div>
-<div class="imageblock data-line-1759">
+<div class="imageblock data-line-1781">
 <div class="content">
 <img src="../images/oauth-appid-concepts.png" alt="App-ID concept">
 </div>
 </div>
-<div class="sect4 data-line-1761">
+<div class="sect4 data-line-1783">
 <h5 id="_validating_the_oauth_provider_configuration">Validating the OAuth provider configuration</h5>
-<div class="paragraph data-line-1762">
+<div class="paragraph data-line-1784">
 <p>Before configuring and using API Connect, we are making sure the OAuth provider is correctly configured and all the various scenarios are working.</p>
 </div>
-<div class="paragraph data-line-1764">
+<div class="paragraph data-line-1786">
 <p>I indicate here the Windows style commands (it is easy to convert them into Linux style)</p>
 </div>
-<div class="literalblock data-line-1766">
+<div class="literalblock data-line-1788">
 <div class="content">
 <pre> ====== Get a token (Resource Owner Password grant)
  ```
@@ -4164,7 +4212,7 @@ curl -k -u "%app_client_id%:%app_client_secret%" -H "Host: eu-gb.appid.cloud.ibm
  ```</pre>
 </div>
 </div>
-<div class="literalblock data-line-1786">
+<div class="literalblock data-line-1808">
 <div class="content">
 <pre>====== Introspect the access token
 ```
@@ -4173,13 +4221,13 @@ set authorizationhapic=&lt;base64(client_id of the application representing APIC
 curl -k -H "Authorization: Basic %authorizationhapic%" -F "token=%btoken%" "https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/introspect"</pre>
 </div>
 </div>
-<div class="literalblock data-line-1792">
+<div class="literalblock data-line-1814">
 <div class="content">
 <pre> ```
 Response is</pre>
 </div>
 </div>
-<div class="listingblock data-line-1794">
+<div class="listingblock data-line-1816">
 <div class="content">
 <pre class="highlight"><code>{
 	"active": true,
@@ -4187,233 +4235,233 @@ Response is</pre>
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1801">
+<div class="paragraph data-line-1823">
 <p>We are all set, we can create a token, and we can introspect and get a <strong>valid:true</strong> response, we can now configure API Connect who is going to do the same introspect call.</p>
 </div>
 </div>
-<div class="sect4 data-line-1803">
+<div class="sect4 data-line-1825">
 <h5 id="_create_the_oauth_provider_in_api_connect">Create the OAuth Provider in API Connect</h5>
-<div class="paragraph data-line-1804">
+<div class="paragraph data-line-1826">
 <p>We have decided to create the OAuth Provider in the API Connect Cloud Manager using the Cloud Management Console, it could have been at an organisation level uisng the API Connect Manager.</p>
 </div>
-<div class="paragraph data-line-1806">
+<div class="paragraph data-line-1828">
 <p>As previously, click on Resources, then OAuth Providers. Click Add button selecting Third Party OAuth Provider on top left.
 Enter:
 &gt;Title: AppId</p>
 </div>
-<div class="ulist data-line-1810">
+<div class="ulist data-line-1832">
 <ul>
-<li class="data-line-1810">
+<li class="data-line-1832">
 <p>Keep Access code selected and select Application</p>
 </li>
-<li class="data-line-1811">
+<li class="data-line-1833">
 <p>Select DataPower API Gateway</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1813">
+<div class="imageblock data-line-1835">
 <div class="content">
 <img src="../images/oauth-third-configV10.png" alt="Third party OAuth Provider config">
 </div>
 </div>
-<div class="paragraph data-line-1815">
+<div class="paragraph data-line-1837">
 <p>Click Next button
 In the Endpoints panel, enter:
 &gt;Authorization URL: <a href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorize" class="undefined" data-href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorize">https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorize</a></p>
 </div>
-<div class="ulist data-line-1819">
+<div class="ulist data-line-1841">
 <ul>
-<li class="data-line-1819">
+<li class="data-line-1841">
 <p>Token URL: <a href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token" class="undefined" data-href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token">https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token</a></p>
 </li>
-<li class="data-line-1820">
+<li class="data-line-1842">
 <p>Introspect URL: <a href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/introspect" class="undefined" data-href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/introspect">https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/introspect</a></p>
 </li>
-<li class="data-line-1821">
+<li class="data-line-1843">
 <p>TLS profile (optional): Default TLS client profile:1.0.0</p>
 </li>
-<li class="data-line-1822">
+<li class="data-line-1844">
 <p>TLS profile (optional): Default TLS client profile:1.0.0</p>
 </li>
-<li class="data-line-1823">
+<li class="data-line-1845">
 <p>Security (optional): Basic Authentication</p>
 </li>
-<li class="data-line-1824">
+<li class="data-line-1846">
 <p>Basic authentication  request header name (optional): x-introspect-basic-authorization-header, you can use whatever, this header is used to overwrite the value of the two following fields from a client perspective. If you do not use this header then the two values defined below will be used.</p>
 </li>
-<li class="data-line-1825">
+<li class="data-line-1847">
 <p>Basic authentication username (optional): &lt;client_id of apic system identity&gt;</p>
 </li>
-<li class="data-line-1826">
+<li class="data-line-1848">
 <p>Basic authentication password (optional): &lt;client_secret of apic system identity&gt;</p>
 </li>
-<li class="data-line-1827">
+<li class="data-line-1849">
 <p>Select Active for Token validation
 Click Next button</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-1830">
+<div class="paragraph data-line-1852">
 <p>The only used endpoint is the Introspect URL. The Authorization and Token URLs are used in the documentation only and published with the API.</p>
 </div>
-<div class="imageblock data-line-1832">
+<div class="imageblock data-line-1854">
 <div class="content">
 <img src="../images/oauth-third-endpointsV10.png" alt="Third party OAuth Provider endpoints">
 </div>
 </div>
-<div class="paragraph data-line-1834">
+<div class="paragraph data-line-1856">
 <p>For the scope enter:</p>
 </div>
-<div class="ulist data-line-1836">
+<div class="ulist data-line-1858">
 <ul>
-<li class="data-line-1836">
+<li class="data-line-1858">
 <p>details for elevated access</p>
 </li>
-<li class="data-line-1837">
+<li class="data-line-1859">
 <p>openid for OIDC support</p>
 </li>
-<li class="data-line-1838">
+<li class="data-line-1860">
 <p>and then click Save button</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1840">
+<div class="imageblock data-line-1862">
 <div class="content">
 <img src="../images/oauth-third-scopesV10.png" alt="Third party OAuth Provider config">
 </div>
 </div>
-<div class="paragraph data-line-1842">
+<div class="paragraph data-line-1864">
 <p>We are done with the configuration of the OAuth provider. We can now leave the Cloud Manager console.</p>
 </div>
 </div>
-<div class="sect4 data-line-1844">
+<div class="sect4 data-line-1866">
 <h5 id="_associate_the_oauth_provider_with_the_different_catalogs">Associate the OAuth Provider with the different catalogs</h5>
-<div class="paragraph data-line-1845">
+<div class="paragraph data-line-1867">
 <p>We need to make this OAuth Provider accessible in the various catalogs where we want to use it.
 In the Manager Console, click on Manage and select Sandbox, then Settings and OAuth Providers. Click on Edit button on the top left.</p>
 </div>
-<div class="imageblock data-line-1848">
+<div class="imageblock data-line-1870">
 <div class="content">
 <img src="../images/oauth-native-manager-associateV10.png" alt="OAuth provider association to Catalog Edit">
 </div>
 </div>
-<div class="paragraph data-line-1850">
+<div class="paragraph data-line-1872">
 <p>Click on the checkbox close to AppId.</p>
 </div>
-<div class="imageblock data-line-1852">
+<div class="imageblock data-line-1874">
 <div class="content">
 <img src="../images/third-oauth-sandbox-associate-editV10.png" alt="OAuth provider association to Catalog">
 </div>
 </div>
-<div class="paragraph data-line-1854">
+<div class="paragraph data-line-1876">
 <p>Repeat the same operation with the Integration Catalog.
 It is not yet accessible because we are not using it in any API.</p>
 </div>
 </div>
-<div class="sect4 data-line-1857">
+<div class="sect4 data-line-1879">
 <h5 id="_protect_the_api_with_oauth_third_party">Protect the API with OAuth - Third Party</h5>
-<div class="paragraph data-line-1858">
+<div class="paragraph data-line-1880">
 <p>Let&#8217;s protect, the FakeMagento version 5.0.0 API. Click on Develop and select the FakeMagento-5.0.0 API.
 Click on Security Definitions and click on Add button:
 Enter:
 &gt; Name: AppId Third Party Authorization</p>
 </div>
-<div class="ulist data-line-1863">
+<div class="ulist data-line-1885">
 <ul>
-<li class="data-line-1863">
+<li class="data-line-1885">
 <p>Description: Using App ID third party OAuth provider for Authorization grant</p>
 </li>
-<li class="data-line-1864">
+<li class="data-line-1886">
 <p>Select OAuth2</p>
 </li>
-<li class="data-line-1865">
+<li class="data-line-1887">
 <p>Select  AppId for the OAuth Provider</p>
 </li>
-<li class="data-line-1866">
+<li class="data-line-1888">
 <p>Select Access code for the Flow</p>
 </li>
 </ul>
 </div>
-<div class="imageblock data-line-1868">
+<div class="imageblock data-line-1890">
 <div class="content">
 <img src="../images/third-party-access-secure-API-sec-defV10.png" alt="OAuth Access Code API protection Security Definition">
 </div>
 </div>
-<div class="paragraph data-line-1870">
+<div class="paragraph data-line-1892">
 <p>Click Save button.</p>
 </div>
-<div class="paragraph data-line-1872">
+<div class="paragraph data-line-1894">
 <p>In the Security section, select AppId Third Party Authorization and the two scope details and openid, then click Save button.</p>
 </div>
-<div class="imageblock data-line-1874">
+<div class="imageblock data-line-1896">
 <div class="content">
 <img src="../images/third-party-access-secure-API-sec.png" alt="OAuth Access Code API protection Security">
 </div>
 </div>
 </div>
-<div class="sect4 data-line-1876">
+<div class="sect4 data-line-1898">
 <h5 id="_synchronize_the_client_credentials_from_appid_into_api_connect_application_definition">Synchronize the client credentials from AppId into API Connect Application definition</h5>
-<div class="paragraph data-line-1877">
+<div class="paragraph data-line-1899">
 <p>What we do here is get the API keys defined in App ID for the application and then use the CLI to add this set of credentials to the MyMobileApp application. The only way to do this is using the CLI or the REST API. As said previously, an alternative would have been to update the credentials from API Connect to AppId with the AppId API.</p>
 </div>
-<div class="ulist data-line-1879">
+<div class="ulist data-line-1901">
 <ul>
-<li class="data-line-1879">
+<li class="data-line-1901">
 <p>Log to the manager</p>
 </li>
 </ul>
 </div>
-<div class="listingblock data-line-1880">
+<div class="listingblock data-line-1902">
 <div class="content">
 <pre class="highlight"><code>apic.exe login -s &lt;manager-endpoint&gt; -u &lt;user&gt; -p &lt;password&gt; -r provider/default-idp-2</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1884">
+<div class="paragraph data-line-1906">
 <p><strong>Note:</strong> From now on, I&#8217;m going to use a short cut/alias to simplify what I type. And notice that I&#8217;m using Windows so you may have to slightly modify those command if on Linux.</p>
 </div>
-<div class="listingblock data-line-1885">
+<div class="listingblock data-line-1907">
 <div class="content">
 <pre class="highlight"><code>set  apic10=&lt;path-to-apic&gt; -s &lt;manager-endpoint&gt; -o &lt;organisation&gt;</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1889">
+<div class="paragraph data-line-1911">
 <p>Typing <code>%apic10%</code> provides an extensive help.
 To update the application credentials, we need to find the name of the consumer org in the integration catalog and the name of the application.</p>
 </div>
-<div class="ulist data-line-1892">
+<div class="ulist data-line-1914">
 <ul>
-<li class="data-line-1892">
+<li class="data-line-1914">
 <p>Get the name of the consumer organisation</p>
 </li>
 </ul>
 </div>
-<div class="listingblock data-line-1893">
+<div class="listingblock data-line-1915">
 <div class="content">
 <pre class="highlight"><code>%apic10% consumer-orgs:list -c integration
 orgdev1    [state: enabled]   https://manager.159.8.70.38.xip.io/api/consumer-orgs/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda</code></pre>
 </div>
 </div>
-<div class="ulist data-line-1898">
+<div class="ulist data-line-1920">
 <ul>
-<li class="data-line-1898">
+<li class="data-line-1920">
 <p>Get the name of the application</p>
 </li>
 </ul>
 </div>
-<div class="listingblock data-line-1899">
+<div class="listingblock data-line-1921">
 <div class="content">
 <pre class="highlight"><code>%apic10% apps:list -c integration --scope catalog
 mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a</code></pre>
 </div>
 </div>
-<div class="ulist data-line-1904">
+<div class="ulist data-line-1926">
 <ul>
-<li class="data-line-1904">
+<li class="data-line-1926">
 <p>We need to specify the credentials information in a json file. Create a file called appidcredentialSet.json for example.</p>
 </li>
 </ul>
 </div>
-<div class="listingblock data-line-1905">
+<div class="listingblock data-line-1927">
 <div class="content">
 <pre class="highlight"><code>{
 	"type": "credential",
@@ -4426,26 +4474,26 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
 }</code></pre>
 </div>
 </div>
-<div class="ulist data-line-1916">
+<div class="ulist data-line-1938">
 <ul>
-<li class="data-line-1916">
+<li class="data-line-1938">
 <p>We can now update API connect:</p>
 </li>
 </ul>
 </div>
-<div class="listingblock data-line-1917">
+<div class="listingblock data-line-1939">
 <div class="content">
 <pre class="highlight"><code>%apic10% -c integration --consumer-org orgdev1 -a mymobileapp credentials:create C:\temp\appidcredentialSet.json</code></pre>
 </div>
 </div>
-<div class="ulist data-line-1921">
+<div class="ulist data-line-1943">
 <ul>
-<li class="data-line-1921">
+<li class="data-line-1943">
 <p>Let&#8217;s check that the credentials have been correctly updated</p>
 </li>
 </ul>
 </div>
-<div class="listingblock data-line-1923">
+<div class="listingblock data-line-1945">
 <div class="content">
 <pre class="highlight"><code>%apic10% -c integration --consumer-org orgdev1 -a mymobileapp credentials:list --format json
 
@@ -4490,24 +4538,24 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1968">
+<div class="paragraph data-line-1990">
 <p>Note: using the --debug on apic gives the equivalent curl requests. The it is possible to directly invoke object with REST API. You can get the URL of each object using the web-dev-tools in your browser. In the command below, you can get the Access Token, client_id and client_secret using the --debug option on the login call.</p>
 </div>
-<div class="paragraph data-line-1970">
+<div class="paragraph data-line-1992">
 <p>curl -k -H "accept: application/json" -H "Authorization: Bearer &lt;AT&gt;" -H "X-Ibm-Client-Id: &lt;client_id&gt;" -H "X-Ibm-Client-Secret: &lt;client_secret&gt;" "https://manager.159.8.70.38.xip.io/api/apps/3f015cc4-9cb5-4d72-a202-008473d14a11/35409cde-6895-44e6-a297-6f3b8736c026/b226cc4a-28bd-4f6b-8197-65e4e45c8dda/8ec77979-0877-443f-bc6d-17ba55f48b5a/credentials"</p>
 </div>
-<div class="imageblock data-line-1972">
+<div class="imageblock data-line-1994">
 <div class="content">
 <img src="../images/web-dev-tools.png" alt="Postman Test Access Token">
 </div>
 </div>
-<div class="paragraph data-line-1975">
+<div class="paragraph data-line-1997">
 <p>Below a curl invocation sample (The Access token has been generated using the Resource Owner Grant. The client-id is defined in App-id for the MobileApp Application (App-ID terminology) and also for the MyMobileApp application in API connect (API Connect terminology). The uid/pwd to get the Access Token is a User defined in the Cloud Directory Users (IdP).</p>
 </div>
-<div class="paragraph data-line-1978">
+<div class="paragraph data-line-2000">
 <p>Request</p>
 </div>
-<div class="listingblock data-line-1979">
+<div class="listingblock data-line-2001">
 <div class="content">
 <pre class="highlight"><code>curl -v -k --request POST \
   --url https://rgw.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0001.par01.containers.appdomain.cloud/org1/sandbox/fakemagento/v5/order \
@@ -4519,404 +4567,404 @@ mymobileapp    [state: enabled]   https://manager.159.8.70.38.xip.io/api/apps/3f
   --data '{"orderDetails":"2 plates","orderDate":"2019-12-25T10:00:00.000Z"}'</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1990">
+<div class="paragraph data-line-2012">
 <p>Response</p>
 </div>
-<div class="listingblock data-line-1991">
+<div class="listingblock data-line-2013">
 <div class="content">
 <pre class="highlight"><code>{"norderId":"7275084087558144","norderResult":true,"norderDetails":"2 plates","norderDate":"2019-12-25T10:00:00.000Z"}</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1995">
+<div class="imageblock data-line-2017">
 <div class="content">
 <img src="../images/oauth-third-ropsw-test-curl.png" alt="curl Test Access Token">
 </div>
 </div>
 </div>
-<div class="sect4 data-line-1997">
-<h5 id="_tests_4">Tests</h5>
-<div class="paragraph data-line-1998">
+<div class="sect4 data-line-2019">
+<h5 id="_tests_6">Tests</h5>
+<div class="paragraph data-line-2020">
 <p>Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.</p>
 </div>
-<div class="sect5 data-line-2000">
+<div class="sect5 data-line-2022">
 <h6 id="_using_postman_4">Using POSTMAN</h6>
-<div class="paragraph data-line-2001">
+<div class="paragraph data-line-2023">
 <p>As for the Authorization grant with the native OAuth Provider we use Postman to directly get the access token.</p>
 </div>
-<div class="paragraph data-line-2003">
+<div class="paragraph data-line-2025">
 <p>Using the "1 -Access Token Authorization V5" request.
 Click on the Authorization link, then click on Get New Access Token</p>
 </div>
 </div>
-<div class="sect5 data-line-2006">
+<div class="sect5 data-line-2028">
 <h6 id="_using_curl_4">Using curl</h6>
 
 </div>
 </div>
 </div>
-<div class="sect3 data-line-2008">
+<div class="sect3 data-line-2030">
 <h4 id="_custom_jwt_generate_and_validate">Custom JWT Generate and Validate</h4>
-<div class="paragraph data-line-2009">
+<div class="paragraph data-line-2031">
 <p>Not done yet</p>
 </div>
 </div>
-<div class="sect3 data-line-2011">
+<div class="sect3 data-line-2033">
 <h4 id="_using_an_oidc_registry_to_protect_the_platform">Using an OIDC Registry to protect the platform</h4>
-<div class="sect4 data-line-2012">
+<div class="sect4 data-line-2034">
 <h5 id="_gather_the_various_information_needed">Gather the various information needed</h5>
-<div class="paragraph data-line-2014">
+<div class="paragraph data-line-2036">
 <p>So far, we have looked mostly at API Security, now let&#8217;s see the protection of the platform (Cloud Manager, API Manager and Portal).
 The most common and simple way to protect the platform is to use one or more LDAP servers. A very simple way is also to use the Local User Registry, but if it is ok to include users in it for the Cloud Manager, because we may say that the number of users should be small (the platform administrators), it is probably not suitable for large number of users in the provider organizations and for the Portal sites.
 The concern here being the management side and the fact that the Local User Registry is not integrated with the enterprise IAM solution. With the adoption of OIDC, API Connect offers the possibility to also use an OIDC provider to protect the platform (Cloud Manager, API Manager and Portal). As seen previously, you can combine the various authentication mechanisms as well and have different ways of authenticating for two organizations and also various ways for portal sites.</p>
 </div>
-<div class="paragraph data-line-2018">
+<div class="paragraph data-line-2040">
 <p>In this first section, we are going to configure an OIDC provider to protect a portal site.</p>
 </div>
-<div class="paragraph data-line-2020">
+<div class="paragraph data-line-2042">
 <p>We need to find some information from the OIDC provider, in our case AppId. This information will be used to complete the definitions in API Connect.</p>
 </div>
-<div class="paragraph data-line-2022">
+<div class="paragraph data-line-2044">
 <p>The first thing is to get the various endpoints, there is a very easy way to get them. Go to the Service Credentials section in AppId. Copy the discoveryEndpoint URL.
 For me, this is <a href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/tenant_id_value/.well-known/openid-configuration" class="undefined" data-href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/tenant_id_value/.well-known/openid-configuration">https://eu-gb.appid.cloud.ibm.com/oauth/v4/tenant_id_value/.well-known/openid-configuration</a> (where tenant_id_value is my tenant id).</p>
 </div>
-<div class="imageblock data-line-2025">
+<div class="imageblock data-line-2047">
 <div class="content">
 <img src="../images/appid-service-credentials.png" alt="AppId Credentials">
 </div>
 </div>
-<div class="paragraph data-line-2027">
+<div class="paragraph data-line-2049">
 <p>Then in a browser, paste it, it gives you all endpoints.</p>
 </div>
-<div class="imageblock data-line-2029">
+<div class="imageblock data-line-2051">
 <div class="content">
 <img src="../images/appid-service-discovery.png" alt="AppId Discovery">
 </div>
 </div>
-<div class="paragraph data-line-2031">
+<div class="paragraph data-line-2053">
 <p>You also need to get a client_id and client_secret to access AppId from API Connect. In my case, I use the application called my_apic (any application from AppID can be used).</p>
 </div>
-<div class="imageblock data-line-2033">
+<div class="imageblock data-line-2055">
 <div class="content">
 <img src="../images/appid-application.png" alt="AppId Discovery">
 </div>
 </div>
-<div class="paragraph data-line-2035">
+<div class="paragraph data-line-2057">
 <p>We need to update one aspect of the configuration, the redirect URL. So far, we used a dummy value. This time we need to use a proper value. The value is &lt;consumer_endpoint&gt;/consumer-api/oauth2/redirect, in my case: <a href="https://consumer.159.8.70.38.xip.io/consumer-api/oauth2/redirect" class="undefined" data-href="https://consumer.159.8.70.38.xip.io/consumer-api/oauth2/redirect">https://consumer.159.8.70.38.xip.io/consumer-api/oauth2/redirect</a>
 In AppId, click on Manage Authentication, then Authentication Settings, then enter the Web redirect URL, select the + sign.</p>
 </div>
-<div class="imageblock data-line-2038">
+<div class="imageblock data-line-2060">
 <div class="content">
 <img src="../images/appid-redirect-url.png" alt="Create User registry">
 </div>
 </div>
 </div>
-<div class="sect4 data-line-2040">
+<div class="sect4 data-line-2062">
 <h5 id="_create_the_oidc_user_registry">Create the OIDC User Registry</h5>
-<div class="paragraph data-line-2042">
+<div class="paragraph data-line-2064">
 <p>We are ready to configure API Connect. In the API Cloud Manager, click on Resources, then User Registries and click on the Create button</p>
 </div>
-<div class="imageblock data-line-2044">
+<div class="imageblock data-line-2066">
 <div class="content">
 <img src="../images/oidc-ur-buttonV10.png" alt="Create User registry">
 </div>
 </div>
-<div class="paragraph data-line-2046">
+<div class="paragraph data-line-2068">
 <p>Select OpenID Connect (OIDC)</p>
 </div>
-<div class="imageblock data-line-2048">
+<div class="imageblock data-line-2070">
 <div class="content">
 <img src="../images/oidc-ur-choiceV10.png" alt="OIDC User Registry">
 </div>
 </div>
-<div class="paragraph data-line-2050">
+<div class="paragraph data-line-2072">
 <p>Enter the following:
 &gt; Title: AppId</p>
 </div>
-<div class="ulist data-line-2053">
+<div class="ulist data-line-2075">
 <ul>
-<li class="data-line-2053">
+<li class="data-line-2075">
 <p>Summary: AppId as an OIDC provider</p>
 </li>
-<li class="data-line-2054">
+<li class="data-line-2076">
 <p>Authorization Endpoint: <a href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorization" class="undefined" data-href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorization">https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/authorization</a></p>
 </li>
-<li class="data-line-2055">
+<li class="data-line-2077">
 <p>Token Endpoint: <a href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token" class="undefined" data-href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token">https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/token</a></p>
 </li>
-<li class="data-line-2056">
+<li class="data-line-2078">
 <p>UserInfo Endpoint: <a href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/userinfo" class="undefined" data-href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/userinfo">https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/userinfo</a></p>
 </li>
-<li class="data-line-2057">
+<li class="data-line-2079">
 <p>JWKS Endpoint: <a href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/publickeys" class="undefined" data-href="https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/publickeys">https://eu-gb.appid.cloud.ibm.com/oauth/v4/62d4566b-f411-4614-8adc-58c090707585/publickeys</a></p>
 </li>
-<li class="data-line-2058">
+<li class="data-line-2080">
 <p>Client_id: \&lt;client_id\&gt;</p>
 </li>
-<li class="data-line-2059">
+<li class="data-line-2081">
 <p>Client_secret: \&lt;client_secret\&gt;</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-2061">
+<div class="paragraph data-line-2083">
 <p>I also changed the User mapping and replaced sub (like subject) by name in to get the right identifier displayed when the user is logged on. You must make sure that this is possible in your environment and that the subject is unique.</p>
 </div>
-<div class="imageblock data-line-2063">
+<div class="imageblock data-line-2085">
 <div class="content">
 <img src="../images/oidc-ur-createV10.png" alt="OIDC User Registry creation">
 </div>
 </div>
 </div>
-<div class="sect4 data-line-2065">
+<div class="sect4 data-line-2087">
 <h5 id="_associate_the_oidc_user_registry_to_provide_access_to_an_organization">Associate the OIDC User Registry to provide access to an organization</h5>
-<div class="paragraph data-line-2066">
+<div class="paragraph data-line-2088">
 <p>In this case we use the OIDC provider to provide access to the Manager for all the organizations. Notice that it is possible to restrain the use of the User Registry to one or more Organizations.
 To make it work we need to make sure that the redirect URL is registered in the OIDC Provider configuration in our case AppId.</p>
 </div>
-<div class="paragraph data-line-2069">
+<div class="paragraph data-line-2091">
 <p><strong>Hint</strong>: A simple way to get the exact value is to let the authentication fail., and then copy it from the URL.</p>
 </div>
-<div class="imageblock data-line-2071">
+<div class="imageblock data-line-2093">
 <div class="content">
 <img src="../images/oidc-platform-invalid-redirect-url.png%20)." alt="OIDC Invalid Redirect URL">
 </div>
 </div>
-<div class="paragraph data-line-2073">
+<div class="paragraph data-line-2095">
 <p>Example: redirect_uri=https://api.a10cad-par01-b34dfa42ccf328c7da72e2882c1627b1-0001.par01.containers.appdomain.cloud/api/oauth2/redirect&amp;state=b11df288-2f41-4f91-bdb6-010322b7bb97</p>
 </div>
-<div class="paragraph data-line-2075">
+<div class="paragraph data-line-2097">
 <p>Then add it in AppId:
 image::../images/app-id-add-redirect-url.png[AppId add Redirect URL]</p>
 </div>
-<div class="paragraph data-line-2078">
+<div class="paragraph data-line-2100">
 <p>Now, we can register the user from the OIDC Provider.</p>
 </div>
-<div class="paragraph data-line-2080">
+<div class="paragraph data-line-2102">
 <p><strong>Notice</strong>: In my case, I like the idea that the owner (of the organization) is using the local registry and all the other users are in the OIDC registry. This allows to have a special user who does not depend on the external system. It can be a real user or not. I understand that some security policies will not allow this everywhere, so it is not applicable all the time.</p>
 </div>
-<div class="paragraph data-line-2082">
+<div class="paragraph data-line-2104">
 <p>I&#8217;m using the owner of the organization (org1owner), this user is defined in the local User registry). Notice, that we now can also login with AppId</p>
 </div>
-<div class="imageblock data-line-2084">
+<div class="imageblock data-line-2106">
 <div class="content">
 <img src="../images/oidc-lur-login.png" alt="Login with LUR">
 </div>
 </div>
-<div class="paragraph data-line-2086">
+<div class="paragraph data-line-2108">
 <p>This user being the owner of the organization is going to invite another member which is defined in the OIDC Registry.
 Click on Member and then Add &#8594; Invite Member</p>
 </div>
-<div class="imageblock data-line-2089">
+<div class="imageblock data-line-2111">
 <div class="content">
 <img src="../images/oidc-org-invite-member.png" alt="OIDC User Registry Invite member">
 </div>
 </div>
-<div class="paragraph data-line-2091">
+<div class="paragraph data-line-2113">
 <p>Specify the email of the user and the roles he will perform.</p>
 </div>
-<div class="imageblock data-line-2093">
+<div class="imageblock data-line-2115">
 <div class="content">
 <img src="../images/oidc-org-invite-member-fill.png" alt="OIDC User Registry Invite member">
 </div>
 </div>
-<div class="paragraph data-line-2095">
+<div class="paragraph data-line-2117">
 <p>The user receives an email, in our case I simply copy the activation link provided</p>
 </div>
-<div class="imageblock data-line-2097">
+<div class="imageblock data-line-2119">
 <div class="content">
 <img src="../images/oidc-org-invite-member-activation-link.png" alt="OIDC Invite Member Activation link">
 </div>
 </div>
-<div class="paragraph data-line-2099">
+<div class="paragraph data-line-2121">
 <p>The link provides the opportunity to sign up to API Connect.
 It is important to choose the OIDC Provider registry.</p>
 </div>
-<div class="imageblock data-line-2102">
+<div class="imageblock data-line-2124">
 <div class="content">
 <img src="../images/oidc-org-sign-choose-ur.png" alt="OIDC Org Sign in">
 </div>
 </div>
-<div class="paragraph data-line-2104">
+<div class="paragraph data-line-2126">
 <p>the click on Sign up</p>
 </div>
-<div class="imageblock data-line-2106">
+<div class="imageblock data-line-2128">
 <div class="content">
 <img src="../images/oidc-org-sign-up-start.png" alt="OIDC Org Sign up">
 </div>
 </div>
-<div class="paragraph data-line-2108">
+<div class="paragraph data-line-2130">
 <p>You are redirected to the OIDC Provider login page</p>
 </div>
-<div class="imageblock data-line-2110">
+<div class="imageblock data-line-2132">
 <div class="content">
 <img src="../images/oidc-login-page.png" alt="OIDC Org Login Page">
 </div>
 </div>
-<div class="paragraph data-line-2112">
+<div class="paragraph data-line-2134">
 <p>Enter Credentials and click Sign in</p>
 </div>
-<div class="paragraph data-line-2114">
+<div class="paragraph data-line-2136">
 <p>You are redirected to API connect and you are now logged in. Notice, that the Account shows the right information because we used name to be mapped to the subject.</p>
 </div>
-<div class="imageblock data-line-2116">
+<div class="imageblock data-line-2138">
 <div class="content">
 <img src="../images/oidc-org-logged-in.png" alt="OIDC Org API Connect home page">
 </div>
 </div>
 </div>
-<div class="sect4 data-line-2118">
+<div class="sect4 data-line-2140">
 <h5 id="_associate_the_oidc_user_registry_with_a_catalog">Associate the OIDC User Registry with a Catalog</h5>
-<div class="paragraph data-line-2119">
+<div class="paragraph data-line-2141">
 <p>We are going to associate it with the Integration Catalog.
 Click on Manage, then on Integration Catalog, then on Settings, then on Onboarding.</p>
 </div>
-<div class="imageblock data-line-2122">
+<div class="imageblock data-line-2144">
 <div class="content">
 <img src="../images/oidc-catalog-onboarding-link.png" alt="OIDC User Registry association to a Catalog">
 </div>
 </div>
-<div class="paragraph data-line-2124">
+<div class="paragraph data-line-2146">
 <p>Click on the Edit button, close to Catalog User Registries, and select AppId.</p>
 </div>
-<div class="imageblock data-line-2126">
+<div class="imageblock data-line-2148">
 <div class="content">
 <img src="../images/oidc-ur-portal-onboarding.png" alt="OIDC User Registry association to a Catalog">
 </div>
 </div>
-<div class="paragraph data-line-2128">
+<div class="paragraph data-line-2150">
 <p>Set as default user registry, click on the three vertical dots, closed to AppId and select Set default.</p>
 </div>
-<div class="imageblock data-line-2130">
+<div class="imageblock data-line-2152">
 <div class="content">
 <img src="../images/oidc-ur-portal-set-default.png" alt="Set the User Registry as the default user registry">
 </div>
 </div>
-<div class="paragraph data-line-2132">
+<div class="paragraph data-line-2154">
 <p>We are ready to test the configuration</p>
 </div>
 </div>
-<div class="sect4 data-line-2134">
+<div class="sect4 data-line-2156">
 <h5 id="_test_the_new_configuration">Test the new configuration</h5>
-<div class="paragraph data-line-2135">
+<div class="paragraph data-line-2157">
 <p>Let&#8217;s go to the Integration Developer Portal. In a browser enter the URL of your portal, in my case,  <a href="https://portal.159.8.70.38.xip.io/org1/integration/user/login" class="undefined" data-href="https://portal.159.8.70.38.xip.io/org1/integration/user/login">https://portal.159.8.70.38.xip.io/org1/integration/user/login</a>. The page has changed, you can now see the a new button to authenticate to AppId. Click on the AppId button.</p>
 </div>
-<div class="imageblock data-line-2137">
+<div class="imageblock data-line-2159">
 <div class="content">
 <img src="../images/oidc-portal-signin.png" alt="OIDC Developer Portal Sign in">
 </div>
 </div>
-<div class="paragraph data-line-2139">
+<div class="paragraph data-line-2161">
 <p>You are redirected to the login page of the OIDC Provider. Notice that in my case, it is configured to also provide additional ways of authentication.</p>
 </div>
-<div class="imageblock data-line-2141">
+<div class="imageblock data-line-2163">
 <div class="content">
 <img src="../images/oidc-portal-signin-appid-signin.png" alt="OIDC Developer Portal Sign in">
 </div>
 </div>
-<div class="paragraph data-line-2143">
+<div class="paragraph data-line-2165">
 <p>The user is logged in. Because the user has never logged in to the Portal, it needs to create the consumer organization.
 Enter OIDCConsOrg1 for example.</p>
 </div>
-<div class="imageblock data-line-2146">
+<div class="imageblock data-line-2168">
 <div class="content">
 <img src="../images/oidc-portal-consumer-org-creation.png" alt="OIDC Developer Portal Sign in">
 </div>
 </div>
-<div class="paragraph data-line-2148">
+<div class="paragraph data-line-2170">
 <p>Below a sequence diagram explaining the various interactions including the several redirection that have happened under the cover. The OIDC implementation is based on [Hybrid Flow as definied in OpenID Connect Core 1.0](<a href="https://openid.net/specs/openid-connect-core-1_0.html#HybridFlowAuth" class="undefined" data-href="https://openid.net/specs/openid-connect-core-1_0.html#HybridFlowAuth">https://openid.net/specs/openid-connect-core-1_0.html#HybridFlowAuth</a>)</p>
 </div>
-<div class="imageblock data-line-2150">
+<div class="imageblock data-line-2172">
 <div class="content">
 <img src="../images/oidc-portal-seq-diag.png" alt="OIDC Developer Portal Sign in">
 </div>
 </div>
 </div>
 </div>
-<div class="sect3 data-line-2152">
+<div class="sect3 data-line-2174">
 <h4 id="_oidc_provider_for_an_organisation">OIDC Provider for an organisation</h4>
-<div class="paragraph data-line-2153">
+<div class="paragraph data-line-2175">
 <p>In this chapter, we don&#8217;t detail everything because it is very similar to the protection of the Portal with an OIDC provider.
 We need to add a redirect URI for the Organization to come back from the OIDC Provider to API Connect.</p>
 </div>
-<div class="paragraph data-line-2156">
+<div class="paragraph data-line-2178">
 <p>The redirect URI must be the one of the platform endpoint in this case (using an OIDC provider as user registry for the Cloud Manager or API Manager).</p>
 </div>
-<div class="imageblock data-line-2158">
+<div class="imageblock data-line-2180">
 <div class="content">
 <img src="../images/oidc-mgr-redirect.png" alt="OIDC For an organisation Redirect URL in the OIDC Provider">
 </div>
 </div>
 </div>
 </div>
-<div class="sect2 data-line-2160">
+<div class="sect2 data-line-2182">
 <h3 id="_step_13_testing_the_quality_of_your_api">Step 13 - Testing the quality of your API</h3>
-<div class="paragraph data-line-2161">
+<div class="paragraph data-line-2183">
 <p>In this step we are going to see quickly how to use IBM API Connect Test and Monitor. The documentation associated with IBM API Connect Test and Monitor is available at <a href="https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted" class="undefined" data-href="https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted">https://ibm-apiconnect.github.io/test-and-monitor/gettingstarted</a>.
 This tool addresses in a no code approach testing the API with a fine granularity in the test and either on demand or with scheduled testing.
 This provides capabilities to create tests that are very fined grained, in the sense that you are able to validate API (or group of API) either onDemand or on a regular schedule. This then allows to display functional and performance dashboards to better understand how the API are behaving. This is not for performance testing but quality testing. If an error occur you can receive an email, and deep dive to understand why it failed. It is also a mechanism to validate that all your API are still working if a change was performed to the platform, API, etc &#8230;&#8203;</p>
 </div>
-<div class="sect3 data-line-2165">
+<div class="sect3 data-line-2187">
 <h4 id="_creating_a_test">Creating a test</h4>
-<div class="paragraph data-line-2166">
+<div class="paragraph data-line-2188">
 <p>There are several ways to create a test using: a call, a Postman collection, from scratch.
 Using a compose feature
 image::../images/test-and-monitor-no-code-generated-test.png[Test and Monitor Create a test]</p>
 </div>
 </div>
-<div class="sect3 data-line-2170">
+<div class="sect3 data-line-2192">
 <h4 id="_running_a_test">Running a test</h4>
 
 </div>
-<div class="sect3 data-line-2172">
+<div class="sect3 data-line-2194">
 <h4 id="_scheduling_a_test">Scheduling a test</h4>
-<div class="imageblock data-line-2173">
+<div class="imageblock data-line-2195">
 <div class="content">
 <img src="../images/test-and-monitor-schedule.png" alt="Test and Monitor Create a schedule">
 </div>
 </div>
 </div>
-<div class="sect3 data-line-2175">
+<div class="sect3 data-line-2197">
 <h4 id="_using_the_dashboards">Using the dashboards</h4>
-<div class="imageblock data-line-2176">
+<div class="imageblock data-line-2198">
 <div class="content">
 <img src="../images/test-and-monitor-api-quality.png" alt="Test and Monitor Using the Quality dashboard">
 </div>
 </div>
 </div>
 </div>
-<div class="sect2 data-line-2178">
+<div class="sect2 data-line-2200">
 <h3 id="_step_14_cicd_integration">Step 14 - CI/CD integration</h3>
-<div class="sect3 data-line-2179">
+<div class="sect3 data-line-2201">
 <h4 id="_managing_the_api_automatically">Managing the API automatically</h4>
-<div class="paragraph data-line-2180">
+<div class="paragraph data-line-2202">
 <p>Since APIC is expose API or CLI to perform anything, it is very simple to perform any automatic tasks.</p>
 </div>
 </div>
-<div class="sect3 data-line-2182">
+<div class="sect3 data-line-2204">
 <h4 id="_testing_during_the_build_phase">Testing during the build phase</h4>
-<div class="paragraph data-line-2183">
+<div class="paragraph data-line-2205">
 <p>It is possible to create an API Hook in API Connect Test and Monitor.
 See [Test and Monitor API Hook](<a href="https://www.ibm.com/support/knowledgecenter/SSMNED_v10/com.ibm.apic.atm.doc/Creating-An-API-Hook.html" class="undefined" data-href="https://www.ibm.com/support/knowledgecenter/SSMNED_v10/com.ibm.apic.atm.doc/Creating-An-API-Hook.html">https://www.ibm.com/support/knowledgecenter/SSMNED_v10/com.ibm.apic.atm.doc/Creating-An-API-Hook.html</a>)
 This Hook allows the generation of a report for any tests for example during the build phase.
 For example adding an Execute shell block for a build step within a build in Jenkins. Then you can add a JUnit test result report under a Post-build Actions.</p>
 </div>
-<div class="paragraph data-line-2188">
+<div class="paragraph data-line-2210">
 <p>Below a sample, output in Jenkins
 image::../images/test-and-monitor-ci-cd-jenkins-result.png[Test and Monitor Test result in Jenkins]</p>
 </div>
-<div class="paragraph data-line-2191">
+<div class="paragraph data-line-2213">
 <p>Congratulations. You have completed this Lab!</p>
 </div>
 </div>
-<div class="sect3 data-line-2193">
+<div class="sect3 data-line-2215">
 <h4 id="_acknowledgments">Acknowledgments</h4>
-<div class="paragraph data-line-2194">
+<div class="paragraph data-line-2216">
 <p>Thanks to my colleague Philippe Curmin who has done a thorough review of this document.</p>
 </div>
 </div>
 </div>
-<div class="sect2 data-line-2196">
+<div class="sect2 data-line-2218">
 <h3 id="_additional_resources">Additional Resources</h3>
-<div class="paragraph data-line-2198">
+<div class="paragraph data-line-2220">
 <p>For additional resources please look at the to the following:
 - [IBM Middleware User Community](<a href="https://community.ibm.com/community/user/middleware/communities/cloud-integration-home" class="undefined" data-href="https://community.ibm.com/community/user/middleware/communities/cloud-integration-home">https://community.ibm.com/community/user/middleware/communities/cloud-integration-home</a>)
 - [IBM API Connect Version 10 documentation](<a href="https://www.ibm.com/support/knowledgecenter/SSMNED_v10/mapfiles/getting_started.html" class="undefined" data-href="https://www.ibm.com/support/knowledgecenter/SSMNED_v10/mapfiles/getting_started.html">https://www.ibm.com/support/knowledgecenter/SSMNED_v10/mapfiles/getting_started.html</a>)
@@ -4926,7 +4974,7 @@ image::../images/test-and-monitor-ci-cd-jenkins-result.png[Test and Monitor Test
 - [API Connect Test and Monitor](<a href="https://ibm-apiconnect.github.io/test-and-monitor/" class="undefined" data-href="https://ibm-apiconnect.github.io/test-and-monitor/">https://ibm-apiconnect.github.io/test-and-monitor/</a>)
 - [API reference architecture](<a href="https://www.ibm.com/cloud/architecture/architectures/apiArchitecture/reference-architecture" class="undefined" data-href="https://www.ibm.com/cloud/architecture/architectures/apiArchitecture/reference-architecture">https://www.ibm.com/cloud/architecture/architectures/apiArchitecture/reference-architecture</a>)</p>
 </div>
-<div class="paragraph data-line-2207">
+<div class="paragraph data-line-2229">
 <p>[IBM Cloud]:  <a href="https://cloud.ibm.com" class="undefined" data-href="https://cloud.ibm.com">https://cloud.ibm.com</a>
 [IBM Cloud Catalog]: <a href="https://cloud.ibm.com/catalog" class="undefined" data-href="https://cloud.ibm.com/catalog">https://cloud.ibm.com/catalog</a></p>
 </div>
@@ -4936,7 +4984,7 @@ image::../images/test-and-monitor-ci-cd-jenkins-result.png[Test and Monitor Test
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-12-12 10:51:27 +0100
+Last updated 2022-12-12 16:24:15 +0100
 </div>
 </div>
 </body>
