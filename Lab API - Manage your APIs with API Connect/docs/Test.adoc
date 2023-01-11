@@ -1058,11 +1058,12 @@ To perform all the scenarios below, we are going to use the same API that will b
 
 | V1 | API Key | API Key |xref:#_protecting_an_api_with_an_api_key[here]
 | V2 | API Key + Basic Authentication  | |xref:#_protecting_an_api_with_basic_authentication[here]
-| V3 | Resource Owner Password Credentials Grant | Resource owner |xref:#_oauth_resource_owner_password_credentials_grant[here]
+| V3 | Resource Owner Password Credentials Grant | Resource owner - Password |xref:#_oauth_resource_owner_password_credentials_grant[here]
 | V4 | Authorization Code grant + OIDC | Access code |xref:#_authorization_code_grant_and_oidc[here]
 | V5 | Client Credentials grant | Application |xref:#_oauth_client_credentials_grant[here]
-| V6 | External OAuth Provider | |xref:#_external_oauth_provider[here]
-| V7 | Custom JWT Generate and Validate | |xref:#_custom_jwt_generate_and_validate[here]
+| V6 | Implicit grant | Implicit |xref:#_oauth_implicit_grant[here]
+| V7 | External OAuth Provider | |xref:#_external_oauth_provider[here]
+| V8 | Custom JWT Generate and Validate | |xref:#_custom_jwt_generate_and_validate[here]
 | N/A | Using an OIDC Registry to protect the platform  | |xref:#_using_an_oidc_registry_to_protect_the_platform[here] 
 |===
 
@@ -1697,7 +1698,7 @@ Enter:
 Click Save button
 image::../images/application-secure-API-sec-def.png[OAuth Application API Security Definition]
 
-In the Security selection, select Native Application oatuh2 and the details scope.
+In the Security selection, select Native Application oauth2 and the details scope.
 
 Click Save button.
 
@@ -1784,6 +1785,135 @@ In the second step, we click on Generate link to automatically populate the para
 This invokes the FakeMagento API using the access Token as a Bearer.
 
 image::../images/test-application-22.png[Test Get Access Token]
+
+
+toto
+
+==== OAuth Implicit grant
+
+===== Protect the API with OAuth - Implicit
+Let's protect, the FakeMagento version 6.0.0 API. Click on Develop and select the FakeMagento-6.0.0 API.
+
+Click on Security Schemes and click on Add button.
+Enter:
+
+* Name: Native Implicit
+
+* Description: Using the native OAuth provider for Implicit  grant
+* Select OAuth2
+* Select nativeprovider
+* Select Implicit for the Flow
+Click Create button
+
+image::../images/V10_oauth_implicit_sec_def.png[OAuth API Implicit Security Definition]
+
+Check that the details scope is selected
+
+image::../images/V10_oauth_implicit_sec_scope_def.png[OAuth API Implicit Security Definition]
+
+Click Save button.
+
+In the Security definition, click on the Add sign and select the two security schemes clientID and NAtive Implicit and the details scope.
+
+image::../images/V10_oauth_implicit_sec_req.png[OAuth Application API Security]
+
+Click Create button.
+
+Click Save button.
+
+===== Tests
+Not explained in detail here, but we publish the product (or use versioning with the publish capability), we are using the Integration environment. Then we subscribe to the Product with the Gold Plan and approve the subscription. The API is published and ready to use.
+
+===== Using the Explorer
+Select the Explorer tab, select the POST /order operation.
+Click on Try it.
+
+Select the details scope
+For the Redirect URI, enter: https://oauth.pstmn.io/v1/browser-callback which is the OAuth redirect URL associated to the application. Click on the Get Token button.
+
+image::../images/V10_oauth_implicit_test_get_token.png[Test Get Token]
+
+Enter the credentials of the user, in my case foo/foo.
+Click The Sign in button.
+
+
+image::../images/V10_oauth_implicit_test_enter_creds.png[Test Get Token]
+
+You obtain a web page with a successfull authentication, you can retrieve the access token in the URI, copy it.
+
+image::../images/V10_oauth_implicit_test_get_at_creds.png[Test Get Token]
+
+We are ready to invoke the API with the Access Token
+
+Paste the Access Token, and click on generate link. And click Send.
+
+image::../images/V10_oauth_implicit_test_invoke_api.png[Test Invoke API]
+
+====== Using POSTMAN
+1) Get token using the "1 -Client Credentials V4" request
+
+image::../images/test-application-11.png[Test Get Access Token]
+
+2) Use token to access FakeMagento V4.0.0 API using the "2 -FakeMagentaOrder Native OAuth API" request
+
+image::../images/test-application-12.png[Test Access API]
+
+====== Using curl
+
+Request
+```
+POST /org1/integration/nativeprovider/oauth2/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+accept: application/json
+grant_type=client_credentials&client_id=3beaa6887601bb3a6c5f802e67372535&client_secret=556a75ce26097f96ea281ed47c1cf2e7&scope=details&APIm-Debug=true
+```
+Response
+```
+HTTP/1.1 200 OK
+X-RateLimit-Limit: name=default,100;
+X-RateLimit-Remaining: name=default,76;
+X-Client-IP: 10.126.64.177
+X-Global-Transaction-ID: 6fc036bd5e87726800066a61
+Content-Type: application/json
+{
+	"token_type": "Bearer",
+	"access_token": "AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmV0AD6QpfILhTsnddGNJQ5MQIHdQI9eESHYs0QyOFDUc4x3A55wFGH2jfbiVLlhDhlddI5tUIe9x-pGgFgHMZZ8IGYVL2wYiB_aOsElY1h8yNRymzvCzDWTFRU4UiaPGH4",
+	"scope": "details",
+	"expires_in": 3600,
+	"consented_on": 1585934952
+}
+```
+
+Request
+```
+POST /org1/integration/fakemagento/v2/order HTTP/1.1
+X-IBM-Client-Id: 3beaa6887601bb3a6c5f802e67372535
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer AAIgNDIxMjIzZTc3M2YyMzdjNTIzMTg0MjEwMjY2MDg5NmV0AD6QpfILhTsnddGNJQ5MQIHdQI9eESHYs0QyOFDUc4x3A55wFGH2jfbiVLlhDhlddI5tUIe9x-pGgFgHMZZ8IGYVL2wYiB_aOsElY1h8yNRymzvCzDWTFRU4UiaPGH4
+{
+  "orderDetails": "2 plates",
+  "orderDate": "2019-12-25T10:00:00.000Z"
+}
+```
+Response
+```
+HTTP/1.1 200 OK
+X-RateLimit-Limit: name=ten,10;
+X-RateLimit-Remaining: name=ten,9;
+Accept: application/json
+X-Client-IP: 10.126.64.177
+X-Global-Transaction-ID: 6fc036bd5e877298000817c9
+Content-Type: application/json
+{
+	"norderId": "7275084087558144",
+	"norderResult": true,
+	"norderDetails": "2 plates",
+	"norderDate": "2019-12-25T10:00:00.000Z"
+}
+```
+
+toto
 
 ==== External OAuth Provider
 In this scenario, we have an external OAuth Provider available, we use the IBM app-id application available in IBM Cloud as an OAuth/OIDC provider ([App-ID documentation](https://cloud.ibm.com/docs/appid)). The integration with API Connect implies a synchronisation of the API keys (client id/client secret) with the applications defined in the OAuth Provider. It can be done in two ways, either the API keys are created in API Connect and then added to the OAuth Provider, either the API Keys are created in the OAuth Provider and they are added to the application in API Connect using apic CLI. In this scenario, we will use the second option which will give us an opportunity to look at the API Connect CLI.
