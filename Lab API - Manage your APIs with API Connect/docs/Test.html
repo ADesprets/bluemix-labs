@@ -2751,14 +2751,16 @@ Express server listening on http://127.0.0.1:9000
 </div>
 <table class="tableblock frame-all grid-all stretch data-line-1056">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Provider</th>
 <th class="tableblock halign-left valign-top">Security scheme</th>
 <th class="tableblock halign-left valign-top">Referred as</th>
 <th class="tableblock halign-left valign-top">Link</th>
@@ -2767,54 +2769,63 @@ Express server listening on http://127.0.0.1:9000
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">V1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">API Key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">API Key</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_protecting_an_api_with_an_api_key">here</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">V2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">API Key + Basic Authentication</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_protecting_an_api_with_basic_authentication">here</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">V3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Resource Owner Password Credentials Grant</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Resource owner - Password</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_oauth_resource_owner_password_credentials_grant">here</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">V4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Authorization Code grant + OIDC</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Access code</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_authorization_code_grant_and_oidc">here</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">V5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Client Credentials grant</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Application</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_oauth_client_credentials_grant">here</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">V6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Implicit grant</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Implicit</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_oauth_implicit_grant">here</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">V7</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">External OAuth Provider</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authorization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Access Code</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_external_oauth_provider">here</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">V8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom JWT Generate and Validate</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_custom_jwt_generate_and_validate">here</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Using an OIDC Registry to protect the platform</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#_using_an_oidc_registry_to_protect_the_platform">here</a></p></td>
@@ -4052,7 +4063,7 @@ Click on the Authorization link, then click on Get New Access Token</p>
 <div class="sect4 data-line-1686">
 <h5 id="_protect_the_api_with_oauth_application">Protect the API with OAuth - Application</h5>
 <div class="paragraph data-line-1687">
-<p>Let&#8217;s protect, the FakeMagento version 4.0.0 API. Click on Develop and select the FakeMagento-4.0.0 API.
+<p>Let&#8217;s protect, the FakeMagento version 5.0.0 API. Click on Develop and select the FakeMagento-5.0.0 API.
 Click on Security Definitions and click on Add button.
 Enter:
 &gt; Name: Native Application</p>
@@ -5249,7 +5260,7 @@ image::../images/test-and-monitor-ci-cd-jenkins-result.png[Test and Monitor Test
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-01-11 19:24:03 +0100
+Last updated 2023-01-17 11:37:45 +0100
 </div>
 </div>
 </body>

@@ -1054,17 +1054,17 @@ In the materials, you also find a POSTMAN collection (alongside the environment 
 To perform all the scenarios below, we are going to use the same API that will be versioned, each version will have a different security scheme and a different base path /fakemagento/v<n>, for example, /fakemagento/v1. In the table below, the version refers to the version of the fake magento API with different security mechanisms.
 
 |===
-| Version | Security scheme | Referred as | Link
+| Version |Provider | Security scheme | Referred as | Link
 
-| V1 | API Key | API Key |xref:#_protecting_an_api_with_an_api_key[here]
-| V2 | API Key + Basic Authentication  | |xref:#_protecting_an_api_with_basic_authentication[here]
-| V3 | Resource Owner Password Credentials Grant | Resource owner - Password |xref:#_oauth_resource_owner_password_credentials_grant[here]
-| V4 | Authorization Code grant + OIDC | Access code |xref:#_authorization_code_grant_and_oidc[here]
-| V5 | Client Credentials grant | Application |xref:#_oauth_client_credentials_grant[here]
-| V6 | Implicit grant | Implicit |xref:#_oauth_implicit_grant[here]
-| V7 | External OAuth Provider | |xref:#_external_oauth_provider[here]
-| V8 | Custom JWT Generate and Validate | |xref:#_custom_jwt_generate_and_validate[here]
-| N/A | Using an OIDC Registry to protect the platform  | |xref:#_using_an_oidc_registry_to_protect_the_platform[here] 
+| V1 | N/A | API Key | API Key |xref:#_protecting_an_api_with_an_api_key[here]
+| V2 | N/A | API Key + Basic Authentication  | |xref:#_protecting_an_api_with_basic_authentication[here]
+| V3 | Native | Resource Owner Password Credentials Grant | Resource owner - Password |xref:#_oauth_resource_owner_password_credentials_grant[here]
+| V4 | Native | Authorization Code grant + OIDC | Access code |xref:#_authorization_code_grant_and_oidc[here]
+| V5 | Native | Client Credentials grant | Application |xref:#_oauth_client_credentials_grant[here]
+| V6 | Native | Implicit grant | Implicit |xref:#_oauth_implicit_grant[here]
+| V7 | External | Authorization | Access Code |xref:#_external_oauth_provider[here]
+| V8 | N/A | Custom JWT Generate and Validate | |xref:#_custom_jwt_generate_and_validate[here]
+| N/A | External |Using an OIDC Registry to protect the platform  | |xref:#_using_an_oidc_registry_to_protect_the_platform[here] 
 |===
 
 ==== Introduction
@@ -1684,7 +1684,7 @@ image::../images/test-access-15.png[Postman Test Access Token]
 ==== OAuth Client Credentials grant
 
 ===== Protect the API with OAuth - Application
-Let's protect, the FakeMagento version 4.0.0 API. Click on Develop and select the FakeMagento-4.0.0 API.
+Let's protect, the FakeMagento version 5.0.0 API. Click on Develop and select the FakeMagento-5.0.0 API.
 Click on Security Definitions and click on Add button.
 Enter:
 > Name: Native Application
