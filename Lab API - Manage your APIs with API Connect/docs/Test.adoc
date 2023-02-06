@@ -1098,6 +1098,8 @@ Below is a table with the main specificatiNOTE:ons.
 | Assertion Framework (RFC 7521) | https://datatracker.ietf.org/doc/html/rfc7521
 | JWT Profile for Client Authentication   (RFC 7523) | https://datatracker.ietf.org/doc/html/rfc7523
 | SAML Assertions (RFC 7522) | https://datatracker.ietf.org/doc/html/rfc7522
+| Token Binding Protocol (RFC 8471) | https://www.rfc-editor.org/rfc/rfc8471
+| Token Binding over HTTP (RFC 8473) | https://www.rfc-editor.org/rfc/rfc8473
 |===
 
 
@@ -2361,6 +2363,14 @@ Below a sample, output in Jenkins
 image::../images/test-and-monitor-ci-cd-jenkins-result.png[Test and Monitor Test result in Jenkins]
 
 Congratulations. You have completed this Lab!
+
+==== Step 15 - Error Handling and advanced API development
+
+In this chapter we will demonstrate the use of:
+
+* Handling variables
+* Use of Throw and Catch
+* Manipulating default policies for advanced processing (output variable in Invoke)
 
 ==== Acknowledgments
 Thanks to my colleague Philippe Curmin who has done a thorough review of this document.
