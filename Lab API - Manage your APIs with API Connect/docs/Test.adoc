@@ -1099,7 +1099,7 @@ Below is a table with the main specificatiNOTE:ons.
 | JWT Profile for Client Authentication   (RFC 7523) | https://datatracker.ietf.org/doc/html/rfc7523
 | SAML Assertions (RFC 7522) | https://datatracker.ietf.org/doc/html/rfc7522
 | Token Binding Protocol (RFC 8471) | https://www.rfc-editor.org/rfc/rfc8471
-| Token Binding over HTTP (RFC 8473) | https://www.rfc-editor.org/rfc/rfc8473
+| Token Binding over HTTP  (RFC 8473) | https://www.rfc-editor.org/rfc/rfc8473
 |===
 
 
