@@ -229,7 +229,7 @@ Nowadays a lot of systems containing data are distributed. This increases availa
 === Policies
 Below the available policies in API Connect V10.0.0.0
 
-image::../images/V10-policies.png[V10 Policies]
+image::../images/V1005-policies.png[V10 Policies]
 
 |===
 |Category | Name |Description |-|Category | Name |Description
@@ -385,7 +385,7 @@ image::../images/designer-add-APIV10.png[Designer add API]
 
 Select the *From existing OpenAPI service* and click *Next* button.
 
-image::../images/designer-select-from-existingV10.png[Designer Select from existing Open API] 
+image::../images/designer-select-from-existingV1005.png[Designer Select from existing Open API] 
 
 Select the file downloaded previously and click *Next* button.
 
@@ -398,7 +398,7 @@ Then click *Next* button.
 
 NOTE: The base path has been chosen carefully to avoid URI rewriting and simplify this first example. You always must be careful with the exposed URI and back end URI and adopt strategy to avoid URI rewriting or if not possible to reduce the work required to do this mapping. The worst case is to have a specific URI for each combination VERB + PATH.
 
-image::../images/designer-specify-quote-api.png[Designer Specify quote api]
+image::../images/designer-specify-quote-apiV1005.png[Designer Specify quote api]
 
 Keep the default value for CORS and using a client id to secure the API, click *Next* button.
 
@@ -483,7 +483,7 @@ The API is definition is complete. We need now to add the Product and publish it
 
 To create a product, click on the Develop icon on the navigation panel (left). Then click on the *Add* button and select Product.
 
-image::../images/design-add-product.png[Designer Add product]
+image::../images/design-add-productV1005.png[Designer Add product]
 
 Select *New product* button and *Next* button.
 
@@ -495,37 +495,37 @@ Enter the following information:
 
 Click on *Next* button
 
-image::../images/designer-new-product-info.png[Designer New product Information]
+image::../images/designer-new-product-infoV1005.png[Designer New product Information]
 
 Select the Quote API by clicking on the check box and the click *Next* button.
 
-image::../images/designer-new-product-selectapi.png[Designer New product Select API]
+image::../images/designer-new-product-selectapiV1005.png[Designer New product Select API]
 
 Change or adjust the plan according to your requirements plan and then click on *Next* button.
 
-image::../images/designer-new-product-plan.png[Designer New product Select plan]
+image::../images/designer-new-product-planV1005.png[Designer New product Select plan]
 
 Change or adjust the visibility or subscribability according to your requirements plan and then click on *Next* button.
 
-image::../images/designer-new-product-visibility.png[Designer New product Select visibility]
+image::../images/designer-new-product-visibilityV1005.png[Designer New product Select visibility]
 
 click on *Edit Product* button.
 
-image::../images/designer-new-product-done.png[Designer New product Done]
+image::../images/designer-new-product-doneV1005.png[Designer New product Done]
 
 We want to publish the API on the remote manager. So first, we start to add this manager to the Designer so we can choose where we want to deploy the product. We click on the *Switch cloud connection* link at the top of the window and then click on *Add Another Cloud* button. Enter the URL of the remote manager, in my case, https://manager.159.8.70.38.xip.io, then enter the credentials to access the organization you work with.
 
 We publish the API, by clicking on the Develop icon, then clicking on the ... close to the new product and select Publish.
 
-image::../images/designer-quote-product-publish.png[Designer Quote product publish]
+image::../images/designer-quote-product-publishV1005.png[Designer Quote product publish]
 
 Then click on the *Publish* button.
 
-image::../images/designer-quote-product-publish-done.png[Designer Quote product publish done]
+image::../images/designer-quote-product-publish-doneV1005.png[Designer Quote product publish done]
 
 We can check on the remote Manager that the Product containing the Quote API has been correctly published.
 
-image::../images/designer-publish-product-remote.png[Designer Quote product publish remote]
+image::../images/designer-publish-product-remoteV1005.png[Designer Quote product publish remote]
 
 We want to automate the publishing and do not use the Designer and instead the CLI.
 
