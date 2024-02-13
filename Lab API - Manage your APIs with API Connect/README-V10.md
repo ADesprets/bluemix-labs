@@ -149,8 +149,8 @@ There are four WEB interfaces with a coloured theme. You see in the table below,
 |---------------|-----------------|--------|----------------------------------------------------|
 | Cloud Manager | Manager         | Green  | ![Theme Cloud Manager](./images/v10-theme-cmc.png) |
 | API Manager   | Manager         | Blue   | ![Theme API Manager](./images/v10-theme-mgr.png)   |
-| API Designer  | LTE             | Blue   | ![Theme API Designer](./images/v10-theme-des.png)      |
-| Dev Portal    | Portal (Drupal) | Purple | ![Theme Dev Portal](./images/V10-theme-dev.png)        |
+| API Designer  | LTE             | Blue   | ![Theme API Designer](./images/v10-theme-des.png)  |
+| Dev Portal    | Portal (Drupal) | Purple | ![Theme Dev Portal](./images/V10-theme-dev.png)    |
 
 ## Topologies and multitenancy aspects
 ### Topologies - Generic
@@ -205,7 +205,7 @@ Nowadays a lot of systems containing data are distributed. This increases availa
 
 ## Policies
 Below the available policies in API Connect V10.0.0.0
-<br>![V10 Policies](./images/V10-policies.png)</br>
+<br>![V10 Policies](./images/V1005-policies.png)</br>
 
 
 |Category  | Name             |Description        |-|Category   | Name                 |Description      |
@@ -354,11 +354,15 @@ You should obtain the following results: {"loanAmount":10000,"annualInterestRate
 
 Select the *From existing OpenAPI service* and click *Next* button.
 
-![Designer Select from existing Open API](./images/designer-select-from-existingV10.png)
+![Designer Select from existing Open API](./images/designer-select-from-existingV1005.png)
 
 Select the file downloaded previously and click *Next* button.
 
 ![Designer Select OpenAPI file](./images/designer-select-openapi-fileV10.png)
+
+Click Edit API
+
+![Edit OpenAPI file](./images/designer-edit-openapiV1005.png)
 
 Change the following details
 * Base path: /loans/v1
@@ -367,7 +371,7 @@ Then click *Next* button.
 
 > Hint: The base path has been chosen carefully to avoid URI rewriting and simplify this first example. You always must be careful with the exposed URI and back end URI and adopt strategy to avoid URI rewriting or if not possible to reduce the work required to do this mapping. The worst case is to have a specific URI for each combination VERB + PATH.
 
-![Designer Specify quote api](./images/designer-specify-quote-api.png)
+![Designer Specify quote api](./images/designer-specify-quote-apiV1005.png)
 
 Keep the default value for CORS and using a client id to secure the API, click *Next* button.
 
@@ -400,7 +404,6 @@ We go in the Assembly Panel and click on the Invocation policy. The panel with t
 > Hint: For compatibility of the gateway aspects, here delete the invoke policy and add it again. The choice here is based on which gateway type do we use. In our case, we use the new one, referred as DataPower API Gateway.
 
 We change the value to $(target-url)$(request.path)$(request.search) and click *Save* button.
-
 
 ![Designer Quote api invoke](./images/designer-quote-api-invokeV10.png)
 
@@ -453,11 +456,11 @@ The API is definition is complete. We need now to add the Product and publish it
 
 To create a product, click on the Develop icon on the navigation panel (left). Then click on the *Add* button and select Product.
 
-![Designer Add product](./images/design-add-product.png)
+![Designer Add product](./images/design-add-productV1005.png)
 
 Select *New product* button and *Next* button.
 
-![Designer New product](./images/designer-new-product.png)
+![Designer New product](./images/designer-new-productV1005.png)
 
 Enter the following information:
 * Title: Quote Management Product
@@ -465,37 +468,40 @@ Enter the following information:
 
 Click on *Next* button
 
-![Designer New product Information](./images/designer-new-product-info.png)
+![Designer New product Information](./images/designer-new-product-infoV1005.png)
 
 Select the Quote API by clicking on the check box and the click *Next* button.
 
-![Designer New product Select API](./images/designer-new-product-selectapi.png)
+![Designer New product Select API](./images/designer-new-product-selectapiV1005.png)
 
 Change or adjust the plan according to your requirements plan and then click on *Next* button.
 
-![Designer New product Select plan](./images/designer-new-product-plan.png)
+![Designer New product Select plan](./images/designer-new-product-planV1005.png)
 
 Change or adjust the visibility or subscribability according to your requirements plan and then click on *Next* button.
 
-![Designer New product Select visibility](./images/designer-new-product-visibility.png)
+![Designer New product Select visibility](./images/designer-new-product-visibilityV1005.png)
 
 click on *Edit Product* button.
 
-![Designer New product Done](./images/designer-new-product-done.png)
+![Designer New product Done](./images/designer-new-product-doneV1005.png)
 
 We want to publish the API on the remote manager. So first, we start to add this manager to the Designer so we can choose where we want to deploy the product. We click on the *Switch cloud connection* link at the top of the window and then click on *Add Another Cloud* button. Enter the URL of the remote manager, in my case, https://manager.159.8.70.38.xip.io, then enter the credentials to access the organization you work with.
 
 We publish the API, by clicking on the Develop icon, then clicking on the ... close to the new product and select Publish.
 
-![Designer Quote product publish](./images/designer-quote-product-publish.png)
+![Designer Quote product publish](./images/designer-quote-product-publishV1005.png)
 
 Then click on the *Publish* button.
 
- ![Designer Quote product publish done](./images/designer-quote-product-publish-done.png)
+ ![Designer Quote product publish done](./images/designer-quote-product-publish-doneV1005.png)
+
+ Edit the visibility or keep it, and click Publish
+![Designer Quote product publish done](./images/designer-quote-product-publish-visibilityV1005.png)
 
 We can check on the remote Manager that the Product containing the Quote API has been correctly published.
 
-![Designer Quote product publish remote](./images/designer-publish-product-remote.png)
+![Designer Quote product publish remote](./images/designer-publish-product-remoteV1005.png)
 
 We want to automate the publishing and do not use the Designer and instead the CLI.
 
